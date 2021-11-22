@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 常用变换对与性质   信号能量 ∫−∞+∞∣x(t)∣2dt  \int_{-\infty}^{+\infty} |x(t)|^2 \mathrm{d}t ∫​−∞​+∞​​∣x(t)∣​2​​dt   信号功率 limT→∞1T∫−T&#x2F;2T&#x2F;2∣x(t)∣2dt  \lim_{T\to \infty} \frac{1}{T}\int_{-T&#x2F;2}^{T&#x2F;2} |x(t)|^2 \mathrm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用变换对与性质">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/1c0324e5/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 常用变换对与性质   信号能量 ∫−∞+∞∣x(t)∣2dt  \int_{-\infty}^{+\infty} |x(t)|^2 \mathrm{d}t ∫​−∞​+∞​​∣x(t)∣​2​​dt   信号功率 limT→∞1T∫−T&#x2F;2T&#x2F;2∣x(t)∣2dt  \lim_{T\to \infty} \frac{1}{T}\int_{-T&#x2F;2}^{T&#x2F;2} |x(t)|^2 \mathrm">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-16T15:12:58.000Z">
+<meta property="article:modified_time" content="2021-06-16T15:12:58.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/1c0324e5/"/>
+
+
+
+
+
+  <title>常用变换对与性质 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/1c0324e5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">常用变换对与性质</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-16T15:12:58+00:00">
+                2021-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="常用变换对与性质"><a class="header-anchor" href="#常用变换对与性质">¶</a> 常用变换对与性质</h1>
+<ul>
+<li>
+<p>信号能量</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi mathvariant="normal">∣</mi><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mrow><mi mathvariant="normal">d</mi></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">  \int_{-\infty}^{+\infty} |x(t)|^2 \mathrm{d}t
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathrm">∣</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">d</span></span><span class="mord mathit">t</span></span></span></span></span></p>
+</li>
+<li>
+<p>信号功率</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>lim</mi><mrow><mi>T</mi><mo>→</mo><mi mathvariant="normal">∞</mi></mrow></msub><mfrac><mrow><mn>1</mn></mrow><mrow><mi>T</mi></mrow></mfrac><msubsup><mo>∫</mo><mrow><mo>−</mo><mi>T</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow><mrow><mi>T</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msubsup><mi mathvariant="normal">∣</mi><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mrow><mi mathvariant="normal">d</mi></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">  \lim_{T\to \infty} \frac{1}{T}\int_{-T/2}^{T/2} |x(t)|^2 \mathrm{d}t
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.499em;"></span><span class="strut bottom" style="height:2.58625em;vertical-align:-1.08725em;"></span><span class="base displaystyle textstyle uncramped"><span class="mop op-limits"><span class="vlist"><span style="top:0.644331em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mrel">→</span><span class="mord mathrm">∞</span></span></span></span><span style="top:2.7755575615628914e-17em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="mop">lim</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span></span><span style="top:-0.9740000000000002em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathrm">∣</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">d</span></span><span class="mord mathit">t</span></span></span></span></span></p>
+</li>
+<li>
+<p>系统性质</p>
+<p>线性：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow></mrow><annotation encoding="application/x-tex"></annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0em;"></span><span class="strut bottom" style="height:0em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"></span></span></span></span></p>
+<p>时不变</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow></mrow><annotation encoding="application/x-tex"></annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0em;"></span><span class="strut bottom" style="height:0em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"></span></span></span></span></p>
+</li>
+<li>
+<p>卷积求LTI系统响应</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mi>h</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>∗</mo><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">  y(t) = h(t) * x(t)    
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">=</span><span class="mord mathit">h</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mbin">∗</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span></span></span></span></span></p>
+</li>
+<li>
+<p>特征函数求LTI响应</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mi>H</mi><mo>(</mo><mi>s</mi><mo>)</mo><msup><mi>e</mi><mrow><mi>s</mi><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  y(t) = H(s)e^{st}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.843556em;"></span><span class="strut bottom" style="height:1.093556em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>连续时间傅里叶级数展开</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><msub><mi>a</mi><mi>k</mi></msub><msup><mi>e</mi><mrow><mi>j</mi><mi>k</mi><msub><mi>ω</mi><mn>0</mn></msub><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  x(t) = \sum_{k=-\infty}^{+\infty} a_k e^{jk\omega_0 t}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.7583360000000003em;"></span><span class="strut bottom" style="height:3.11878em;vertical-align:-1.360444em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.202113em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mrel">=</span><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.000005000000000032756em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.250005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathrm">0</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>离散时间傅里叶级数展开</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>[</mo><mi>n</mi><mo>]</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><msub><mi>a</mi><mi>k</mi></msub><msup><mi>e</mi><mrow><mi>j</mi><mi>k</mi><msub><mi>ω</mi><mn>0</mn></msub><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  x[n] = \sum_{k=-\infty}^{+\infty} a_k e^{jk\omega_0 n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.7583360000000003em;"></span><span class="strut bottom" style="height:3.11878em;vertical-align:-1.360444em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.202113em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mrel">=</span><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.000005000000000032756em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.250005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathrm">0</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>连续时间傅里叶系数</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>T</mi></mrow></mfrac><msub><mo>∫</mo><mrow><mi>T</mi></mrow></msub><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>k</mi><msub><mi>ω</mi><mn>0</mn></msub><mi>t</mi></mrow></msup><mrow><mi mathvariant="normal">d</mi></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">  a_k = \frac{1}{T}\int_{T} x(t) e^{-jk\omega_0 t} \mathrm{d}t
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.36em;"></span><span class="strut bottom" style="height:2.27225em;vertical-align:-0.91225em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-right:0.05em;margin-left:-0.44445em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathrm">0</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">d</span></span><span class="mord mathit">t</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>离散时间傅里叶系数</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><msup><mo>∑</mo><mrow><mo>&lt;</mo><mi>N</mi><mo>&gt;</mo></mrow></msup><mi>x</mi><mo>[</mo><mi>n</mi><mo>]</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>k</mi><msub><mi>ω</mi><mn>0</mn></msub><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  a_k = \frac{1}{N} \sum^{&lt;N&gt;} x[n] e^{-jk\omega_0 n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.8283360000000002em;"></span><span class="strut bottom" style="height:2.514336em;vertical-align:-0.686em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop op-limits"><span class="vlist"><span style="top:-0.000004999999999921734em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.250005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mrel">&lt;</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mrel">&gt;</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathrm">0</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>连续时间傅里叶变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi><mi>t</mi></mrow></msup><mrow><mi mathvariant="normal">d</mi></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">  X(j\omega) = \int_{-\infty}^{+\infty} x(t) e^{-j\omega t} \mathrm{d}t
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mrel">=</span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">d</span></span><span class="mord mathit">t</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>连续时间傅里叶逆变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>π</mi></mrow></mfrac><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi><mi>t</mi></mrow></msup><mi>d</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">  x(t) = \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(j\omega) e^{j\omega t}d\omega
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>卷积定理</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>∗</mo><mi>h</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>↔</mo><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mi>H</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">  x(t) * h(t) \leftrightarrow X(j\omega)H(j\omega)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mbin">∗</span><span class="mord mathit">h</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">↔</span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord mathit" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span></span></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mi>h</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>↔</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>π</mi></mrow></mfrac><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mo>∗</mo><mi>H</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">  x(t)h(t) \leftrightarrow \frac{1}{\pi} X(j\omega) * H(j\omega)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.32144em;"></span><span class="strut bottom" style="height:2.00744em;vertical-align:-0.686em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord mathit">h</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mrel">↔</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mbin">∗</span><span class="mord mathit" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>连续傅里叶变换性质</strong></p>
+\begin{aligned}
+  线性：ax_1(t) + bx_2(t) &\leftrightarrow aX_1(j\omega)+bX_2(j\omega)\\
+  时移：x(t-t_0) &\leftrightarrow X(j\omega)e^{-j\omega t_0}\\
+  频移：x(t)e^{j\omega_0t}&\leftrightarrow X(j(\omega-\omega_0))\\
+  时域反转：x(-t) &\leftrightarrow X(-j\omega)\\
+  微分：dx(t)/dt &\leftrightarrow j\omega X(j\omega)\\
+  频域微分：-tx(t) &\leftrightarrow dX(j\omega)/d\omega\\
+\end{aligned}
+
+</li>
+<li>
+<p><strong>常用连续时间傅里叶变换对</strong></p>
+\begin{aligned}
+  e^{-at}u(t) \leftrightarrow& \frac{1}{a + j\omega}\\
+  \delta(t) \leftrightarrow& 1\\
+  \delta(t-t_0) \leftrightarrow& e^{-j\omega t_0}\\
+  1 \leftrightarrow& 2\pi \delta(\omega)\\
+  e^{j \omega_0 t} \leftrightarrow& 2\pi \delta(\omega - \omega_0)\\
+  \frac{\sin Wt}{\pi t} \leftrightarrow& 截止频率W的方波\\
+  \sin \omega_0 t \leftrightarrow& \frac{\pi}{j}[\delta(\omega-\omega_0) - \delta(\omega+\omega_0)]\\
+  \cos \omega_0 t \leftrightarrow& \pi[\delta(\omega-\omega_0) + \delta(\omega+\omega_0)]
+\end{aligned}
+
+</li>
+<li>
+<p><strong>离散时间傅里叶变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>x</mi><mo>[</mo><mi>n</mi><mo>]</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  X(e^{j\omega}) = \sum_{-\infty}^{+\infty} x[n] e^{-j\omega n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.7583360000000003em;"></span><span class="strut bottom" style="height:3.0666720000000005em;vertical-align:-1.308336em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.150005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.000005000000000143778em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.2500050000000003em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>离散时间傅里叶逆变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>[</mo><mi>n</mi><mo>]</mo><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>π</mi></mrow></mfrac><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>X</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi><mi>n</mi></mrow></msup><mi>d</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">  x[n] = \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(e^{j\omega})e^{-j\omega n} d\omega
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">x</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span></span></span></span></span></p>
+</li>
+<li>
+<p>怕萨瓦定理</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi mathvariant="normal">∣</mi><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mi>d</mi><mi>t</mi><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>π</mi></mrow></mfrac><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi mathvariant="normal">∣</mi><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mi>d</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">  \int_{-\infty}^{+\infty} |x(t)|^2 dt = \frac{1}{2\pi} \int_{-\infty}^{+\infty} |X(j\omega)|^2 d\omega
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathrm">∣</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">d</span><span class="mord mathit">t</span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord"><span class="mord mathrm">∣</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>拉普拉斯变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>s</mi><mo>)</mo><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>s</mi><mi>t</mi></mrow></msup><mrow><mi mathvariant="normal">d</mi></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">  X(s) = \int_{-\infty}^{+\infty} x(t) e^{-st} \mathrm{d}t
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.3823310000000002em;"></span><span class="strut bottom" style="height:2.3529120000000003em;vertical-align:-0.970581em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mclose">)</span><span class="mrel">=</span><span class="mop"><span class="op-symbol large-op mop" style="margin-right:0.44445em;top:-0.0011249999999999316em;">∫</span><span class="vlist"><span style="top:0.91225em;margin-left:-0.44445em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.9740000000000001em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit">s</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">d</span></span><span class="mord mathit">t</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>常用拉普拉斯变化对</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtable><mtr><mtd><mrow><msup><mi>e</mi><mrow><mo>−</mo><mi>a</mi><mi>t</mi></mrow></msup><mi>u</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow></mtd><mtd><mrow><mrow></mrow><mo>↔</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>s</mi><mo>+</mo><mi>a</mi></mrow></mfrac><mo separator="true">,</mo><mi>R</mi><mi>e</mi><mo>{</mo><mi>s</mi><mo>}</mo><mo>&gt;</mo><mo>−</mo><mi>a</mi></mrow></mtd></mtr><mtr><mtd><mrow><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>a</mi><mi>t</mi></mrow></msup><mi>u</mi><mo>(</mo><mo>−</mo><mi>t</mi><mo>)</mo></mrow></mtd><mtd><mrow><mrow></mrow><mo>↔</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>s</mi><mo>+</mo><mi>a</mi></mrow></mfrac><mo separator="true">,</mo><mi>R</mi><mi>e</mi><mo>{</mo><mi>s</mi><mo>}</mo><mo>&lt;</mo><mo>−</mo><mi>a</mi></mrow></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">\begin{aligned}
+  e^{-at}u(t) &amp;\leftrightarrow \frac{1}{s + a}, Re\{s\} &gt; -a\\
+  -e^{-at}u(-t) &amp;\leftrightarrow \frac{1}{s+a}, Re\{s\} &lt; -a
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:2.34077em;"></span><span class="strut bottom" style="height:4.18154em;vertical-align:-1.84077em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist"><span style="top:-1.01933em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit">a</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">u</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span></span></span><span style="top:1.07144em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord">−</span><span class="mord"><span class="mord mathit">e</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit">a</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">u</span><span class="mopen">(</span><span class="mord">−</span><span class="mord mathit">t</span><span class="mclose">)</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="col-align-l"><span class="vlist"><span style="top:-1.01933em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord displaystyle textstyle uncramped"></span><span class="mrel">↔</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit">s</span><span class="mbin">+</span><span class="mord mathit">a</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit">e</span><span class="mopen">{</span><span class="mord mathit">s</span><span class="mclose">}</span><span class="mrel">&gt;</span><span class="mord">−</span><span class="mord mathit">a</span></span></span><span style="top:1.07144em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord displaystyle textstyle uncramped"></span><span class="mrel">↔</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit">s</span><span class="mbin">+</span><span class="mord mathit">a</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit">e</span><span class="mopen">{</span><span class="mord mathit">s</span><span class="mclose">}</span><span class="mrel">&lt;</span><span class="mord">−</span><span class="mord mathit">a</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>单边拉普拉斯变换微分</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtable><mtr><mtd><mrow><mi>d</mi><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mi mathvariant="normal">/</mi><mi>d</mi><mi>t</mi></mrow></mtd><mtd><mrow><mrow></mrow><mo>↔</mo><mi>s</mi><mrow><mi mathvariant="script">X</mi></mrow><mo>(</mo><mi>s</mi><mo>)</mo><mo>−</mo><mi>x</mi><mo>(</mo><msup><mn>0</mn><mo>−</mo></msup><mo>)</mo></mrow></mtd></mtr><mtr><mtd><mrow><msup><mi>d</mi><mn>2</mn></msup><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo><mi mathvariant="normal">/</mi><mi>d</mi><msup><mi>t</mi><mn>2</mn></msup></mrow></mtd><mtd><mrow><mrow></mrow><mo>↔</mo><msup><mi>s</mi><mn>2</mn></msup><mrow><mi mathvariant="script">X</mi></mrow><mo>(</mo><mi>s</mi><mo>)</mo><mo>−</mo><mi>s</mi><mi>x</mi><mo>(</mo><msup><mn>0</mn><mo>−</mo></msup><mo>)</mo><mo>−</mo><msup><mi>x</mi><mrow><mi mathvariant="normal">′</mi></mrow></msup><mo>(</mo><msup><mn>0</mn><mo>−</mo></msup><mo>)</mo></mrow></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">  \begin{aligned}
+    dx(t)/dt &amp;\leftrightarrow s\mathcal{X}(s) - x(0^-)\\
+    d^2x(t) / dt^2 &amp;\leftrightarrow s^2\mathcal{X}(s) - sx(0^-) - x&#x27;(0^-)
+  \end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.462054em;"></span><span class="strut bottom" style="height:2.4241080000000004em;vertical-align:-0.9620540000000004em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist"><span style="top:-0.6220539999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">d</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathit">d</span><span class="mord mathit">t</span></span></span><span style="top:0.6020540000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">d</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathit">d</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="col-align-l"><span class="vlist"><span style="top:-0.6220539999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord displaystyle textstyle uncramped"></span><span class="mrel">↔</span><span class="mord mathit">s</span><span class="mord displaystyle textstyle uncramped"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mclose">)</span><span class="mbin">−</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord"><span class="mord mathrm">0</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">−</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span><span style="top:0.6020540000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord displaystyle textstyle uncramped"></span><span class="mrel">↔</span><span class="mord"><span class="mord mathit">s</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mclose">)</span><span class="mbin">−</span><span class="mord mathit">s</span><span class="mord mathit">x</span><span class="mopen">(</span><span class="mord"><span class="mord mathrm">0</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">−</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span><span class="mbin">−</span><span class="mord"><span class="mord mathit">x</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">′</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathrm">0</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">−</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>z变换</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></msubsup><mi>x</mi><mo>[</mo><mi>n</mi><mo>]</mo><msup><mi>z</mi><mrow><mo>−</mo><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">  X(z) = \sum_{-\infty}^{+\infty} x[n] z^{-n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.7583360000000003em;"></span><span class="strut bottom" style="height:3.0666720000000005em;vertical-align:-1.308336em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="mclose">)</span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.150005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">∞</span></span></span></span><span style="top:-0.000005000000000143778em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.2500050000000003em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">+</span><span class="mord mathrm">∞</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">x</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord">−</span><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>常用z变换对</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtable><mtr><mtd><mrow><msup><mi>a</mi><mi>n</mi></msup><mi>u</mi><mo>[</mo><mi>n</mi><mo>]</mo><mo>↔</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>1</mn><mo>−</mo><mi>a</mi><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mfrac><mo separator="true">,</mo><mi mathvariant="normal">∣</mi><mi>z</mi><mi mathvariant="normal">∣</mi><mo>&gt;</mo><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi></mrow></mtd></mtr><mtr><mtd><mrow><mo>−</mo><msup><mi>a</mi><mi>n</mi></msup><mi>u</mi><mo>[</mo><mo>−</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>]</mo><mo>↔</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>1</mn><mo>−</mo><mi>a</mi><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mfrac><mo separator="true">,</mo><mi mathvariant="normal">∣</mi><mi>z</mi><mi mathvariant="normal">∣</mi><mo>&lt;</mo><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi></mrow></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">\begin{aligned}
+  a^n u[n] \leftrightarrow \frac{1}{1 - az^{-1}}, |z| &gt; |a|\\
+  -a^n u[-n-1] \leftrightarrow \frac{1}{1 - az^{-1}}, |z| &lt; |a|
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:2.34077em;"></span><span class="strut bottom" style="height:4.18154em;vertical-align:-1.84077em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist"><span style="top:-1.01933em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathit">n</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">u</span><span class="mopen">[</span><span class="mord mathit">n</span><span class="mclose">]</span><span class="mrel">↔</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mpunct">,</span><span class="mord mathrm">∣</span><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="mord mathrm">∣</span><span class="mrel">&gt;</span><span class="mord mathrm">∣</span><span class="mord mathit">a</span><span class="mord mathrm">∣</span></span></span><span style="top:1.07144em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord">−</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathit">n</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">u</span><span class="mopen">[</span><span class="mord">−</span><span class="mord mathit">n</span><span class="mbin">−</span><span class="mord mathrm">1</span><span class="mclose">]</span><span class="mrel">↔</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord">−</span><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mpunct">,</span><span class="mord mathrm">∣</span><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="mord mathrm">∣</span><span class="mrel">&lt;</span><span class="mord mathrm">∣</span><span class="mord mathit">a</span><span class="mord mathrm">∣</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>分贝公式（伯德图）</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>−</mo><mn>2</mn><mn>0</mn><msub><mi>log</mi><mrow><mn>1</mn><mn>0</mn></mrow></msub><mi mathvariant="normal">∣</mi><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">  -20\log_{10}|X(j\omega)|
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord">−</span><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="vlist"><span style="top:0.24444em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathrm">1</span><span class="mord mathrm">0</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord mathit" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mord mathit" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord mathrm">∣</span></span></span></span></span></p>
+</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/62d277af/" rel="next" title="z">
+                <i class="fa fa-chevron-left"></i> z
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/88c26b79/" rel="prev" title="Outline">
+                Outline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%98%E6%8D%A2%E5%AF%B9%E4%B8%8E%E6%80%A7%E8%B4%A8"><span class="nav-number">1.</span> <span class="nav-text"> 常用变换对与性质</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

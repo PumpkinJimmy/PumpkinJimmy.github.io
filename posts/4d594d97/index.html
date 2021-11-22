@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Computer Architecture  Term Reference 1. Introduction  CPU Performance Power Wall Paralism   2. Instructions 3. Encoding &amp; Arithmetic 4. Processor  Pipeline &amp; Hazard 指令级并行 其他   5. Cache  各类储存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer Architecture">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/4d594d97/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="Computer Architecture  Term Reference 1. Introduction  CPU Performance Power Wall Paralism   2. Instructions 3. Encoding &amp; Arithmetic 4. Processor  Pipeline &amp; Hazard 指令级并行 其他   5. Cache  各类储存">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-20T10:57:33.000Z">
+<meta property="article:modified_time" content="2021-01-20T10:57:33.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/4d594d97/"/>
+
+
+
+
+
+  <title>Computer Architecture | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/4d594d97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Computer Architecture</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-01-20T10:57:33+00:00">
+                2021-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="#computer-architecture">Computer Architecture</a>
+<ul>
+<li><a href="#term-reference">Term Reference</a></li>
+<li><a href="#1-introduction">1. Introduction</a>
+<ul>
+<li><a href="#cpu-performance">CPU Performance</a></li>
+<li><a href="#power-wall">Power Wall</a></li>
+<li><a href="#paralism">Paralism</a></li>
+</ul>
+</li>
+<li><a href="#2-instructions">2. Instructions</a></li>
+<li><a href="#3-encoding--arithmetic">3. Encoding &amp; Arithmetic</a></li>
+<li><a href="#4-processor">4. Processor</a>
+<ul>
+<li><a href="#pipeline--hazard">Pipeline &amp; Hazard</a></li>
+<li><a href="#%E6%8C%87%E4%BB%A4%E7%BA%A7%E5%B9%B6%E8%A1%8C">指令级并行</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+<li><a href="#5-cache">5. Cache</a>
+<ul>
+<li><a href="#%E5%90%84%E7%B1%BB%E5%82%A8%E5%AD%98%E5%99%A8%E5%8F%8A%E5%85%B6%E5%B7%A5%E8%89%BA">各类储存器及其工艺</a></li>
+<li><a href="#%E5%82%A8%E5%AD%98%E5%99%A8%E6%9E%B6%E6%9E%84">储存器架构</a></li>
+<li><a href="#cache-mapping">Cache Mapping</a></li>
+<li><a href="#cache-replacement-policy">Cache Replacement Policy</a></li>
+<li><a href="#cache-writing">Cache Writing</a></li>
+<li><a href="#cache-performance">Cache Performance</a></li>
+<li><a href="#multi-level-cache">Multi-Level Cache</a></li>
+<li><a href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98">虚拟内存</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Computer Architecture"><a class="header-anchor" href="#Computer Architecture">¶</a> Computer Architecture</h1>
+<h2 id="Term Reference"><a class="header-anchor" href="#Term Reference">¶</a> Term Reference</h2>
+<ul>
+<li>ISA: Instruction Set of Architecture</li>
+<li>MIPS: Millon Instructions per Second</li>
+<li>CPI: (Average) Clock cycles of a Instruction</li>
+<li>Response Time</li>
+<li>Throughput: 吞吐量</li>
+</ul>
+<h2 id="1. Introduction"><a class="header-anchor" href="#1. Introduction">¶</a> 1. Introduction</h2>
+<h3 id="CPU Performance"><a class="header-anchor" href="#CPU Performance">¶</a> CPU Performance</h3>
+<ol start="0">
+<li>一般我们说的Performance主要是指：</li>
+</ol>
+<ul>
+<li>CPU Time 响应时间：完成<em>一个</em>任务所需要得时间</li>
+<li>Throughput 吞吐量：单位时间内完成的<em>任务数量</em></li>
+<li>CPU Time = Execution Time = Response Time 只取决于速度；Throughput与速度、并行度都有关系</li>
+</ul>
+<ol>
+<li>
+<p><strong>CPU Time formula</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">U</mi><mtext> </mtext><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mtext><mo>=</mo><mfrac><mrow><mtext><mi mathvariant="normal">I</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">.</mi><mtext> </mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">t</mi></mtext><mo>×</mo><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">I</mi></mtext></mrow><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">k</mi><mtext> </mtext><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">    \text{CPU Time} = \frac{\text{Instr. Count}\times \text{CPI}}{\text{Clock rate}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.36033em;"></span><span class="strut bottom" style="height:2.04633em;vertical-align:-0.686em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">P</span><span class="mord mathrm">U</span><span class="mord mspace"> </span><span class="mord mathrm">T</span><span class="mord mathrm">i</span><span class="mord mathrm">m</span><span class="mord mathrm">e</span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="text mord textstyle cramped"><span class="mord mathrm">C</span><span class="mord mathrm">l</span><span class="mord mathrm">o</span><span class="mord mathrm">c</span><span class="mord mathrm">k</span><span class="mord mspace"> </span><span class="mord mathrm">r</span><span class="mord mathrm">a</span><span class="mord mathrm">t</span><span class="mord mathrm">e</span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="text mord textstyle uncramped"><span class="mord mathrm">I</span><span class="mord mathrm">n</span><span class="mord mathrm">s</span><span class="mord mathrm">t</span><span class="mord mathrm">r</span><span class="mord mathrm">.</span><span class="mord mspace"> </span><span class="mord mathrm">C</span><span class="mord mathrm">o</span><span class="mord mathrm">u</span><span class="mord mathrm">n</span><span class="mord mathrm">t</span></span><span class="mbin">×</span><span class="text mord textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">P</span><span class="mord mathrm">I</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p>由公式可知，<em>一个程序</em>在<em>单个Core</em>上的CPU Time取决于三个因素：</p>
+<ol>
+<li>
+<p>Instruction Count</p>
+<p>更少指令数的程序运行更</p>
+</li>
+<li>
+<p>CPI</p>
+<p>不同的指令所需的cycle数不一样。使用所需cycle较少的指令（如加法）会快于一些大CPI的指令（如读写内存）</p>
+</li>
+<li>
+<p>Clock rate</p>
+<p>更高的主频带来更短的CPU Time</p>
+</li>
+</ol>
+<p>注意：这三个参数是<strong>相互关联</strong>的，改变其中一个也有可能改变其他几个。也即：一般不能指望通过简单地提升其中一个指标来调高总体性能</p>
+</li>
+<li>
+<p>Cycle Time, Clock Rate</p>
+<p>Cycle Time: time per clock cycle</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">k</mi><mtext> </mtext><mi mathvariant="normal">R</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mtext><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi><mtext> </mtext><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">    \text{Clock Rate} = \frac{1}{\text{Cycle Time}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.32144em;"></span><span class="strut bottom" style="height:2.20188em;vertical-align:-0.8804400000000001em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">l</span><span class="mord mathrm">o</span><span class="mord mathrm">c</span><span class="mord mathrm">k</span><span class="mord mspace"> </span><span class="mord mathrm">R</span><span class="mord mathrm">a</span><span class="mord mathrm">t</span><span class="mord mathrm">e</span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.6860000000000002em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="text mord textstyle cramped"><span class="mord mathrm">C</span><span class="mord mathrm" style="margin-right:0.01389em;">y</span><span class="mord mathrm">c</span><span class="mord mathrm">l</span><span class="mord mathrm">e</span><span class="mord mspace"> </span><span class="mord mathrm">T</span><span class="mord mathrm">i</span><span class="mord mathrm">m</span><span class="mord mathrm">e</span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>MIPS</strong></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">M</mi><mi mathvariant="normal">I</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">S</mi></mtext><mo>=</mo><mfrac><mrow><mtext><mi mathvariant="normal">I</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">.</mi><mtext> </mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">t</mi></mtext></mrow><mrow><mtext><mi mathvariant="normal">E</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mtext> </mtext><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mtext><mo>×</mo><mn>1</mn><msup><mn>0</mn><mn>6</mn></msup></mrow></mfrac><mo>=</mo><mfrac><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">k</mi><mtext> </mtext><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mtext></mrow><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">I</mi></mtext><mo>×</mo><mn>1</mn><msup><mn>0</mn><mn>6</mn></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">    \text{MIPS} = \frac{\text{Instr. Count}}{\text{Execution Time} \times 10^6} = \frac{\text{Clock rate}}{\text{CPI}\times 10^6}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.37144em;"></span><span class="strut bottom" style="height:2.14077em;vertical-align:-0.7693300000000001em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">M</span><span class="mord mathrm">I</span><span class="mord mathrm">P</span><span class="mord mathrm">S</span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="text mord textstyle cramped"><span class="mord mathrm">E</span><span class="mord mathrm">x</span><span class="mord mathrm">e</span><span class="mord mathrm">c</span><span class="mord mathrm">u</span><span class="mord mathrm">t</span><span class="mord mathrm">i</span><span class="mord mathrm">o</span><span class="mord mathrm">n</span><span class="mord mspace"> </span><span class="mord mathrm">T</span><span class="mord mathrm">i</span><span class="mord mathrm">m</span><span class="mord mathrm">e</span></span><span class="mbin">×</span><span class="mord mathrm">1</span><span class="mord"><span class="mord mathrm">0</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">6</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="text mord textstyle uncramped"><span class="mord mathrm">I</span><span class="mord mathrm">n</span><span class="mord mathrm">s</span><span class="mord mathrm">t</span><span class="mord mathrm">r</span><span class="mord mathrm">.</span><span class="mord mspace"> </span><span class="mord mathrm">C</span><span class="mord mathrm">o</span><span class="mord mathrm">u</span><span class="mord mathrm">n</span><span class="mord mathrm">t</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="text mord textstyle cramped"><span class="mord mathrm">C</span><span class="mord mathrm">P</span><span class="mord mathrm">I</span></span><span class="mbin">×</span><span class="mord mathrm">1</span><span class="mord"><span class="mord mathrm">0</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">6</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="text mord textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">l</span><span class="mord mathrm">o</span><span class="mord mathrm">c</span><span class="mord mathrm">k</span><span class="mord mspace"> </span><span class="mord mathrm">r</span><span class="mord mathrm">a</span><span class="mord mathrm">t</span><span class="mord mathrm">e</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p>由上述公式可知，MIPS只与CPU Clock rate和</p>
+<ul>
+<li>Compiler’s Performance Impact</li>
+</ul>
+<p>编译器通过减少指令数来让程序得CPU Time更少</p>
+</li>
+<li>
+<p>实际应用中的性能问题</p>
+<p>实际上，衡量一台机器的性能是复杂的。影响性能的因素有：</p>
+<ol>
+<li>CPI</li>
+<li>Clock rate</li>
+</ol>
+<p>但这些只是衡量单个CPU的MIPS。除此之外还有：</p>
+<ol start="3">
+<li>
+<p>Instruction Count</p>
+<p>不同的程序具有不同的指令数</p>
+</li>
+<li>
+<p>Compiler</p>
+<p>编译器通过影响程序指令数来影响CPU Time</p>
+</li>
+<li>
+<p>Core数</p>
+<p>具有更多的Core时可以提高Throughput，也可以通过并行来减少单个程序的总CPU Time</p>
+</li>
+<li>
+<p>专用硬件</p>
+<p>某些为特定任务设计的硬件会比通用处理器性能更佳（如显卡的渲染管线、DSP等）</p>
+</li>
+<li>
+<p>等等</p>
+</li>
+</ol>
+<p>综上所述，我们难以简单地通过直接使用硬件参数计算比较机器地性能。真正可行的性能比较方法是<strong>使用Benchmark</strong>比较性能（类似通俗意义上的“跑分”）。<em>Benchmark</em>通过对机器运行标准的工作负载，比较实际运行时间来比较相对性能。专用的硬件可以有专用的Benchmark</p>
+<p>一个权威的Benchmark是SPEC组织</p>
+</li>
+<li>
+<p>Factors</p>
+<p>宏观而言，<em>一个程序</em>的性能与多个因素有关系：</p>
+<ol>
+<li>
+<p>算法</p>
+<p>通过减少指令数、使用CPI较低的指令来提高性能</p>
+</li>
+<li>
+<p>Compiler</p>
+<p>通过减少指令数、使用CPI较低的指令来提高性能</p>
+</li>
+<li>
+<p>ISA</p>
+<p>影响CPI</p>
+</li>
+<li>
+<p>Hardware Architecture</p>
+<p>影响CPI,Clock rate以及Multi-Core影响Throughput等</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Pitfalls:</p>
+<ol>
+<li>
+<p>MIPS与程序的指令数<strong>无关</strong></p>
+</li>
+<li>
+<p>MIPS高不等于CPU Time更少</p>
+<p>同一个程序，并不是在MIPS高得CPU上就有更短得CPU time。这是因为可能同一程序在不同CPU上所需指令数不同</p>
+</li>
+<li>
+<p>严格来说，增加CPU Core只能提高Throughput不能减少Response Time（由于单个Core的速度没有提高）</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Power Wall"><a class="header-anchor" href="#Power Wall">¶</a> Power Wall</h3>
+<ol>
+<li>
+<p>Why not higher clock rate</p>
+<p>更高的主频-&gt;更高的电压-&gt;平方增长的功耗</p>
+<p>最初的20年，厂商在提升主频的同时在想办法降低电压来降低功耗</p>
+<p>但现在，已经没有办法再降低电压了</p>
+</li>
+<li>
+<p>为什么不继续缩小晶体管</p>
+<p>一般来说，芯片的主体工艺是CMOS。这种工艺加工的晶体管即使在不工作的时候，只要通电，就会有漏电流（Leaky Current）。随着晶体管继续缩小，晶体管之间的距离不断缩小，漏电流将急剧增大，导致功耗增加</p>
+</li>
+</ol>
+<p>综上，只要功耗维持在合理范围内，就无法提高主频，也无法继续缩小晶体管，<strong>单核性能难以再提高</strong>。这就是为什么要讨论<em>多核</em>，<em>多处理器</em>，<em>异构处理器</em></p>
+<h3 id="Paralism"><a class="header-anchor" href="#Paralism">¶</a> Paralism</h3>
+<p>（待完善）</p>
+<h2 id="2. Instructions"><a class="header-anchor" href="#2. Instructions">¶</a> 2. Instructions</h2>
+<ol start="0">
+<li>
+<p>A bit of history</p>
+<p>Von Neumann Architecture 冯诺依曼架构</p>
+<ul>
+<li>指令只是一种特殊的数据</li>
+<li>指令与普通数据共享内存、总线和地址空间</li>
+<li>优点：简单，性价比高</li>
+</ul>
+<p>Harvard Architecture</p>
+<ul>
+<li>指令与数据分开储存</li>
+<li>优点：防止了修改内存中指令的常见hack；可以<strong>并行取指令和取数</strong>，性能更高</li>
+<li>缺点：更复杂，更昂贵，<em>依赖软硬件设计者去权衡指令和数据问题</em></li>
+</ul>
+</li>
+<li>
+<p>What is instructions</p>
+<p><em>instructions</em> are the primitive operations of CPU</p>
+<p>ISA是“Instruction Set Architecture”是硬件和软件的界面（interface）</p>
+</li>
+<li>
+<p>Registers</p>
+<ol>
+<li>
+<p>names</p>
+<p><code>$16-$23 -&gt;$s0-$s7</code> for variable</p>
+<p><code>$8-$15 -&gt; $t0-$t7</code> for temporary</p>
+<p><code>$a0 -&gt; $a3</code> for process argument</p>
+<p><code>$sp</code> stack pointer</p>
+<p><code>$fp</code> frame pointer</p>
+<p><code>$gp</code> for global memory access</p>
+<p><code>$v0-$v2</code> for process return value</p>
+<p><code>$ra</code> for caller address</p>
+</li>
+<li>
+<p>register have no types.</p>
+<p>Operations you apply determine how interpret the data.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>MIPS Instruction Format</p>
+<ol>
+<li>R-type for register operations</li>
+<li>I-type for immediate operations and data transfer</li>
+<li>J-type for jump operations</li>
+</ol>
+</li>
+<li>
+<p>Arithmatic Operations</p>
+<ul>
+<li><code>add/addu/sub/subu</code></li>
+<li><code>and/or/nor/</code></li>
+<li><code>sll/slr</code></li>
+<li>Immediate Operations</li>
+<li>32-bits Immediate Number
+<ul>
+<li><code>lui</code></li>
+</ul>
+</li>
+<li>Multiply
+<ul>
+<li><code>mult</code></li>
+<li><code>mfhi/mflo</code></li>
+</ul>
+</li>
+<li>Divide
+<ul>
+<li><code>div</code></li>
+<li>also <code>mfhi/mflo</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Big Endian vs. Little Endian</p>
+<p>端序讨论的是对一个<em>字</em>中字节的地址顺序</p>
+<p>我们规定*大端序(Big Endian)<em>是指一个字的</em>最左边(leftmost)*的字节为最低地址</p>
+<p>反之，*小端序(Little Endian)<em>是指一个字的</em>最右边(rightmost)*的字节为最低地址</p>
+<p>所谓“最左边”，是指对应我们的“阿拉伯数字书写顺序”的最左边，也就是说<strong>大端序的字最高位是最低地址</strong></p>
+<p>本质上，端序问题的根源是：</p>
+<ul>
+<li>计算机往往以字为单位处理数据，但往往以字节为最小寻址单位</li>
+<li>阿拉伯数字低位到高位的顺序是从右到左，但我们的书写顺序确是从左到右</li>
+</ul>
+<p>第一条迫使我们约定字节编址顺序；</p>
+<p>第二条则导致我们有两种合理的约定方式：</p>
+<ul>
+<li>如果认为一个字是一个字节的流，那从左到右摆放的字节自然是从左到右地址递增（大端序）</li>
+<li>但若按照阿拉伯数字的习惯数字当然是从右到左地址递增（小端序）</li>
+</ul>
+<p>大端序要注意：<br>
+字的“最低位字节”与“地址最低字节”不一样！</p>
+<p>小端序要注意：<br>
+连续的比特流中，字内字节顺序需要“反转”！</p>
+<p>（综上，我觉得还是小端序比较反人类）</p>
+</li>
+<li>
+<p>Data transfer between reg. and mem.</p>
+<ul>
+<li>
+<p>Basic: <code>lw/sw</code> 按字取/存</p>
+</li>
+<li>
+<p><code>lh/sh;lb/sb</code> 按半字/字节做存取</p>
+</li>
+<li>
+<p>Byte Alignment</p>
+<p>在按字/半字存取时，必须注意<em>字节对齐(Byte Alignment)</em>，（以32机器为例）也即：</p>
+<p><strong>按字存取时地址必须是4的倍数；按半字存取时地址必须是2的倍数</strong></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Branch and Jump Operations</p>
+<ul>
+<li>
+<p><code>beq/bne</code></p>
+</li>
+<li>
+<p><code>slt</code></p>
+</li>
+<li>
+<p><code>j</code></p>
+</li>
+<li>
+<p><code>jr/jal/jalr</code></p>
+<ul>
+<li><code>jal $reg</code>  jump to the address specified by reg. and store <code>PC+4</code> in <code>$ra</code> (mostly used to call process)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="3. Encoding &amp; Arithmetic"><a class="header-anchor" href="#3. Encoding &amp; Arithmetic">¶</a> 3. Encoding &amp; Arithmetic</h2>
+<ol>
+<li>
+<p>补码</p>
+<ul>
+<li>
+<p>利用有限位加法和溢出实现“化减为加”</p>
+</li>
+<li>
+<p>补码=反码+1</p>
+</li>
+<li>
+<p>虽然加减法效率非常高，<strong>但导致了两套不同的比较、溢出机制</strong></p>
+<p>Unsigned Addition:</p>
+<blockquote>
+<p>Carry-out(进位) indicates overflow, i.e.:</p>
+</blockquote>
+ (1101)_2 + (0100)_2 = (1 0001)_2\quad \mathrm{overflow}\\
+   (0111)_2 + (0001)_2 = (1000)_2 \quad \text{not overflow}
+
+<p>Signed Addition:</p>
+<blockquote>
+<p>Two operands with the same sign and produce a opposite signed indicates overflow</p>
+<p>Two operands with different sign <strong>never overflow</strong></p>
+</blockquote>
+ (1101)_2 + (0100)_2 = (0001)_2\Rightarrow (-3 + 4 = 1) \quad\text{not overflow}\\
+   (0111)_2 + (0001)_2 = (1000)_2 \Rightarrow (7+1=-8)\quad \mathrm{overflow}
+
+<p>Unsigned Comparison:</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>1</mn><mn>1</mn><mn>1</mn><mn>1</mn><msub><mo>)</mo><mn>2</mn></msub><mo>&gt;</mo><mo>(</mo><mn>0</mn><mn>0</mn><mn>0</mn><mn>1</mn><msub><mo>)</mo><mn>2</mn></msub><mo>↔</mo><mn>1</mn><mn>5</mn><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(1111)_2 &gt; (0001)_2 \leftrightarrow 15 &gt; 1
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mclose"><span class="mclose">)</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">&gt;</span><span class="mopen">(</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mclose"><span class="mclose">)</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">↔</span><span class="mord mathrm">1</span><span class="mord mathrm">5</span><span class="mrel">&gt;</span><span class="mord mathrm">1</span></span></span></span></span></p>
+<p>Signed Comparison:</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>1</mn><mn>1</mn><mn>1</mn><mn>1</mn><msub><mo>)</mo><mn>2</mn></msub><mo>&lt;</mo><mo>(</mo><mn>0</mn><mn>0</mn><mn>0</mn><mn>1</mn><msub><mo>)</mo><mn>2</mn></msub><mo>↔</mo><mo>−</mo><mn>1</mn><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(1111)_2 &lt; (0001)_2 \leftrightarrow -1 &lt; 1
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mclose"><span class="mclose">)</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">&lt;</span><span class="mopen">(</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mclose"><span class="mclose">)</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">↔</span><span class="mord">−</span><span class="mord mathrm">1</span><span class="mrel">&lt;</span><span class="mord mathrm">1</span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+<li>
+<p>浮点数</p>
+<ul>
+<li>
+<p>IEEE 754 单精度：</p>
+<p>32位宽</p>
+<p>格式：符号位(S, 1bit) | 指数(E, 8bit) | 尾数(Significand, 23bit)</p>
+<p E-127="">公式：Value = (-1)^S \times (1.\mathrm{Significand})^</p>
+<p>指数取值范围：1~255（注意0不是常规指数）</p>
+<p>尾数取值范围：1~<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mn>2</mn><mn>3</mn></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{23}-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathrm">2</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathrm">3</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span>（注意若位数为0，则指数必须相应为0）</p>
+<p>表示范围：$\pm \times  2</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="4. Processor"><a class="header-anchor" href="#4. Processor">¶</a> 4. Processor</h2>
+<h3 id="Pipeline &amp; Hazard"><a class="header-anchor" href="#Pipeline &amp; Hazard">¶</a> Pipeline &amp; Hazard</h3>
+<p>Pipeline：</p>
+<ul>
+<li>
+<p>定义：</p>
+<p>考虑多周期CPU的五个阶段，显然当一条指令开始译码时，下一条指令的取指已经可以进行了；同理一条指令在ALU计算，下一条指令已经可以译码了。</p>
+<p>利用指令的分阶段特性并行执行多条指令，从而在无法提升频率的情况下调高吞吐率进而最终提高性能的手法就是Pipeline</p>
+</li>
+<li>
+<p>现代CPU全部采用Pipeline技术来实现、加速指令级并行</p>
+</li>
+<li>
+<p>Pipeline的stage数决定Pipeline的throughput的上限，即一般流水线越深，吞吐率越高；但流水线越深，流水寄存器就越多。所以在空间允许的情况下，流水线越深越好。</p>
+</li>
+<li>
+<p>Pipeline processor的频率上限的瓶颈是delay最大的stage（一般是MEM），故好的Pipeline应该均衡每个stage所需的时间</p>
+</li>
+</ul>
+<p>流水线面临三种Hazard：</p>
+<ol>
+<li>
+<p>Structure Hazard:</p>
+<ul>
+<li>同一cycle，多条指令的不同stage都在进行，使得多个不同的stage不再能够复用硬件</li>
+<li>如果按照多周期CPU的设计，不同指令所需的stage数目不同，那Pipeline会导致一些指令在同一cycle需要进行同一个stage，从而导致两条指令竞争同一套硬件</li>
+</ul>
+<p>解决方案如下：</p>
+<ul>
+<li>为每一个stage单独准备一套硬件，不再复用</li>
+<li>将所有指令规整为运行相同的stage数</li>
+</ul>
+<p>由流水线的特性，在warmup之后，每一个cycle都有一条指令完成，因此为规整化增加的stage最终不会影响throughput</p>
+</li>
+<li>
+<p>Data Hazard</p>
+<ul>
+<li>“Read and write”，即在同一个cycle读写同一个寄存器。</li>
+<li>“Read after write”(RAW)，即在上一条R-Type指令还没有Write Back寄存器之前，后面的指令已经读取同一个的寄存器的值进行ALU运算了</li>
+<li>“Load and use”(LU)，一条load指令之后立刻使用load的Rt寄存器进行运算，是RAW的一种</li>
+</ul>
+<p>解决技术：</p>
+<ul>
+<li>Half-cycle：cycle一分为二，前半个周期写有效，后半个周期读有效</li>
+<li>Forwarding（转发）：对于RAW Hazard, 通过增加<code>EX/MEM-&gt;ID/EX,MEM/WB-&gt;ID/EX</code>转发旁路，加上转发控制信号，可以在检测到Hazard时将正确的结果转发回<code>ID/EX</code>寄存器</li>
+<li>Stalling（阻塞）：对于LU Hazard，由于load指令在MEM阶段才出结果，此时下一条指令的EX阶段已经执行完毕了，Forwarding无论如何都解决不了了，必须要阻塞至少一个cycle，然后再转发，才能解决。硬件阻塞需要加入适当的控制信号使得阻塞的部件正确锁存/清理所有的信息；软件则只需要插入一条NOP空指令即可</li>
+</ul>
+<p>考虑R-Type指令：若不做任何处理，一条指令的写至多与后续的三条指令的读产生数据冒险，也即在写指令的WB完成之前处在ID(Reg),EXE,WB的三条指令。</p>
+<ul>
+<li>&quot;Half-cycle&quot;方法解决掉ID冲突。前半个周期WB写入寄存器堆，后半周期ID读寄存器堆解码出正确的值。引入此法后写只与后续两条指令的读竞争</li>
+<li>&quot;Forwarding&quot;解决掉剩余的EXE,WB的竞争。这是由于R-Type指令的结果最早在EXE阶段结束即可得到。至此R-Type数据冒险全部消除</li>
+</ul>
+<p>考虑Load指令：若不做任何处理，一条指令的写至多与后续的三条指令冲突。</p>
+<ul>
+<li>&quot;Half-cycle&quot;同理</li>
+<li>&quot;Forwarding&quot;只能解决掉</li>
+</ul>
+<p>此外，编译器可以在不改变代码逻辑的情况下恰当地重排指令来避免stall（实验表明编译器重排指令可以减少33%以上的stall）</p>
+</li>
+<li>
+<p>Control Hazard（待完善）</p>
+<p>分支预测：Pipeline不等待分支指令完成，预测分支是否被触发，然后按照预测往下执行，若预测错误，则清楚已经执行的</p>
+<p>编译器调度</p>
+</li>
+</ol>
+<h3 id="指令级并行"><a class="header-anchor" href="#指令级并行">¶</a> 指令级并行</h3>
+<p>主要技术“多发射”，也即多条指令真正在同一时刻开始执行，依赖多条流水线来实现</p>
+<ul>
+<li>
+<p>静态多发射技术，也称VLIW</p>
+<p>VLIW指一个指令字中包含同时执行的多条指令。<strong>由编译器进行调度打包指令、消除所有冒险</strong>。</p>
+<p>好处是由编译器解决一切，硬件简单；</p>
+<p>缺点是生成的汇编指令与硬件实现高度耦合；同时在多发射中产生新的数据冒险和控制冒险会导致部分性能的损失</p>
+</li>
+<li>
+<p>动态多发射技术，也称超标量（Superscalar）</p>
+<p>由硬件完成指令的并行打包译码和消除冒险。</p>
+<blockquote>
+<p>为什么明明依靠编译器调度就足以消除冒险，还需要硬件处理冒险呢？</p>
+<p>因为并非所有阻塞都是可以预测的，如Cache Miss阻塞，这些需要硬件处理才能发挥出全部性能</p>
+</blockquote>
+<p>进一步的，由于实际上不同指令所需的周期是不一样的，多发射会导致“后发先至”（也就是后快开始的指令先完成）。在保证没有竞争之后，我们可以允许这种情况的发生，也即“乱序执行乱序完成”</p>
+</li>
+<li>
+<p>无论哪种多发射技术，都需要额外的运算单元、端口、和寄存器去同时处理多条流水线同时进行</p>
+</li>
+<li>
+<p>现代CPU，特别是Intel，在单个核心中采用了上述所有的高级流水线技术：</p>
+<ul>
+<li>10+级流水线</li>
+<li>动态分支预测</li>
+<li>超标量</li>
+<li>乱序执行</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他"><a class="header-anchor" href="#其他">¶</a> 其他</h3>
+<p>无论是pipeline中重排指令减少stall，还是多流水线中循环展开，都依赖编译器采用正确的优化策略。可见，编译器跟程序的性能息息相关；想要有好的编译器优化策略，必须充分理解计算机底层的架构。</p>
+<h2 id="5. Cache"><a class="header-anchor" href="#5. Cache">¶</a> 5. Cache</h2>
+<h3 id="各类储存器及其工艺"><a class="header-anchor" href="#各类储存器及其工艺">¶</a> 各类储存器及其工艺</h3>
+<ul>
+<li>寄存器</li>
+<li>SRAM</li>
+<li>DRAM</li>
+<li>Flash</li>
+<li>磁盘1</li>
+</ul>
+<h3 id="储存器架构"><a class="header-anchor" href="#储存器架构">¶</a> 储存器架构</h3>
+<p>三级架构：缓存-主存-辅存</p>
+<p>缓存：高速SRAM</p>
+<p>主存：DRAM</p>
+<p>辅存：低速Flash/磁盘</p>
+<h3 id="Cache Mapping"><a class="header-anchor" href="#Cache Mapping">¶</a> Cache Mapping</h3>
+<ul>
+<li>直接映射</li>
+<li>全相联</li>
+<li>多路映射<br>
+（待完善）</li>
+</ul>
+<h3 id="Cache Replacement Policy"><a class="header-anchor" href="#Cache Replacement Policy">¶</a> Cache Replacement Policy</h3>
+<ul>
+<li>LRU</li>
+<li>FIFO</li>
+<li>Random<br>
+（待完善）</li>
+</ul>
+<h3 id="Cache Writing"><a class="header-anchor" href="#Cache Writing">¶</a> Cache Writing</h3>
+<ul>
+<li>Write-Through</li>
+<li>Write-Back<br>
+（待完善）</li>
+</ul>
+<h3 id="Cache Performance"><a class="header-anchor" href="#Cache Performance">¶</a> Cache Performance</h3>
+<ul>
+<li>
+<p>Basic</p>
+<ul>
+<li>Miss Rate：缺失率，缓存不命中的几率</li>
+<li>Miss Penalty：缺失代价，缓存不命中需要访问主存带来的时间开销</li>
+</ul>
+</li>
+<li>
+<p>AMAT</p>
+<p>全称Average Memory Access Time</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">A</mi><mi mathvariant="normal">M</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">T</mi></mtext><mo>=</mo><msub><mi>T</mi><mrow><mi>h</mi><mi>i</mi><mi>t</mi></mrow></msub><mo>+</mo><mi>M</mi><mi>i</mi><mi>s</mi><mi>s</mi><mi>R</mi><mi>a</mi><mi>t</mi><mi>e</mi><mo>×</mo><msub><mi>T</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex"> \text{AMAT} = T_{hit} + Miss Rate \times T_{miss}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">A</span><span class="mord mathrm">M</span><span class="mord mathrm">A</span><span class="mord mathrm">T</span></span><span class="mrel">=</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">h</span><span class="mord mathit">i</span><span class="mord mathit">t</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mord mathit">i</span><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">e</span><span class="mbin">×</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">m</span><span class="mord mathit">i</span><span class="mord mathit">s</span><span class="mord mathit">s</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>CPU Time<br>
+不考虑访存延迟（即Cache全命中）：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">U</mi><mtext> </mtext><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mtext><mo>=</mo><mo>(</mo><mo>)</mo></mrow><annotation encoding="application/x-tex"> \text{CPU Time} = ()
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">P</span><span class="mord mathrm">U</span><span class="mord mspace"> </span><span class="mord mathrm">T</span><span class="mord mathrm">i</span><span class="mord mathrm">m</span><span class="mord mathrm">e</span></span><span class="mrel">=</span><span class="mopen">(</span><span class="mclose">)</span></span></span></span></span></p>
+<p>考虑储存器架构后的CPU Time修正为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext><mi mathvariant="normal">C</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">U</mi><mtext> </mtext><mi mathvariant="normal">T</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mtext><mo>=</mo></mrow><annotation encoding="application/x-tex"> \text{CPU Time} = 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm">C</span><span class="mord mathrm">P</span><span class="mord mathrm">U</span><span class="mord mspace"> </span><span class="mord mathrm">T</span><span class="mord mathrm">i</span><span class="mord mathrm">m</span><span class="mord mathrm">e</span></span><span class="mrel">=</span></span></span></span></span></p>
+</li>
+<li>
+<p>待完善</p>
+</li>
+</ul>
+<h3 id="Multi-Level Cache"><a class="header-anchor" href="#Multi-Level Cache">¶</a> Multi-Level Cache</h3>
+<p>在三层架构的基础上，继续对Cache分层，分L1、L2甚至L3</p>
+<p>对于具有L1、L2的Cache，L1往往容量较小，但速度几乎与CPU同级；L2则比较大，足以覆盖大部分的主存访问。</p>
+<p>多级缓存架构对缓存性能的提升在于通过二级缓存减小了L1 Miss Penalty</p>
+<h3 id="虚拟内存"><a class="header-anchor" href="#虚拟内存">¶</a> 虚拟内存</h3>
+<ul>
+<li>虚拟地址与段页式内存管理
+<ul>
+<li>虚拟地址的结构：逻辑页号:段号:段内地址</li>
+<li>一言以蔽之，页号需要<em>映射</em>，段号用于<em>偏移</em></li>
+<li>页式内存管理实质上是将主存作为虚拟存储器系统的高速缓冲部分。其管理方式可以类比Cache：
+<ul>
+<li>将整个虚拟存储器的空间划分为许多相同大小的页</li>
+<li>通常主存只会保留部分的页，余下的页会放在容量更大的辅存当中</li>
+<li>由于主存只保留部分页，故工作在虚拟存储器上的逻辑页号与用于寻址的物理页号无法构成简单的一一对应关系。必须维护一个映射表来将映射为主存的物理页号用以寻址</li>
+<li>使用页表来实现这一映射</li>
+<li>由于页表存在内存中，查询页表的性能是不高的，我们引入TLB（块表）来加速
+<ul>
+<li>TLB表存放在Cache中，本质上是对页表空间进行Cache加速</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>段式内存管理是源自冯氏计算机程序的分段技术，使用简单的偏移来完成映射
+<ul>
+<li>冯诺依曼结构下的程序会人为地划分程序段和数据段，这些段在段内连续且段不等长</li>
+<li>段式管理实质上是对存储空间进行“分区”，段号的对应是简单的偏移</li>
+<li>相比页式管理意图用于管理虚拟存储器系统，段式管理更多聚焦于为多道程序提供相互独立的虚拟地址空间</li>
+<li>其缺点是会导致较多的内存碎片和跨页段导致无法与虚拟存储器协同工作</li>
+<li>段式管理同样需要一个段表来查询段号对应的偏移量</li>
+</ul>
+</li>
+<li>段式与页式的协同工作方式是：先分页，再在页内分段</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/2b1fb13d/" rel="next" title="计组复习提纲">
+                <i class="fa fa-chevron-left"></i> 计组复习提纲
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/66d17931/" rel="prev" title="物理网络vs互联网络">
+                物理网络vs互联网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Computer%20Architecture"><span class="nav-number">1.</span> <span class="nav-text"> Computer Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Term%20Reference"><span class="nav-number">1.1.</span> <span class="nav-text"> Term Reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1.%20Introduction"><span class="nav-number">1.2.</span> <span class="nav-text"> 1. Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%20Performance"><span class="nav-number">1.2.1.</span> <span class="nav-text"> CPU Performance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Power%20Wall"><span class="nav-number">1.2.2.</span> <span class="nav-text"> Power Wall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paralism"><span class="nav-number">1.2.3.</span> <span class="nav-text"> Paralism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2.%20Instructions"><span class="nav-number">1.3.</span> <span class="nav-text"> 2. Instructions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3.%20Encoding%20&%20Arithmetic"><span class="nav-number">1.4.</span> <span class="nav-text"> 3. Encoding &amp; Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4.%20Processor"><span class="nav-number">1.5.</span> <span class="nav-text"> 4. Processor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline%20&%20Hazard"><span class="nav-number">1.5.1.</span> <span class="nav-text"> Pipeline &amp; Hazard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%BA%A7%E5%B9%B6%E8%A1%8C"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 指令级并行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.5.3.</span> <span class="nav-text"> 其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5.%20Cache"><span class="nav-number">1.6.</span> <span class="nav-text"> 5. Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%B1%BB%E5%82%A8%E5%AD%98%E5%99%A8%E5%8F%8A%E5%85%B6%E5%B7%A5%E8%89%BA"><span class="nav-number">1.6.1.</span> <span class="nav-text"> 各类储存器及其工艺</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%82%A8%E5%AD%98%E5%99%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.2.</span> <span class="nav-text"> 储存器架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache%20Mapping"><span class="nav-number">1.6.3.</span> <span class="nav-text"> Cache Mapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache%20Replacement%20Policy"><span class="nav-number">1.6.4.</span> <span class="nav-text"> Cache Replacement Policy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache%20Writing"><span class="nav-number">1.6.5.</span> <span class="nav-text"> Cache Writing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache%20Performance"><span class="nav-number">1.6.6.</span> <span class="nav-text"> Cache Performance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-Level%20Cache"><span class="nav-number">1.6.7.</span> <span class="nav-text"> Multi-Level Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-number">1.6.8.</span> <span class="nav-text"> 虚拟内存</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

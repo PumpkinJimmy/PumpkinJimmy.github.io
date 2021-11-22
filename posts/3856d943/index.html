@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ Digit System ¶ Technology  encapsulation of IC  SIP DIP   Scale of IC （待完善） Programmable IC  PLD FPGA    ¶ 半导体：逻辑门 两种典型的工艺：  TTL CMOS（主流）  我们关注逻辑门的如下参数：   功耗 门部件的功耗   延迟 信号传递的延迟   噪声容限 对噪声的容忍能力（与电压有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Digit System">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/3856d943/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ Digit System ¶ Technology  encapsulation of IC  SIP DIP   Scale of IC （待完善） Programmable IC  PLD FPGA    ¶ 半导体：逻辑门 两种典型的工艺：  TTL CMOS（主流）  我们关注逻辑门的如下参数：   功耗 门部件的功耗   延迟 信号传递的延迟   噪声容限 对噪声的容忍能力（与电压有">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-19T11:15:15.000Z">
+<meta property="article:modified_time" content="2021-06-19T11:15:15.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/3856d943/"/>
+
+
+
+
+
+  <title>Digit System | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/3856d943/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Digit System</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-19T11:15:15+00:00">
+                2021-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Digit System"><a class="header-anchor" href="#Digit System">¶</a> Digit System</h1>
+<h2 id="Technology"><a class="header-anchor" href="#Technology">¶</a> Technology</h2>
+<ul>
+<li>encapsulation of IC
+<ul>
+<li>SIP</li>
+<li>DIP</li>
+</ul>
+</li>
+<li>Scale of IC<br>
+（待完善）</li>
+<li>Programmable IC
+<ul>
+<li>PLD</li>
+<li>FPGA</li>
+</ul>
+</li>
+</ul>
+<h2 id="半导体：逻辑门"><a class="header-anchor" href="#半导体：逻辑门">¶</a> 半导体：逻辑门</h2>
+<p>两种典型的工艺：</p>
+<ul>
+<li>TTL</li>
+<li><strong>CMOS</strong>（主流）</li>
+</ul>
+<p>我们关注逻辑门的如下参数：</p>
+<ul>
+<li>
+<p>功耗</p>
+<p>门部件的功耗</p>
+</li>
+<li>
+<p>延迟</p>
+<p>信号传递的延迟</p>
+</li>
+<li>
+<p>噪声容限</p>
+<p>对噪声的容忍能力（与电压有关）</p>
+</li>
+<li>
+<p>负载能力（对TTL）</p>
+<p>一个TTL门后面可以连接的（我们称为<em>驱动</em>的）门的数量是有限的，我们称之为逻辑门的<em>负载能力</em></p>
+<p>一个逻辑门驱动能力有限的原因是（以<em>拉电流</em>为例），随着其驱动的门越多，电路拉电流越大，驱动门的压降越低，导致<strong>高电平过低</strong>，从而门失效</p>
+</li>
+</ul>
+<h3 id="CMOS"><a class="header-anchor" href="#CMOS">¶</a> CMOS</h3>
+<ul>
+<li>
+<p>CMOS电路基本单元：MOSFET（场效应管）</p>
+<p>Two Type</p>
+<ul>
+<li>P-Channel P沟道</li>
+<li>N-Channel N沟道</li>
+</ul>
+<p>N-Channel相当于<em>高有效</em>，P-Channel相当于<em>低有效</em></p>
+<p><strong>Three Terminal</strong></p>
+<ul>
+<li>G(Gate) 栅极</li>
+<li>D(Drain) 漏极</li>
+<li>S(Source) 源极</li>
+</ul>
+<p>其中漏极和源极提供电位的电极，栅极控制场效应管的通/断，相当于电流的“闸门”</p>
+<p>通常，栅极充当输入，漏极充当输出，源极提供电压</p>
+</li>
+<li>
+<p>Tri-state Gate(三态门)</p>
+<p>除了高,低电平,增加一个高阻抗态(Z).在高阻抗状态下，无论输入是什么，漏极电流都非常的小，想当于门成为了一个电阻非常大的部件。高阻抗状态相当于断路，具有保护内部的作用。</p>
+<p>注意区别低电平和高阻抗。高阻抗状态下输出与Vcc和GND都不相连，几乎没有电流；低电平状态下输出与GND相连。</p>
+</li>
+<li>
+<p>Open-Drain</p>
+<p>一种源极接地、漏极未连接的构造。这样构造的门不受主体电路电压的驱动，不能直接工作，必须要在漏极附近外接电压Vcc。这样构造的好处是允许单独外接电压，不受输入门的驱动能力的限制。</p>
+</li>
+</ul>
+<h3 id="TTL"><a class="header-anchor" href="#TTL">¶</a> TTL</h3>
+<p>TTL IC的基本部件是<strong>三极管</strong></p>
+<p>三级管的三极：</p>
+<ul>
+<li>基极</li>
+<li>集电极</li>
+<li>发射极</li>
+</ul>
+<p>这三极分别对应CMOS场效应管：</p>
+<ul>
+<li>栅极</li>
+<li>漏极</li>
+<li>源极</li>
+</ul>
+<p>除了构成逻辑门，三极管还可以构造其他电路（比如放大电路）</p>
+<p>三极管存在两路电流：基极电流和集电极电流</p>
+<h3 id="三态门"><a class="header-anchor" href="#三态门">¶</a> 三态门</h3>
+<p>三态门</p>
+<ul>
+<li>在高、低态之外增加一个“高阻态”</li>
+<li>高阻态作用1：保护电路。处于高阻态时，“高阻”意味着施加高电压也不会损毁内部电路</li>
+<li>高阻态作用2：表征“无效”状态。在许多情境下，输入端是0或者1都是有效的输入，此时想要真正的“使能”特性，加一个与门不够了，使用一个带使能开关的三态门才是正解。</li>
+</ul>
+<h2 id="时序电路"><a class="header-anchor" href="#时序电路">¶</a> 时序电路</h2>
+<h3 id="锁存器"><a class="header-anchor" href="#锁存器">¶</a> 锁存器</h3>
+<h3 id="触发器"><a class="header-anchor" href="#触发器">¶</a> 触发器</h3>
+<h3 id="One-Shot"><a class="header-anchor" href="#One-Shot">¶</a> One-Shot</h3>
+<h3 id="Timer"><a class="header-anchor" href="#Timer">¶</a> Timer</h3>
+<h3 id="Counter"><a class="header-anchor" href="#Counter">¶</a> Counter</h3>
+<ul>
+<li>Counter本质上就是实现分频Clock</li>
+<li>异步Counter：易级联拓展，不准（组合电路带来的延迟会导致计数器的高位逐渐偏差）</li>
+<li>同步Counter：准，难级联拓展</li>
+</ul>
+<h3 id="通用时序电路：状态机"><a class="header-anchor" href="#通用时序电路：状态机">¶</a> 通用时序电路：状态机</h3>
+<p>两种状态机模型：</p>
+<ol>
+<li>
+<p>摩尔机</p>
+<p><strong>下一状态只与当前状态有关</strong></p>
+<p>典型的摩尔机例子：计数器。下一个数的数只与上一个有关。</p>
+</li>
+<li>
+<p>米利机</p>
+<p><strong>下一状态与当前状态以及一组输入有关</strong></p>
+<p>典型的米利机例子：带计数方向的计数器。下一个输出与输入的方向以及上一时刻的数有关。</p>
+</li>
+</ol>
+<h3 id="Memory"><a class="header-anchor" href="#Memory">¶</a> Memory</h3>
+<ul>
+<li>
+<p>ROM</p>
+</li>
+<li>
+<p>ROM 只读存储器</p>
+</li>
+<li>
+<p>PROM Programmable ROM 可以修改的ROM（使用一些诸如熔丝一样一次性写入的物理结构）</p>
+</li>
+<li>
+<p>EPROM Erasable PROM 可擦除的PROM 可以使用专用设备（如紫外线）擦除，操作昂贵，现在用的少</p>
+</li>
+<li>
+<p>EEPROM Electronic Erasable PROM 电可擦除PROM，擦写不需要专用设备，用的比较多</p>
+<p>实际上现在EEPROM的种类和结构很多，原理各不相同。原则上，Flash也能算是EEPROM，但Flash的结构与传统EEPROM相去甚远，因此单独拎出来。</p>
+<p>在要求少量数据反复擦写+非易失的场合，传统EEPROM还是有优势的</p>
+</li>
+<li>
+<p>Flash 结构类似CMOS场效应管，但栅极构造很不同，可以不仅可以控制通断，还可以控制多少电荷多少</p>
+</li>
+<li>
+<p>EEPROM vs. Flash</p>
+<ul>
+<li>Flash面积小、电路简单、廉价；EEPROM电路复杂，贵</li>
+<li>Flash以块为单位擦除（类似扇区）；EEPROM以字节为单位擦除</li>
+<li>Flash写数据很慢（4~6ms）；EEPROM写数据较快一点</li>
+<li>Flash寿命擦写寿命有限</li>
+</ul>
+</li>
+<li>
+<p>RAM</p>
+<ul>
+<li>SRAM：触发器构成</li>
+<li>DRAM：电容构成
+<ul>
+<li>只需要一个MOS管+一个电容就可以存一个bit</li>
+<li>电容充电为1，没有充电为0</li>
+<li>破坏性读出：为了读到1，DRAM存储单元中的电容需要放电。因此DRAM的读出是破坏性的，读完必须把数据重新写入回去。</li>
+<li>刷新：电容会漏电，需要周期性地<em>刷新</em>，也就是把存储单元中的信息重新充进去才行.可以发现，写和刷新的操作本质上是一样的，只不过刷新是周期性的，读不是</li>
+<li>地址复用：对于组织成行-列的大容量DRAM，常采用<em>地址线复用</em>的技巧，在一个周期内，在一组地址线输入两次来分两次输入行、列地址。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/88c26b79/" rel="next" title="Outline">
+                <i class="fa fa-chevron-left"></i> Outline
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/16242cf1/" rel="prev" title="ODE">
+                ODE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Digit%20System"><span class="nav-number">1.</span> <span class="nav-text"> Digit System</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Technology"><span class="nav-number">1.1.</span> <span class="nav-text"> Technology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8A%E5%AF%BC%E4%BD%93%EF%BC%9A%E9%80%BB%E8%BE%91%E9%97%A8"><span class="nav-number">1.2.</span> <span class="nav-text"> 半导体：逻辑门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CMOS"><span class="nav-number">1.2.1.</span> <span class="nav-text"> CMOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TTL"><span class="nav-number">1.2.2.</span> <span class="nav-text"> TTL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%80%81%E9%97%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text"> 三态门</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF"><span class="nav-number">1.3.</span> <span class="nav-text"> 时序电路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%81%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 锁存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Shot"><span class="nav-number">1.3.3.</span> <span class="nav-text"> One-Shot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Timer"><span class="nav-number">1.3.4.</span> <span class="nav-text"> Timer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Counter"><span class="nav-number">1.3.5.</span> <span class="nav-text"> Counter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF%EF%BC%9A%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">1.3.6.</span> <span class="nav-text"> 通用时序电路：状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory"><span class="nav-number">1.3.7.</span> <span class="nav-text"> Memory</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

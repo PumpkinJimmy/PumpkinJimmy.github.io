@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ Computer Network ¶ Introduction ¶ 网络协议层次结构 OSI七层参考模型：  应用层 表示层 会话层 运输层 网络层 数据链路层 物理层  常见教学五层结构：  应用层 运输层 网络层 数据链路层 物理层  实际Internet四层结构：  应用层 运输层 网络层 物理网络层  应用层：  为专门的应用提供服务 传输单位为Message（报文、消息） 协议非常多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer Network">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/acc2fc2f/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ Computer Network ¶ Introduction ¶ 网络协议层次结构 OSI七层参考模型：  应用层 表示层 会话层 运输层 网络层 数据链路层 物理层  常见教学五层结构：  应用层 运输层 网络层 数据链路层 物理层  实际Internet四层结构：  应用层 运输层 网络层 物理网络层  应用层：  为专门的应用提供服务 传输单位为Message（报文、消息） 协议非常多">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-02T10:46:51.000Z">
+<meta property="article:modified_time" content="2021-06-02T10:46:51.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/acc2fc2f/"/>
+
+
+
+
+
+  <title>Computer Network | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/acc2fc2f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Computer Network</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-02T10:46:51+00:00">
+                2021-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Computer Network"><a class="header-anchor" href="#Computer Network">¶</a> Computer Network</h1>
+<h2 id="Introduction"><a class="header-anchor" href="#Introduction">¶</a> Introduction</h2>
+<h3 id="网络协议层次结构"><a class="header-anchor" href="#网络协议层次结构">¶</a> 网络协议层次结构</h3>
+<p>OSI七层参考模型：</p>
+<ul>
+<li>应用层</li>
+<li>表示层</li>
+<li>会话层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<p>常见教学五层结构：</p>
+<ul>
+<li>应用层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<p>实际Internet四层结构：</p>
+<ul>
+<li>应用层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>物理网络层</li>
+</ul>
+<p>应用层：</p>
+<ul>
+<li>为<em>专门的应用</em>提供服务</li>
+<li>传输单位为Message（报文、消息）</li>
+<li>协议非常多，比如：
+<ul>
+<li>HTTP: Web</li>
+<li>SSL/TLS: Security</li>
+<li>SMTP/POP3: Email</li>
+<li>DNS</li>
+<li>FTP: File</li>
+<li>DHCP: Configuration</li>
+</ul>
+</li>
+<li>由于Unix风格和历史原因，应用层协议偏好<em>基于文本</em>的形式</li>
+</ul>
+<p>表示层：</p>
+<ul>
+<li>数据的表示、压缩、转换、加密</li>
+<li>对标HTTP <em>Accept-Encoding</em>与SSL/TLS</li>
+</ul>
+<p>会话层</p>
+<ul>
+<li>提供会话功能（比如IP电话、视频）</li>
+<li>对标RTMP、RTP等流媒体传输协议</li>
+</ul>
+<p>传输层（运输层）：</p>
+<ul>
+<li>提供<em>进程与进程</em>之间的通信</li>
+<li>传输单位为Segment（报文段）</li>
+<li>TCP、UDP</li>
+<li>这一层的TCP可以提供<em>有连接</em>、<em>有确认</em>的<em>可靠传输服务</em></li>
+</ul>
+<p>网络层（网际层）：</p>
+<ul>
+<li>提供<em>主机与主机</em>之间在<em>互连网络</em>中的通信</li>
+<li>传输单位为Datagram（数据报）</li>
+<li>最重要的功能其实是<strong>路由选择</strong></li>
+<li>IP协议的提供的服务是<em>无连接</em>的<em>不可靠服务（尽最大努力交付服务）</em></li>
+<li>协议：
+<ul>
+<li>代表性协议是<em>IP</em></li>
+<li>路由选择协议
+<ul>
+<li>RIP</li>
+<li>OSPF</li>
+<li>BGP</li>
+</ul>
+</li>
+<li>ICMP</li>
+</ul>
+</li>
+<li>IP协议实际上是因特网协议族的最底层，<strong>物理网络层不属于因特网协议族</strong>。这是因为<strong>IP协议连接的物理网络的各个子网可以是异构的</strong>，或者说互连网络连接的各个子网可以采用不同的链路层协议和物理层协议</li>
+</ul>
+<p>数据链路层：</p>
+<ul>
+<li>提供主机与主机之间在<em>直连网络</em>中的通信</li>
+<li>传输单位为Frame（帧）</li>
+<li>负责数据的校验</li>
+<li>协议：
+<ul>
+<li>PPP（点到点）</li>
+<li>Ethernet（多路访问网络）</li>
+<li>ARP（基于MAC地址的链路层通信）</li>
+</ul>
+</li>
+</ul>
+<h3 id="Concepts"><a class="header-anchor" href="#Concepts">¶</a> Concepts</h3>
+<ul>
+<li>
+<p>SAN, LAN, MAN, WAN</p>
+<p>SAN: System Area Network</p>
+</li>
+<li>
+<p>Internet</p>
+<p>Internet = Host + Link + Router</p>
+</li>
+<li>
+<p>PDU, SDU, PCI, SAP</p>
+<ul>
+<li>PDU: Protocol Data Unit，也即包（Packet）</li>
+<li>SDU: Service Data Unit; PCI: Protocol Control Information，一般作为header</li>
+<li>PDU = PCI + SDU</li>
+<li>SAP: Service Access Point</li>
+</ul>
+</li>
+<li>
+<p>时延：</p>
+<ul>
+<li>处理时延：与路由器处理性能有关</li>
+<li>排队时延：与拥塞有关</li>
+<li>传输时延：与通信链路带宽有关</li>
+<li>传播时延：
+<ul>
+<li>与通信介值、通信距离有关</li>
+<li>注意<strong>光纤的传播时延大于铜线</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>因特网：全球最大的互联网</p>
+<ul>
+<li>因特网=边缘部分+路由器+通信链路</li>
+<li>因特网=边缘部分+接入网+主干网</li>
+</ul>
+</li>
+<li>
+<p>带宽 vs. 吞吐量</p>
+<ul>
+<li>带宽：通信链路的数据率的理论上限</li>
+<li>吞吐量：通信链路实际的数据率</li>
+<li>通常吞吐量达不到是跑不满带宽的。原因很多，包括：
+<ul>
+<li>通信环境差，信号失真严重，数据在传输中出现差错</li>
+<li><strong>协议控制信息/ARQ重传的额外开销</strong>。注意到<strong>链路为主机提供了数据通信的通道，但通道上传输的不一定是有效载荷，非有效载荷的部分都不记作有效传输的数据，最终都会成为降低吞吐量的部分</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="信道复用"><a class="header-anchor" href="#信道复用">¶</a> 信道复用</h2>
+<ul>
+<li>
+<p>Multiplex</p>
+<ul>
+<li>FDM: Frequency Division Multiplex</li>
+<li>TDM/WDM: Time/Wave Division Multiplex</li>
+<li>CDM: Code Division Multiplex (3G: CDMA)</li>
+<li>Statistical Multiplex</li>
+</ul>
+</li>
+<li>
+<p>Switching</p>
+<ul>
+<li>Circuit Switching: FDM,TDM,CDM, Telephone</li>
+<li><strong>Packet Switching</strong>: Statistical Multiplex, Computer Network</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/1ad9df94/" rel="next" title="计算机启动流程">
+                <i class="fa fa-chevron-left"></i> 计算机启动流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/88c26b79/" rel="prev" title="Outline">
+                Outline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Computer%20Network"><span class="nav-number">1.</span> <span class="nav-text"> Computer Network</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text"> Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text"> 网络协议层次结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Concepts"><span class="nav-number">1.1.2.</span> <span class="nav-text"> Concepts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text"> 信道复用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

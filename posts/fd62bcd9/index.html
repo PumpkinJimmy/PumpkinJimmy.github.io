@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课,数据库,SQL," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 基础SQL ¶ SQL DDL 123456789101112131415create table table_name (    col1 col_type1,    col2 col_type2 not null,    primary key(col2),    foreign key(col1) references table2,    check(col1 &lt; some_va">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础SQL">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/fd62bcd9/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 基础SQL ¶ SQL DDL 123456789101112131415create table table_name (    col1 col_type1,    col2 col_type2 not null,    primary key(col2),    foreign key(col1) references table2,    check(col1 &lt; some_va">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-13T10:06:52.000Z">
+<meta property="article:modified_time" content="2021-11-22T04:51:39.397Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/fd62bcd9/"/>
+
+
+
+
+
+  <title>基础SQL | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/fd62bcd9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基础SQL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-13T10:06:52+00:00">
+                2021-09-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基础SQL"><a class="header-anchor" href="#基础SQL">¶</a> 基础SQL</h1>
+<h2 id="SQL DDL"><a class="header-anchor" href="#SQL DDL">¶</a> SQL DDL</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> table_name (</span><br><span class="line">    col1 col_type1,</span><br><span class="line">    col2 col_type2 <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    <span class="keyword">primary</span> key(col2),</span><br><span class="line">    <span class="keyword">foreign</span> key(col1) <span class="keyword">references</span> table2,</span><br><span class="line">    <span class="keyword">check</span>(col1 <span class="operator">&lt;</span> some_val)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> table_name <span class="keyword">add</span><span class="operator">/</span><span class="keyword">alter</span><span class="operator">/</span><span class="keyword">delete</span> <span class="keyword">column</span> my_col col_type</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> index <span class="keyword">on</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> index</span><br></pre></td></tr></table></figure>
+<h2 id="SQL DML"><a class="header-anchor" href="#SQL DML">¶</a> SQL DML</h2>
+<h3 id="select"><a class="header-anchor" href="#select">¶</a> select</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> [<span class="keyword">distinct</span>] col1, col2, ...</span><br><span class="line"><span class="keyword">from</span> table1, table2, ...</span><br><span class="line"><span class="keyword">where</span> cond1, cond2, ...</span><br></pre></td></tr></table></figure>
+<h3 id="natural join"><a class="header-anchor" href="#natural join">¶</a> natural join</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> some_col</span><br><span class="line"><span class="keyword">from</span> table1 <span class="keyword">natural</span> <span class="keyword">join</span> table2 <span class="keyword">natural</span> <span class="keyword">join</span> table3</span><br></pre></td></tr></table></figure>
+<h3 id="insert into"><a class="header-anchor" href="#insert into">¶</a> insert into</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> table1 <span class="keyword">values</span> (val1, val2, ...)</span><br></pre></td></tr></table></figure>
+<p>可以把<code>values</code>子句改为嵌套子查询</p>
+<h3 id="delete from"><a class="header-anchor" href="#delete from">¶</a> delete from</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table1 <span class="keyword">where</span> cond1</span><br></pre></td></tr></table></figure>
+<p><code>where</code>可以嵌套子查询</p>
+<h3 id="update"><a class="header-anchor" href="#update">¶</a> update</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">update table1</span><br><span class="line"><span class="keyword">set</span> col1 <span class="operator">=</span> val1</span><br><span class="line"><span class="keyword">where</span> cond1</span><br></pre></td></tr></table></figure>
+<p><code>where</code>可以嵌套子查询</p>
+<h3 id="使用case（待完善）"><a class="header-anchor" href="#使用case（待完善）">¶</a> 使用case（待完善）</h3>
+<h2 id="SQL 杂项"><a class="header-anchor" href="#SQL 杂项">¶</a> SQL 杂项</h2>
+<h3 id="别名 as"><a class="header-anchor" href="#别名 as">¶</a> 别名 as</h3>
+<p>若查询中涉及同一关系模式的多个关系实例参与运算，则不能使用表名指代表，需要<strong>显式为关系实例指定别名</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> T.attr1</span><br><span class="line"><span class="keyword">from</span> table1 <span class="keyword">as</span> T, table1 <span class="keyword">as</span> S</span><br><span class="line"><span class="keyword">where</span> T.attr1 <span class="operator">&gt;</span> S.attr1</span><br></pre></td></tr></table></figure>
+<p><code>as</code>也可以用在列名部分（如在聚集函数中）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">avg</span>(col1) <span class="keyword">as</span> avg_col1</span><br><span class="line"><span class="keyword">from</span> table1</span><br></pre></td></tr></table></figure>
+<h3 id="字符串"><a class="header-anchor" href="#字符串">¶</a> 字符串</h3>
+<h4 id="引号问题"><a class="header-anchor" href="#引号问题">¶</a> 引号问题</h4>
+<p>SQL字符串是单引号定界的。若字符串中包含单引号，使用连续两个单引号表示一个单引号。</p>
+<h4 id="字符串函数"><a class="header-anchor" href="#字符串函数">¶</a> 字符串函数</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upper</span><br><span class="line">lower</span><br><span class="line">trim</span><br><span class="line"><span class="operator">||</span> # 串联（拼接）</span><br></pre></td></tr></table></figure>
+<h4 id="字符串匹配"><a class="header-anchor" href="#字符串匹配">¶</a> 字符串匹配</h4>
+<p>模板语法</p>
+<ul>
+<li><code>_</code>匹配一个字符</li>
+<li><code>%</code>匹配任意长度的子串</li>
+</ul>
+<p>有了模板，使用<code>like</code>子句在<code>where</code>中使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> some_col</span><br><span class="line"><span class="keyword">from</span> table1</span><br><span class="line"><span class="keyword">where</span> col1 <span class="keyword">like</span> <span class="string">&#x27;template&#x27;</span> [<span class="keyword">escape</span>] <span class="string">&#x27;\&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>注意<code>escape</code>用于指定转义字符</p>
+<h3 id="显示的次序"><a class="header-anchor" href="#显示的次序">¶</a> 显示的次序</h3>
+<p>严格来说，关系中的元组是无须的，因此<code>select</code>语句的返回结果也不保证顺序。</p>
+<p><code>order by</code>子句可以指明<code>select</code>返回顺序：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> some_col </span><br><span class="line"><span class="keyword">from</span> table1</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> col1, col2 [<span class="keyword">desc</span><span class="operator">/</span><span class="keyword">asc</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="where谓词语法"><a class="header-anchor" href="#where谓词语法">¶</a> where谓词语法</h3>
+<ul>
+<li>元组比较<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select some_col</span><br><span class="line">from table1</span><br><span class="line">where (col1, col2) = (val1, val2)</span><br></pre></td></tr></table></figure>
+</li>
+<li><code>between</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select some_col</span><br><span class="line">from table1</span><br><span class="line">where col1 between lb and ub</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="集合运算"><a class="header-anchor" href="#集合运算">¶</a> 集合运算</h2>
+<h3 id="不重复（默认）"><a class="header-anchor" href="#不重复（默认）">¶</a> 不重复（默认）</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> # 并</span><br><span class="line"><span class="keyword">intersect</span> # 交</span><br><span class="line"><span class="keyword">except</span> # 差</span><br></pre></td></tr></table></figure>
+<h3 id="允许重复的集合运算"><a class="header-anchor" href="#允许重复的集合运算">¶</a> 允许重复的集合运算</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> <span class="keyword">all</span> # 并，重复元组出现次数会求和</span><br><span class="line"><span class="keyword">intersect</span> <span class="keyword">all</span> # 交，保留两个原集合中较小的一个出现次数</span><br><span class="line"><span class="keyword">except</span> <span class="keyword">all</span> # 差，出现次数详见，但不小于<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="空值"><a class="header-anchor" href="#空值">¶</a> 空值</h2>
+<h3 id="空值判别"><a class="header-anchor" href="#空值判别">¶</a> 空值判别</h3>
+<p><code>where</code>子句中<strong>使用is null而不是= null来判别取值是否为null</strong>。</p>
+<p>原因是<code>null = null</code>的取值是<code>unknown</code>而不是<code>true</code>（见下文）</p>
+<h3 id="空值算术运算"><a class="header-anchor" href="#空值算术运算">¶</a> 空值算术运算</h3>
+<p>规定对<code>null</code>的算术运算的结果都是<code>null</code></p>
+<h3 id="三值逻辑"><a class="header-anchor" href="#三值逻辑">¶</a> 三值逻辑</h3>
+<p>空值导致比较谓词存在陷阱：</p>
+<p>若令<code>x &lt; null</code>为<code>false</code>，意味着<code>not(x &lt; null)</code>为<code>true</code>，这一般都不是想要的。</p>
+<p>为了处理空值的谓词逻辑，需要对二值的布尔逻辑做扩充：</p>
+<ul>
+<li><code>true</code></li>
+<li><code>false</code></li>
+<li><code>unknown</code>（新增）</li>
+</ul>
+<p><code>unknown</code>主要出现在<strong>涉及null的谓词中</strong>。</p>
+<p><code>unknown</code>基本演算：</p>
+    true \land unknown = unknown\\
+    false \land unknown = false\\
+    unknown \land unknown = unknown\\
+
+    true \lor unknown = true\\
+    false \lor unknown = unknown\\
+    unknown \lor unknown = unknown\\
+
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">¬</mi><mi>u</mi><mi>n</mi><mi>k</mi><mi>n</mi><mi>o</mi><mi>w</mi><mi>n</mi><mo>=</mo><mi>u</mi><mi>n</mi><mi>k</mi><mi>n</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">    \lnot unknown = unknown
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">¬</span><span class="mord mathit">u</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathit">n</span><span class="mrel">=</span><span class="mord mathit">u</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathit">n</span></span></span></span></span></p>
+<p>我们规定，<strong>任何关于null的比较运算，结果都是unknown</strong></p>
+<p>这样的规定保证了<code>x &lt; null</code>和<code>not (x &lt; null)</code>都不为真</p>
+<p>注意，<code>where</code>子句的条件若为<code>unknown</code>，则当作<code>false</code>处理</p>
+<h2 id="聚集"><a class="header-anchor" href="#聚集">¶</a> 聚集</h2>
+<p>所谓<em>聚集</em>，相比于常规操作，聚集操作是<strong>关于值集合的多对一映射过程</strong>。常见的求平均、计数，其实可以是聚集过程。</p>
+<h3 id="聚集函数"><a class="header-anchor" href="#聚集函数">¶</a> 聚集函数</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">avg</span><br><span class="line">min </span><br><span class="line">max</span><br><span class="line">sum</span><br><span class="line">count</span><br></pre></td></tr></table></figure>
+<p><strong>小心，SQL select 默认不去重，count尤其可能出错</strong></p>
+<p>使用如下形式做不重复的计数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="keyword">distinct</span> col1)</span><br><span class="line"><span class="keyword">from</span> table1</span><br></pre></td></tr></table></figure>
+<h3 id="groupby"><a class="header-anchor" href="#groupby">¶</a> groupby</h3>
+<p>一种常见的需求是<em>分组聚集</em>。如，相比于统计全公司平均薪酬，我们更关心不同部门的平均薪酬。此时我们的需求是“按所属部门分组，在分别聚集”。</p>
+<p>语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> col1, <span class="built_in">avg</span>(col2)</span><br><span class="line"><span class="keyword">from</span> table1</span><br><span class="line"><span class="keyword">where</span> cond1</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> col1</span><br></pre></td></tr></table></figure>
+<p>要点：</p>
+<ul>
+<li><code>group by</code>指明分组依据的列。对应列取值相同的行会分为同一组</li>
+<li>在聚集中，<code>select</code>子句中出现的属性必须是<em>聚集属性</em></li>
+<li>所谓<em>聚集属性</em>是指
+<ul>
+<li>套着聚集函数的属性</li>
+<li><code>group by</code>属性</li>
+</ul>
+</li>
+</ul>
+<h3 id="having（待完善）"><a class="header-anchor" href="#having（待完善）">¶</a> having（待完善）</h3>
+<p>having和</p>
+<h3 id="空值聚集"><a class="header-anchor" href="#空值聚集">¶</a> 空值聚集</h3>
+<ul>
+<li>聚集都会自动忽略空值</li>
+<li>count(*)例外，即便一个元组是全null值的，它也会算上</li>
+<li>若属性取值集合全是null值，则：
+<ul>
+<li>count返回0</li>
+<li>其他函数返回null</li>
+</ul>
+</li>
+</ul>
+<h2 id="嵌套子查询"><a class="header-anchor" href="#嵌套子查询">¶</a> 嵌套子查询</h2>
+<h3 id="where 嵌套子查询"><a class="header-anchor" href="#where 嵌套子查询">¶</a> where 嵌套子查询</h3>
+<p>在<code>where</code>子句中嵌套子查询的主要动机是为利用查询结果集来执行灵活的谓词运算。</p>
+<ul>
+<li>
+<p>成员资格测试</p>
+<p>其实就是<code>in/not in</code></p>
+</li>
+<li>
+<p>集合元素比较（量词）</p>
+<p>支持<code>&gt;/&lt;/=/&gt;=/&lt;=/&lt;&gt;</code>集合的<code>some/all</code></p>
+</li>
+<li>
+<p>空关系测试</p>
+<p><code>exists/not exists</code>，配合集合运算有奇效</p>
+</li>
+<li>
+<p>重复性测试</p>
+<p><code>unique</code>，在集合无重复元组时为真，否则为假</p>
+</li>
+</ul>
+<h3 id="from 嵌套子查询"><a class="header-anchor" href="#from 嵌套子查询">¶</a> from 嵌套子查询</h3>
+<p>一般认为<code>select</code>返回得结果是一个元组结合，因此也可以放入from</p>
+<p>通常外层查询中可以使用内层的相关变量，<code>lateral</code>子句使得内层可以使用外层的变量（很少有支持）</p>
+<h3 id="with 子句"><a class="header-anchor" href="#with 子句">¶</a> with 子句</h3>
+<p>方便的耍赖手段。利用<code>with</code>子句，可以将一个查询的结果表示为一个临时的变量，在后续引用。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> max_budget(<span class="keyword">value</span>) <span class="keyword">as</span></span><br><span class="line">  (<span class="keyword">select</span> <span class="built_in">max</span>(budget) <span class="keyword">from</span> department)</span><br><span class="line"><span class="keyword">select</span> department_name</span><br><span class="line"><span class="keyword">from</span> department, max_budget</span><br><span class="line"><span class="keyword">where</span> department.budget <span class="operator">=</span> max_budget.value;</span><br></pre></td></tr></table></figure>
+<h3 id="标量子查询"><a class="header-anchor" href="#标量子查询">¶</a> 标量子查询</h3>
+<p>实际上，很多查询的结果实质上是一个标量，但由于关系运算的封闭性，标量结果会变成单行单列的关系。</p>
+<p>如果SQL用户确信某个查询的结果就是一个标量，可以直接将嵌套子查询当作一个标量用在<code>where</code>子句甚至是<code>select</code>子句中。</p>
+<p>滥用标量子查询的问题：</p>
+<ul>
+<li>标量子查询破坏了SQL语句所映射的关系代数运算的封闭性</li>
+<li>一个子查询的结果是否标量在编译阶段是无法检查的，因此一个错误将非标量子查询当作标量使用的语句会触发运行时错误</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/SQL/" rel="tag"># SQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/6ec1fd6c/" rel="next" title="基于启发式合并的O(lglgn)并查集算法">
+                <i class="fa fa-chevron-left"></i> 基于启发式合并的O(lglgn)并查集算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/0/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80SQL"><span class="nav-number">1.</span> <span class="nav-text"> 基础SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%20DDL"><span class="nav-number">1.1.</span> <span class="nav-text"> SQL DDL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%20DML"><span class="nav-number">1.2.</span> <span class="nav-text"> SQL DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">1.2.1.</span> <span class="nav-text"> select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#natural%20join"><span class="nav-number">1.2.2.</span> <span class="nav-text"> natural join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insert%20into"><span class="nav-number">1.2.3.</span> <span class="nav-text"> insert into</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delete%20from"><span class="nav-number">1.2.4.</span> <span class="nav-text"> delete from</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#update"><span class="nav-number">1.2.5.</span> <span class="nav-text"> update</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8case%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.6.</span> <span class="nav-text"> 使用case（待完善）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%20%E6%9D%82%E9%A1%B9"><span class="nav-number">1.3.</span> <span class="nav-text"> SQL 杂项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%AB%E5%90%8D%20as"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 别名 as</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%8F%B7%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.2.1.</span> <span class="nav-text"> 引号问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.2.2.</span> <span class="nav-text"> 字符串函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D"><span class="nav-number">1.3.2.3.</span> <span class="nav-text"> 字符串匹配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E7%9A%84%E6%AC%A1%E5%BA%8F"><span class="nav-number">1.3.3.</span> <span class="nav-text"> 显示的次序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where%E8%B0%93%E8%AF%8D%E8%AF%AD%E6%B3%95"><span class="nav-number">1.3.4.</span> <span class="nav-text"> where谓词语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E8%BF%90%E7%AE%97"><span class="nav-number">1.4.</span> <span class="nav-text"> 集合运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%87%8D%E5%A4%8D%EF%BC%88%E9%BB%98%E8%AE%A4%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text"> 不重复（默认）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E9%87%8D%E5%A4%8D%E7%9A%84%E9%9B%86%E5%90%88%E8%BF%90%E7%AE%97"><span class="nav-number">1.4.2.</span> <span class="nav-text"> 允许重复的集合运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC"><span class="nav-number">1.5.</span> <span class="nav-text"> 空值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC%E5%88%A4%E5%88%AB"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 空值判别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 空值算术运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%80%BC%E9%80%BB%E8%BE%91"><span class="nav-number">1.5.3.</span> <span class="nav-text"> 三值逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%9A%E9%9B%86"><span class="nav-number">1.6.</span> <span class="nav-text"> 聚集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0"><span class="nav-number">1.6.1.</span> <span class="nav-text"> 聚集函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupby"><span class="nav-number">1.6.2.</span> <span class="nav-text"> groupby</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#having%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.6.3.</span> <span class="nav-text"> having（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC%E8%81%9A%E9%9B%86"><span class="nav-number">1.6.4.</span> <span class="nav-text"> 空值聚集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.</span> <span class="nav-text"> 嵌套子查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#where%20%E5%B5%8C%E5%A5%97%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.1.</span> <span class="nav-text"> where 嵌套子查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#from%20%E5%B5%8C%E5%A5%97%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.2.</span> <span class="nav-text"> from 嵌套子查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#with%20%E5%AD%90%E5%8F%A5"><span class="nav-number">1.7.3.</span> <span class="nav-text"> with 子句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E9%87%8F%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.4.</span> <span class="nav-text"> 标量子查询</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

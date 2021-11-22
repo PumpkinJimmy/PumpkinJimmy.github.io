@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ OpenGL笔记 ¶ GLFW和GLAD GLFW是对OS的GUI接口的封装。跨平台创建窗口、检验实践。 GLAD省了调用的加载。 ¶ VAO, VBO, IBO  VAO 顶点数组对象 VBO 顶点缓冲对象 IBO 索引缓冲对象  ¶ 基本渲染管线  Vertex Shader 顶点着色 Primitive Assembly 图元装配 Geometry Shader 几何着色 Rasteri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/38fdccb7/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ OpenGL笔记 ¶ GLFW和GLAD GLFW是对OS的GUI接口的封装。跨平台创建窗口、检验实践。 GLAD省了调用的加载。 ¶ VAO, VBO, IBO  VAO 顶点数组对象 VBO 顶点缓冲对象 IBO 索引缓冲对象  ¶ 基本渲染管线  Vertex Shader 顶点着色 Primitive Assembly 图元装配 Geometry Shader 几何着色 Rasteri">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-03T10:50:28.000Z">
+<meta property="article:modified_time" content="2021-09-03T10:50:28.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/38fdccb7/"/>
+
+
+
+
+
+  <title>OpenGL | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/38fdccb7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OpenGL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-03T10:50:28+00:00">
+                2021-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="OpenGL笔记"><a class="header-anchor" href="#OpenGL笔记">¶</a> OpenGL笔记</h1>
+<h2 id="GLFW和GLAD"><a class="header-anchor" href="#GLFW和GLAD">¶</a> GLFW和GLAD</h2>
+<p><em>GLFW</em>是对OS的GUI接口的封装。跨平台创建窗口、检验实践。</p>
+<p><em>GLAD</em>省了调用的加载。</p>
+<h2 id="VAO, VBO, IBO"><a class="header-anchor" href="#VAO, VBO, IBO">¶</a> VAO, VBO, IBO</h2>
+<ul>
+<li><em>VAO</em> 顶点数组对象</li>
+<li><em>VBO</em> 顶点缓冲对象</li>
+<li><em>IBO</em> 索引缓冲对象</li>
+</ul>
+<h2 id="基本渲染管线"><a class="header-anchor" href="#基本渲染管线">¶</a> 基本渲染管线</h2>
+<ol>
+<li><em>Vertex Shader</em> 顶点着色</li>
+<li><em>Primitive Assembly</em> 图元装配</li>
+<li><em>Geometry Shader</em> 几何着色</li>
+<li><em>Rasterization</em> 光栅化</li>
+<li><em>Fragment shader</em> 片元着色</li>
+<li><em>Blending</em> 混合</li>
+</ol>
+<h2 id="常用API"><a class="header-anchor" href="#常用API">¶</a> 常用API</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glGenBuffers</span>(); <span class="comment">// 创建缓冲</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(); <span class="comment">// 绑定缓冲类型</span></span><br><span class="line"><span class="built_in">glBufferData</span>(); <span class="comment">// 数据传送到缓冲</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(); <span class="comment">// 配置着色器如何解释缓冲区中的数据输入</span></span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>();</span><br><span class="line"><span class="built_in">glBindVertexArray</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="着色器"><a class="header-anchor" href="#着色器">¶</a> 着色器</h2>
+<p>注意区分<em>着色器(Shader)<em>和</em>着色器程序(Shader Program)</em></p>
+<p>一个着色器程序是由多个着色器前后级联构成的一个完成渲染模块，也就是<em>可编程渲染管线</em>。</p>
+<p>每个着色器虽然是独立的程序，但也是着色器程序的一部分。</p>
+<p>着色器使用<code>in/out</code>关键字来指明着色器的输入、输出变量。</p>
+<h3 id="顶点着色器"><a class="header-anchor" href="#顶点着色器">¶</a> 顶点着色器</h3>
+<p>顶点着色器是基本渲染管线必须的一部分。它的输入不一定是标准坐标，但是输出必须是标准化设备坐标。</p>
+<p>在顶点着色器之后的所有坐标都应该使用标准化设备坐标。</p>
+<h3 id="片元着色器"><a class="header-anchor" href="#片元着色器">¶</a> 片元着色器</h3>
+<p>输出一个颜色，表明片元的颜色</p>
+<h3 id="Uniform"><a class="header-anchor" href="#Uniform">¶</a> Uniform</h3>
+<p>使用<code>uniform</code>关键字定义可以供整个着色器程序中任何一个着色器使用的“全局”变量。</p>
+<p>由于是全局的，可以在任何一个着色器中声明Uniform。</p>
+<p>使用<code>glGetUniformLocation</code>在主程序中获得Uniform变量的引用，以便修改。</p>
+<p>注意，<strong>要先启动着色器程序，才使用GetUniform!</strong></p>
+<h2 id="理解VBO，EBO，VAO"><a class="header-anchor" href="#理解VBO，EBO，VAO">¶</a> 理解VBO，EBO，VAO</h2>
+<ul>
+<li>顶点属性
+<ul>
+<li>其实就是一个顶点可以具有很多属性</li>
+<li>除了最基本的坐标属性（位置），还可以有：颜色、透明度，甚至是法线的坐标表示</li>
+</ul>
+</li>
+<li>VBO
+<ul>
+<li>一块拿来放顶点属性的缓冲区</li>
+<li>可以申请很多块VBO</li>
+<li>使用<code>glBufferData</code>把数据从CPU拷到VBO中</li>
+<li>但每次用于渲染的顶点只能是指定的某一块VBO缓冲</li>
+<li>使用<code>glBindBuffer(GL_ARRAY_BUFFER, your_vbo_buf)</code>来指明渲染哪一块VBO中存放的顶点</li>
+<li>为了让着色器可以正确解释VBO中的字节，必须手动指明顶点属性的存储模式（其实相当于struct指明内存分布）</li>
+<li>使用<code>glVertexAttribPointer</code>指明顶点属性的存储模式</li>
+<li>需要使用<code>glEnableVertexAttribArray</code>来启用属性</li>
+<li><strong>数据只需要传输一次，以后就不必再重复传输了</strong></li>
+</ul>
+</li>
+<li>VAO
+<ul>
+<li>所有的VBO配置工作只要做一遍，之后直接从VAO中载入配置然后渲染</li>
+<li>可以理解为一个“配置录制工具”，将配置录制到VAO中，然后每次再载入配置即可</li>
+<li>存储的配置包括：
+<ul>
+<li><code>glBind</code>绑定的是哪一块VBO</li>
+<li><code>glVertexAttribPointer</code>配置的顶点属性模式，启用的节点</li>
+<li>绑定的EBO</li>
+</ul>
+</li>
+<li>其实OpenGL是一个状态机，如果只使用一个VBO，那其实用不上VAO；但考虑到可能使用多个VBO，它们各自对应不同的顶点属性模式，每次更改绑定的VBO，都要重新配置属性，这就很麻烦，因此为每个VBO配套使用一个VAO是有好处的</li>
+</ul>
+</li>
+<li>EBO：减少重复顶点
+<ul>
+<li>在VBO中只存储不重复的顶点和它们的属性</li>
+<li>实际渲染的时候使用EBO中的索引值在VBO中取点</li>
+</ul>
+</li>
+</ul>
+<h2 id="OpenGL的顶点和PCL的点云的区别"><a class="header-anchor" href="#OpenGL的顶点和PCL的点云的区别">¶</a> OpenGL的顶点和PCL的点云的区别</h2>
+<ul>
+<li>OpenGL的Vertex和PCL的Point都是一个具有三维坐标以及其他属性的抽象的“点”</li>
+<li>但OpenGL的顶点并不是孤立的，OpenGL需要<em>组装图元</em>，也即某些点组装成三角形。</li>
+</ul>
+<h2 id="纹理"><a class="header-anchor" href="#纹理">¶</a> 纹理</h2>
+<p>所谓*纹理(Texture)*是贴图的意思。</p>
+<p>纹理可以是2D也可以是3D甚至有别的，这里主要讨论2D纹理。</p>
+<p>为了将纹理贴在正确的位置，需要为顶点指定<em>纹理坐标</em>。</p>
+<p>纹理坐标是指，将纹理归一化放在纹理坐标系的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>0</mn><mo separator="true">,</mo><mn>0</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">0</span><span class="mclose">)</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(1,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span>矩形区域上，然后顶点相当于映射到纹理坐标系的某个位置，然后根据坐标映射关系OpenGL将纹理贴到正确的位置去。</p>
+<h3 id="使用纹理"><a class="header-anchor" href="#使用纹理">¶</a> 使用纹理</h3>
+<ul>
+<li><code>glGenTextures</code>申请一个纹理对象</li>
+<li><code>glActivateTexture</code>激活一个纹理单元（供片段着色器渲染使用）</li>
+<li><code>glBindTexture</code>将某个纹理对象指定为当前纹理</li>
+<li><code>glTexPeremeteri</code>配置纹理属性，包括延展的策略和放大插值的策略</li>
+<li><code>glTexImage2D</code>将一张图片的数据传输到纹理对象的缓冲区</li>
+</ul>
+<p>在片段着色器中使用sampler2D类型的Uniform输入变量来输入纹理单元，使用<code>texture</code>函数来使用纹理。</p>
+<h2 id="变换"><a class="header-anchor" href="#变换">¶</a> 变换</h2>
+<h3 id="齐次坐标"><a class="header-anchor" href="#齐次坐标">¶</a> 齐次坐标</h3>
+<p>可以发现，顶点着色器中输出的标准化坐标存在第四个恒为1的分量，这个分量称为<em>齐次坐标</em>。这是因为线性变换不能表达“平移”操作，为了方便增加了这个坐标。</p>
+<h3 id="万向锁"><a class="header-anchor" href="#万向锁">¶</a> 万向锁</h3>
+<p>使用关于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">x,y,z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">x</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.04398em;">z</span></span></span></span>轴的偏角（称为<em>欧拉角</em>），我们可以给出任意一个3D空间中的旋转。不仅如此，由于角是任意角，我们还可以通过插值得到旋转的整个轨迹。</p>
+<p>但是，存在一些角，具有不唯一的旋转轨迹，从而无法使用一组欧拉角来表征唯一的运动轨迹。</p>
+<h3 id="GLM"><a class="header-anchor" href="#GLM">¶</a> GLM</h3>
+<p>为OpenGL定制的矩阵运算库，可以方便地生成各种变换矩阵。</p>
+<p><strong>陷阱：glm::mat4必须显式初始化</strong>:<br>
+<code>glm::mat4 trans = glm::mat4(1.0f);</code></p>
+<h3 id="摄像机变换与Lookat"><a class="header-anchor" href="#摄像机变换与Lookat">¶</a> 摄像机变换与Lookat</h3>
+<p>所谓摄像机变换，其实是把世界坐标系上的点变换到摄像机坐标系。</p>
+<p>利用基变换思维可以写出变换矩阵。</p>
+<p><code>glm::lookat</code>可以便捷地生成这样地变换矩阵</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trans = glm::<span class="built_in">lookat</span>(cameraPos, lookatPoint, cameraUp);</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ed318fdc/" rel="next" title="Introduction">
+                <i class="fa fa-chevron-left"></i> Introduction
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/ed318fdc/" rel="prev" title="Introduction">
+                Introduction <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenGL%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text"> OpenGL笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GLFW%E5%92%8CGLAD"><span class="nav-number">1.1.</span> <span class="nav-text"> GLFW和GLAD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VAO,%20VBO,%20IBO"><span class="nav-number">1.2.</span> <span class="nav-text"> VAO, VBO, IBO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF"><span class="nav-number">1.3.</span> <span class="nav-text"> 基本渲染管线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8API"><span class="nav-number">1.4.</span> <span class="nav-text"> 常用API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9D%80%E8%89%B2%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text"> 着色器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 顶点着色器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%87%E5%85%83%E7%9D%80%E8%89%B2%E5%99%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 片元着色器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Uniform"><span class="nav-number">1.5.3.</span> <span class="nav-text"> Uniform</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3VBO%EF%BC%8CEBO%EF%BC%8CVAO"><span class="nav-number">1.6.</span> <span class="nav-text"> 理解VBO，EBO，VAO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenGL%E7%9A%84%E9%A1%B6%E7%82%B9%E5%92%8CPCL%E7%9A%84%E7%82%B9%E4%BA%91%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.7.</span> <span class="nav-text"> OpenGL的顶点和PCL的点云的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%B9%E7%90%86"><span class="nav-number">1.8.</span> <span class="nav-text"> 纹理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%BA%B9%E7%90%86"><span class="nav-number">1.8.1.</span> <span class="nav-text"> 使用纹理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2"><span class="nav-number">1.9.</span> <span class="nav-text"> 变换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87"><span class="nav-number">1.9.1.</span> <span class="nav-text"> 齐次坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E5%90%91%E9%94%81"><span class="nav-number">1.9.2.</span> <span class="nav-text"> 万向锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GLM"><span class="nav-number">1.9.3.</span> <span class="nav-text"> GLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%84%E5%83%8F%E6%9C%BA%E5%8F%98%E6%8D%A2%E4%B8%8ELookat"><span class="nav-number">1.9.4.</span> <span class="nav-text"> 摄像机变换与Lookat</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
