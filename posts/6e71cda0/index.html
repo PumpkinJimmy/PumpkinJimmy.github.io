@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 区块链的应用 ¶ 区块链分层   业务层 支持业务层面的应用   共识层 PoW&#x2F;PoX共识机制   网络层 P2P分布式结构   数据层   物理层   ¶ 区块链的核心技术   密码学 数字签名，哈希指针，共识算法   博弈论 激励驱动的博弈论行为建模   P2P网络 去中心化分布式系统   ¶ P2P网络基础   Structured Network 通过维护DHT(Distribute">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区块链的应用">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/6e71cda0/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 区块链的应用 ¶ 区块链分层   业务层 支持业务层面的应用   共识层 PoW&#x2F;PoX共识机制   网络层 P2P分布式结构   数据层   物理层   ¶ 区块链的核心技术   密码学 数字签名，哈希指针，共识算法   博弈论 激励驱动的博弈论行为建模   P2P网络 去中心化分布式系统   ¶ P2P网络基础   Structured Network 通过维护DHT(Distribute">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-21T02:05:42.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:57:14.847Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/6e71cda0/"/>
+
+
+
+
+
+  <title>区块链的应用 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/6e71cda0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">区块链的应用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-21T10:05:42+08:00">
+                2021-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="区块链的应用"><a class="header-anchor" href="#区块链的应用">¶</a> 区块链的应用</h1>
+<h2 id="区块链分层"><a class="header-anchor" href="#区块链分层">¶</a> 区块链分层</h2>
+<ul>
+<li>
+<p>业务层</p>
+<p>支持业务层面的应用</p>
+</li>
+<li>
+<p>共识层</p>
+<p>PoW/PoX共识机制</p>
+</li>
+<li>
+<p>网络层</p>
+<p>P2P分布式结构</p>
+</li>
+<li>
+<p>数据层</p>
+</li>
+<li>
+<p>物理层</p>
+</li>
+</ul>
+<h2 id="区块链的核心技术"><a class="header-anchor" href="#区块链的核心技术">¶</a> 区块链的核心技术</h2>
+<ul>
+<li>
+<p>密码学</p>
+<p>数字签名，哈希指针，共识算法</p>
+</li>
+<li>
+<p>博弈论</p>
+<p>激励驱动的博弈论行为建模</p>
+</li>
+<li>
+<p>P2P网络</p>
+<p>去中心化分布式系统</p>
+</li>
+</ul>
+<h2 id="P2P网络基础"><a class="header-anchor" href="#P2P网络基础">¶</a> P2P网络基础</h2>
+<ul>
+<li>
+<p>Structured Network</p>
+<p>通过维护DHT(Distributed Hash Table)来维护网络、快速访问节点。</p>
+<p>限制较大，要求各个节点具有网络的完全信息。</p>
+</li>
+<li>
+<p>Unstructured Network</p>
+<p>无服务质量承诺，采用Flooding发现节点。</p>
+<p>可拓展性强。</p>
+</li>
+</ul>
+<h3 id="比特币的P2P网络"><a class="header-anchor" href="#比特币的P2P网络">¶</a> 比特币的P2P网络</h3>
+<ul>
+<li>采用非结构化P2P网络</li>
+<li>发现节点的实现：
+<ol>
+<li>（少）使用预先配置的IP地址</li>
+<li>（已弃用）使用互联网中继聊天</li>
+<li><strong>基于DNS的发现服务</strong></li>
+</ol>
+</li>
+</ul>
+<p>一个节点通常维护30个连接。</p>
+<h2 id="比特币网络经典工作流"><a class="header-anchor" href="#比特币网络经典工作流">¶</a> 比特币网络经典工作流</h2>
+<h3 id="转账交易"><a class="header-anchor" href="#转账交易">¶</a> 转账交易</h3>
+<p>设A向B转账</p>
+<ol>
+<li>个人用户使用B的地址标识B</li>
+<li>A使用B的地址与自己的私钥构造请求交易</li>
+<li>上传交易到Mempool</li>
+<li>等待一段时间，在Full Node上查看链，发现自己的交易已经上链生效了</li>
+</ol>
+<h3 id="挖矿"><a class="header-anchor" href="#挖矿">¶</a> 挖矿</h3>
+<ol>
+<li>矿工从Mempool选择区块</li>
+<li>做PoW</li>
+<li>成功的矿工将打包的区块广播出来</li>
+</ol>
+<h3 id="交易确认"><a class="header-anchor" href="#交易确认">¶</a> 交易确认</h3>
+<ol>
+<li>收到区块：一个节点收到邻居的一个区块的邀请信息，若该区块未被加入本地链，则开始检验区块</li>
+<li>检验区块：做一次哈希，确认PoW Nounce是否符合当前难度</li>
+<li>若检验通过，则区块加入本地链中，并被继续向外广播。交易得到这个节点的确认。</li>
+</ol>
+<h2 id="再谈比特币共识"><a class="header-anchor" href="#再谈比特币共识">¶</a> 再谈比特币共识</h2>
+<h3 id="比特币在追求什么共识"><a class="header-anchor" href="#比特币在追求什么共识">¶</a> 比特币在追求什么共识</h3>
+<p>总的来说，比特币希望达成一条<strong>全网统一的区块链</strong>。</p>
+<p>统一的一条区块链意味着：</p>
+<ul>
+<li>统一的交易记录（统一账本）</li>
+<li>统一的版本和协议</li>
+</ul>
+<h3 id="网络延迟分叉"><a class="header-anchor" href="#网络延迟分叉">¶</a> 网络延迟分叉</h3>
+<p>一个打包并完成PoW的区块要传遍网络是需要时间的。</p>
+<p><strong>在到达全网节点之前，节点可能自己先挖出了别的区块</strong>。此时会导致网络延迟分叉（区分软分叉/硬分叉/恶意分叉等人为分叉）</p>
+<p>比特币网络采用如下机制处理这一问题：</p>
+<ul>
+<li>最长链机制：Full Node应该缓存多个分叉，并只认可当前最长的一个作为有效账本</li>
+<li>放回交易：当非最长链被确认为失效时，将其中的交易放回Mempool中。</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/2d51d24b/" rel="next" title="D3.js简记">
+                <i class="fa fa-chevron-left"></i> D3.js简记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/cdaf7470/" rel="prev" title="比特币的匿名性">
+                比特币的匿名性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text"> 区块链的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E5%88%86%E5%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text"> 区块链分层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text"> 区块链的核心技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P2P%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80"><span class="nav-number">1.3.</span> <span class="nav-text"> P2P网络基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E7%89%B9%E5%B8%81%E7%9A%84P2P%E7%BD%91%E7%BB%9C"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 比特币的P2P网络</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E7%89%B9%E5%B8%81%E7%BD%91%E7%BB%9C%E7%BB%8F%E5%85%B8%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">1.4.</span> <span class="nav-text"> 比特币网络经典工作流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E8%B4%A6%E4%BA%A4%E6%98%93"><span class="nav-number">1.4.1.</span> <span class="nav-text"> 转账交易</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%96%E7%9F%BF"><span class="nav-number">1.4.2.</span> <span class="nav-text"> 挖矿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%98%93%E7%A1%AE%E8%AE%A4"><span class="nav-number">1.4.3.</span> <span class="nav-text"> 交易确认</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E8%B0%88%E6%AF%94%E7%89%B9%E5%B8%81%E5%85%B1%E8%AF%86"><span class="nav-number">1.5.</span> <span class="nav-text"> 再谈比特币共识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E7%89%B9%E5%B8%81%E5%9C%A8%E8%BF%BD%E6%B1%82%E4%BB%80%E4%B9%88%E5%85%B1%E8%AF%86"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 比特币在追求什么共识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BB%B6%E8%BF%9F%E5%88%86%E5%8F%89"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 网络延迟分叉</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

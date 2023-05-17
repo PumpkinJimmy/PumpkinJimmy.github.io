@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="专业课," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 计算复杂度类入门 ¶ 不可计算问题  停机问题(Halting Problem) 波斯特对应问题(Post’s Corresponse Prob.) 希尔伯特第十问题：丢番图方程解的存在性 最优压缩问题 等等  ¶ 一些经典算法问题介绍  2-SAT  2-合区范式可满足性问题 合区范式中每个项至多包含两个文字的布尔表达式的可满足性问题 文字是指一个变量或变量的否定 2-SAT可以转化为图论的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="np">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/eaa225ea/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 计算复杂度类入门 ¶ 不可计算问题  停机问题(Halting Problem) 波斯特对应问题(Post’s Corresponse Prob.) 希尔伯特第十问题：丢番图方程解的存在性 最优压缩问题 等等  ¶ 一些经典算法问题介绍  2-SAT  2-合区范式可满足性问题 合区范式中每个项至多包含两个文字的布尔表达式的可满足性问题 文字是指一个变量或变量的否定 2-SAT可以转化为图论的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-29T08:42:33.000Z">
+<meta property="article:modified_time" content="2021-06-29T08:42:33.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/eaa225ea/"/>
+
+
+
+
+
+  <title>np | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/eaa225ea/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">np</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-29T16:42:33+08:00">
+                2021-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="计算复杂度类入门"><a class="header-anchor" href="#计算复杂度类入门">¶</a> 计算复杂度类入门</h1>
+<h2 id="不可计算问题"><a class="header-anchor" href="#不可计算问题">¶</a> 不可计算问题</h2>
+<ul>
+<li>停机问题(Halting Problem)</li>
+<li>波斯特对应问题(Post’s Corresponse Prob.)</li>
+<li>希尔伯特第十问题：丢番图方程解的存在性</li>
+<li>最优压缩问题</li>
+<li>等等</li>
+</ul>
+<h2 id="一些经典算法问题介绍"><a class="header-anchor" href="#一些经典算法问题介绍">¶</a> 一些经典算法问题介绍</h2>
+<ul>
+<li>2-SAT
+<ul>
+<li>2-合区范式可满足性问题</li>
+<li>合区范式中每个项至多包含两个文字的布尔表达式的可满足性问题</li>
+<li>文字是指一个变量或变量的否定</li>
+<li>2-SAT可以转化为图论的强连通分量问题</li>
+<li>P问题</li>
+</ul>
+</li>
+<li>3-SAT问题
+<ul>
+<li>3-合区范式可满足性问题</li>
+<li>合区范式中每个项至多包含三个文字的布尔表达式的可满足性问题</li>
+</ul>
+</li>
+<li>哈密顿回路
+<ul>
+<li>寻找图中不重不漏地经过每个顶点的回路</li>
+</ul>
+</li>
+<li>旅行商问题
+<ul>
+<li>最小哈密顿回路</li>
+</ul>
+</li>
+<li>最大独立集问题
+<ul>
+<li>寻找给定图中最大的独立集</li>
+<li>独立集：图中互不相邻的节点集合</li>
+<li>注意，最大独立集问题是NPC，但是在树上的最大独立集问题是P的（上司舞会，树形DP）</li>
+</ul>
+</li>
+<li>平衡最小割</li>
+</ul>
+<h2 id="NP详解"><a class="header-anchor" href="#NP详解">¶</a> NP详解</h2>
+<p>在现实问题中，指数级及以上的时间复杂度的算法通常是不实用的。因为指数级的算力增长只能换来问题可解规模的线性增长。</p>
+<p>相反，我们认为一个多项式时间复杂度，即便是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mrow><mn>1</mn><mn>0</mn><mn>0</mn></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^{100})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>，也比指数级要好得多。我们关心，是不是任何的可计算问题都存在多项式的时间复杂度，而答案是“不知道”。</p>
+<ul>
+<li>
+<p>判定问题</p>
+<p>计算理论中最基本的问题类型，判定问题指的是给定输入，算法只会输出“是”或者“否”。</p>
+<p>所谓的不可计算问题更严格的表述是“不可判定问题”。</p>
+</li>
+<li>
+<p>搜索问题</p>
+<p>许多常见的最优决策问题（优化问题）都可以变形为等效的搜索问题。</p>
+<p>例如TSP问题原来的表述是“寻找图最短的哈密顿回路”。该优化问题可以变形为：“对给定的图和回路总权值上界，搜索一条满足约束和条件的回路”。</p>
+<p>转化优化问题为搜索问题的动机是方便描述问题类P和NP</p>
+<p>变形之后，考虑如下判定问题：“给定一条路径，判断该路径是否满足哈密顿回路的条件和回路权值的上界约束”。这是一个简单的判定问题，它只需要多项式时间复杂度。</p>
+<p>于是，原TSP问题可以在TSP搜索问题的基础上<em>二分答案</em>来求解，二分答案只需要对数之间。</p>
+<p>换言之，<strong>将原来的优化问题转化为搜索问题之后，若搜索问题是多项式时间复杂度，则原优化问题也是多项式时间复杂度</strong></p>
+</li>
+<li>
+<p>NP问题，P问题</p>
+<p>NP问题是指<strong>给定一个问题的实例和可能的解，可以在多项式时间内验证该解是不是问题的一个解</strong>的计算问题的集合。</p>
+<p>P问题是指<strong>给定一个问题的实例，可以在多项式时间内给出该问题的一个解</strong>的计算问题的集合。</p>
+<p>显然，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo>⊆</mo><mi>N</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">P \subseteq NP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8193em;vertical-align:-0.13597em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="mrel">⊆</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mord mathit" style="margin-right:0.13889em;">P</span></span></span></span>。若能在多项式时间复杂度内给出解，则只需要检验生成的解是否与待验证的解等效即可，而这个验证解的过程是多项式时间的。</p>
+<p>可以发现，许多常见的问题都是NP问题，包括一切的搜索问题。</p>
+<p>而某些搜索问题我们已经可以给出多项式时间复杂度了，另一些则仍然没有找到。</p>
+<p>现在的问题是，<strong>P=NP?</strong></p>
+</li>
+<li>
+<p>NP完全问题</p>
+<p>若“一切”搜索问题都可以规约为该搜索问题，则该搜索问题称为<strong>NP完全(NP-Complete, NPC)</strong>，“完全”强调的是它涵盖了一切搜索问题，搜索问题都可以在多项式时间内规约为该问题。</p>
+<p>NPC类问题的性质：**若NPC问题存在多项式时间复杂度的算法，则所有NP问题都会有多项式时间复杂度的算法。**该命题的否命题也是成立的。</p>
+<p>常见的难以找到多项式时间算法的问题往往就是NPC问题。NPC问题的完全性(Complete)暗示了它是NP总最“难”的问题。如果认为P不等于NP，则NPC就是NP-P。</p>
+<p>还有一类问题称为<strong>NP-Hard问题</strong>。这个问题类是满足了NPC关于规约的完全性的性质但不要求是NP的一类问题。NPC是NP-hard的子集，NP-hard比NP的条件更松，它比NPC更难，即便NPC有多项式时间算法，NP-Hard也不见得有。NPC是NP和NP-hard的交集</p>
+</li>
+</ul>
+<h2 id="常见NP/P问题比较"><a class="header-anchor" href="#常见NP/P问题比较">¶</a> 常见NP/P问题比较</h2>
+<ul>
+<li>3SAT         - 2SAT</li>
+<li>TSP          - MST</li>
+<li>longest path - shortest path</li>
+<li>3d matching  - bipartite matching</li>
+<li>knapsack     - Unary knapsack</li>
+<li>independent set - Indepentent set on trees</li>
+<li>MILP         - LP</li>
+<li>哈密顿回路    - 欧拉回路</li>
+<li>平衡最小割    - 最小割</li>
+<li>子集和问题</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/3c40bcf4/" rel="next" title="应用层">
+                <i class="fa fa-chevron-left"></i> 应用层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/2cad992e/" rel="prev" title="File">
+                File <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%B1%BB%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text"> 计算复杂度类入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E8%AE%A1%E7%AE%97%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text"> 不可计算问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%E9%97%AE%E9%A2%98%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text"> 一些经典算法问题介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NP%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.3.</span> <span class="nav-text"> NP详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81NP/P%E9%97%AE%E9%A2%98%E6%AF%94%E8%BE%83"><span class="nav-number">1.4.</span> <span class="nav-text"> 常见NP&#x2F;P问题比较</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

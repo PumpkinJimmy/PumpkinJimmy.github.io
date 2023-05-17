@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 基本阴影生成 考虑光照遮挡生成的 ¶ 基本概念  Receiver 遮挡物 本影 半影（penumbra）  ¶ 基本类别   Attached Shadows 附着阴影 由于背向光源而导致的附着于模型表面   Cast Shadows 投射阴影 由于光照遮挡导致的投射于Receiver的阴影   Self Shadows   ¶ Hard Shadow vs. Soft Shadow   H">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基本阴影生成">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/7eea30f0/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 基本阴影生成 考虑光照遮挡生成的 ¶ 基本概念  Receiver 遮挡物 本影 半影（penumbra）  ¶ 基本类别   Attached Shadows 附着阴影 由于背向光源而导致的附着于模型表面   Cast Shadows 投射阴影 由于光照遮挡导致的投射于Receiver的阴影   Self Shadows   ¶ Hard Shadow vs. Soft Shadow   H">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-15T02:04:59.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:57:14.951Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/7eea30f0/"/>
+
+
+
+
+
+  <title>基本阴影生成 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/7eea30f0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基本阴影生成</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-15T10:04:59+08:00">
+                2021-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基本阴影生成"><a class="header-anchor" href="#基本阴影生成">¶</a> 基本阴影生成</h1>
+<p>考虑光照遮挡生成的</p>
+<h2 id="基本概念"><a class="header-anchor" href="#基本概念">¶</a> 基本概念</h2>
+<ul>
+<li>Receiver</li>
+<li>遮挡物</li>
+<li>本影</li>
+<li>半影（penumbra）</li>
+</ul>
+<h2 id="基本类别"><a class="header-anchor" href="#基本类别">¶</a> 基本类别</h2>
+<ul>
+<li>
+<p>Attached Shadows 附着阴影</p>
+<p>由于背向光源而导致的<em>附着于模型表面</em></p>
+</li>
+<li>
+<p>Cast Shadows 投射阴影</p>
+<p>由于<em>光照遮挡</em>导致的<em>投射于Receiver</em>的阴影</p>
+</li>
+<li>
+<p>Self Shadows</p>
+</li>
+</ul>
+<h2 id="Hard Shadow vs. Soft Shadow"><a class="header-anchor" href="#Hard Shadow vs. Soft Shadow">¶</a> Hard Shadow vs. Soft Shadow</h2>
+<ul>
+<li>
+<p>Hard Shadow</p>
+<p>通常由理想点光源生成。阴影存在硬边界，不自然</p>
+</li>
+<li>
+<p>Soft Shadow</p>
+<p>引入面光源和半影区使得阴影更自然</p>
+</li>
+</ul>
+<h2 id="Planar Shadow"><a class="header-anchor" href="#Planar Shadow">¶</a> Planar Shadow</h2>
+<p>利用相似，将顶点投影到给定平面上。</p>
+<p>然后在着色时<strong>不计算漫反射和镜面反射，只算环境光</strong></p>
+<h2 id="Curved Surface Shadow"><a class="header-anchor" href="#Curved Surface Shadow">¶</a> Curved Surface Shadow</h2>
+<p>将模型渲染为全黑得到一个影子，然后当作纹理贴到Receiver上。</p>
+<p>缺点是无法渲染自遮挡产生的阴影。</p>
+<h2 id="Shadow Map"><a class="header-anchor" href="#Shadow Map">¶</a> Shadow Map</h2>
+<p>基于z-buffer的阴影生成，用于<strong>快速判断顶点是否被遮挡</strong>，可以支持自遮挡。效果可以，且性能极佳。</p>
+<p>两步走生成阴影：</p>
+<ul>
+<li><strong>将摄像机放在点光源的位置，渲染计算z-buffer，生成Shadow Map</strong></li>
+<li>将摄像机放回原位，利用Shadow Map确定每个顶点是否在阴影内</li>
+</ul>
+<p>注意：<strong>无论摄像机如何变化，只要光源和遮挡物的相对关系不变，Shadow Map就不变</strong></p>
+<p>优点：</p>
+<ul>
+<li>Shadow Map在静态场景渲染中只需要计算一次，性能高。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>Hard Shadow （点光源）</li>
+<li>重采样导致的各种问题（Shadow Map的分辨率是有限的）</li>
+<li>关于浮点运算的一些问题</li>
+</ul>
+<h2 id="Shadow Volume"><a class="header-anchor" href="#Shadow Volume">¶</a> Shadow Volume</h2>
+<p>可用于动态场景的阴影生成方法。</p>
+<p>对物体计算<strong>Shadow Volume</strong>（阴影体），然后给出摄像机，利用<em>阴影体前向面/后向面</em>来确定顶点是否存在于阴影体内，最终确定点是否被遮挡。</p>
+<p>优点：</p>
+<ul>
+<li>可以用于动态场景</li>
+<li>不存在分辨率问题</li>
+<li>精细度高</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>计算开销大</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/deebca66/" rel="next" title="虚拟化">
+                <i class="fa fa-chevron-left"></i> 虚拟化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/ecafb5e8/" rel="prev" title="分布式系统——代码迁移">
+                分布式系统——代码迁移 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%98%B4%E5%BD%B1%E7%94%9F%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text"> 基本阴影生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text"> 基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text"> 基本类别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hard%20Shadow%20vs.%20Soft%20Shadow"><span class="nav-number">1.3.</span> <span class="nav-text"> Hard Shadow vs. Soft Shadow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Planar%20Shadow"><span class="nav-number">1.4.</span> <span class="nav-text"> Planar Shadow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Curved%20Surface%20Shadow"><span class="nav-number">1.5.</span> <span class="nav-text"> Curved Surface Shadow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shadow%20Map"><span class="nav-number">1.6.</span> <span class="nav-text"> Shadow Map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shadow%20Volume"><span class="nav-number">1.7.</span> <span class="nav-text"> Shadow Volume</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

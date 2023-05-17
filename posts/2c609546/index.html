@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 关系型数据库设计范式理论 ¶ 关系模式分解 关系模式分解的问题是如何构造无损的分解* ¶ Functional Dependencies（函数依赖） 函数依赖是码的概念的推广 考虑关系模式RRR，设α,β⊆R\alpha, \beta \subseteq Rα,β⊆R 称α\alphaα决定β\betaβ： α→β    \alpha \rightarrow \beta α→β 当且仅当 ∀r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关系型数据库设计范式理论">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/2c609546/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 关系型数据库设计范式理论 ¶ 关系模式分解 关系模式分解的问题是如何构造无损的分解* ¶ Functional Dependencies（函数依赖） 函数依赖是码的概念的推广 考虑关系模式RRR，设α,β⊆R\alpha, \beta \subseteq Rα,β⊆R 称α\alphaα决定β\betaβ： α→β    \alpha \rightarrow \beta α→β 当且仅当 ∀r">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-18T02:59:39.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:57:15.002Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/2c609546/"/>
+
+
+
+
+
+  <title>关系型数据库设计范式理论 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/2c609546/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关系型数据库设计范式理论</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-18T10:59:39+08:00">
+                2021-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="关系型数据库设计范式理论"><a class="header-anchor" href="#关系型数据库设计范式理论">¶</a> 关系型数据库设计范式理论</h1>
+<h2 id="关系模式分解"><a class="header-anchor" href="#关系模式分解">¶</a> 关系模式分解</h2>
+<p>关系模式分解的问题是<strong>如何构造无损的分解</strong>*</p>
+<h3 id="Functional Dependencies（函数依赖）"><a class="header-anchor" href="#Functional Dependencies（函数依赖）">¶</a> Functional Dependencies（函数依赖）</h3>
+<p>函数依赖是码的概念的推广</p>
+<p>考虑关系模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>，设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo separator="true">,</mo><mi>β</mi><mo>⊆</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\alpha, \beta \subseteq R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">⊆</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span></p>
+<p>称<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span></span></span></span><em>决定</em><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">    \alpha \rightarrow \beta
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span></span></p>
+<p>当且仅当</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>r</mi><mo>(</mo><mi>R</mi><mo>)</mo><mo separator="true">,</mo><mi mathvariant="normal">∀</mi><msub><mi>t</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>t</mi><mn>2</mn></msub><mo>∈</mo><mi>r</mi><mo>(</mo><msub><mi>t</mi><mn>1</mn></msub><mo>[</mo><mi>α</mi><mo>]</mo><mo>=</mo><msub><mi>t</mi><mn>2</mn></msub><mo>[</mo><mi>α</mi><mo>]</mo><mo>→</mo><msub><mi>t</mi><mn>1</mn></msub><mo>[</mo><mi>β</mi><mo>]</mo><mo>=</mo><msub><mi>t</mi><mn>2</mn></msub><mo>[</mo><mi>β</mi><mo>]</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">    \forall r(R), \forall t_1, t_2 \in r(t_1[\alpha] = t_2[\alpha] \rightarrow t_1[\beta] = t_2[\beta])
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">∀</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mord mathrm">∀</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mclose">]</span><span class="mrel">=</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mclose">]</span><span class="mrel">→</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mclose">]</span><span class="mrel">=</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mclose">]</span><span class="mclose">)</span></span></span></span></span></p>
+<p>如上所述的“决定”就是一个<em>函数依赖</em></p>
+<h3 id="码与函数依赖"><a class="header-anchor" href="#码与函数依赖">¶</a> 码与函数依赖</h3>
+<p>可以对比超码的概念。设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi><mo>⊆</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">K\subseteq R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8193em;vertical-align:-0.13597em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mrel">⊆</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>是关系模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>的超码当且仅当：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>r</mi><mo>(</mo><mi>R</mi><mo>)</mo><mo separator="true">,</mo><mi mathvariant="normal">∀</mi><msub><mi>t</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>t</mi><mn>2</mn></msub><mo>∈</mo><mi>r</mi><mo>(</mo><msub><mi>t</mi><mn>1</mn></msub><mo>[</mo><mi>K</mi><mo>]</mo><mo>=</mo><msub><mi>t</mi><mn>2</mn></msub><mo>[</mo><mi>K</mi><mo>]</mo><mo>→</mo><msub><mi>t</mi><mn>1</mn></msub><mo>=</mo><msub><mi>t</mi><mn>2</mn></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">    \forall r(R), \forall t_1,t_2 \in r(t_1[K] = t_2[K] \rightarrow t_1 = t_2)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">∀</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mord mathrm">∀</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mclose">]</span><span class="mrel">=</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mclose">]</span><span class="mrel">→</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>或者说，<strong>超码是函数依赖的特例</strong>：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi><mo>→</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">    K \rightarrow R
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span></span></p>
+<p>同理可以使用函数依赖定义候选码的概念：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">{</mo><mtable><mtr><mtd><mrow><mi>K</mi><mo>→</mo><mi>R</mi></mrow></mtd></mtr><mtr><mtd><mrow><mtext><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi><mtext> </mtext><mi mathvariant="normal">n</mi><mi mathvariant="normal">o</mi><mtext> </mtext></mtext><mi>α</mi><mo>⊂</mo><mi>K</mi><mo separator="true">,</mo><mi>α</mi><mo>→</mo><mi>R</mi></mrow></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+    \begin{cases}
+        K \rightarrow R\\
+        \text{for no } \alpha \subset K, \alpha \rightarrow R
+    \end{cases}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.75em;"></span><span class="strut bottom" style="height:3.0000299999999998em;vertical-align:-1.25003em;"></span><span class="base displaystyle textstyle uncramped"><span class="minner displaystyle textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist"><span style="top:-0.6819999999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span><span style="top:0.7579999999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="text mord displaystyle textstyle uncramped"><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">o</span><span class="mord mathrm">r</span><span class="mord mspace"> </span><span class="mord mathrm">n</span><span class="mord mathrm">o</span><span class="mord mspace"> </span></span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">⊂</span><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<h3 id="平凡函数依赖"><a class="header-anchor" href="#平凡函数依赖">¶</a> 平凡函数依赖</h3>
+<p>当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi><mo>⊆</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">\beta \subseteq \alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">⊆</span><span class="mord mathit" style="margin-right:0.0037em;">α</span></span></span></span>时，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \rightarrow \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>是恒成立的。</p>
+<p>这样的函数依赖称为<em>平凡函数依赖</em>。</p>
+<h3 id="函数依赖集的闭包"><a class="header-anchor" href="#函数依赖集的闭包">¶</a> 函数依赖集的闭包</h3>
+<p>考虑将函数依赖集看作关系，则<strong>函数依赖集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>上的闭包<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>F</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">F^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.771331em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>是指这个关系的传递闭包</strong>。</p>
+<h3 id="1NF（第一范式）"><a class="header-anchor" href="#1NF（第一范式）">¶</a> 1NF（第一范式）</h3>
+<p>很简单，数据库必须是一个狭义上的二维表。</p>
+<p>关于关系型数据库的所有讨论都是基于二维表的，因此所有所有讨论都不涉及违反1NF的模式</p>
+<h3 id="BCNF(Boyce-Codd Normal Form, BC范式)"><a class="header-anchor" href="#BCNF(Boyce-Codd Normal Form, BC范式)">¶</a> BCNF(Boyce-Codd Normal Form, BC范式)</h3>
+<p>定义关系模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>关于函数依赖集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>是属于BCNF，当且仅当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>f</mi><mo>:</mo><mi>α</mi><mo>→</mo><mi>β</mi><mo>∈</mo><msup><mi>F</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">\forall f: \alpha \rightarrow \beta \in F^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.9657709999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">∀</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mrel">:</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">∈</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>，以下两者至少一条成立：</p>
+
+    \beta \in \alpha\\
+    \alpha \rightarrow R
+
+<p>通俗地说，<strong>不属于BCNF的关系是可以做分解的</strong>。因为关系中存在一些“码”（属性集）可以唯一确定另一个属性集合的取值，但这码不能唯一确定元组，这表明关系构造中存在冗余。</p>
+<h3 id="基于BCNF的关系模式分解"><a class="header-anchor" href="#基于BCNF的关系模式分解">¶</a> 基于BCNF的关系模式分解</h3>
+<p>设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>是对模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>而言违反BCNF的函数依赖。则将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>分解为两个模式：</p>
+    R_1 = \alpha \cup \beta\\
+    R_2 = R - (\beta - \alpha)
+
+<p>上述分解的逻辑上，将这个函数依赖所指出的冗余项拎出来另起一个表，新的表只保留一个依赖键<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span></span></span></span></p>
+<h3 id="Dependency Preservation（依赖保持）（待完善）"><a class="header-anchor" href="#Dependency Preservation（依赖保持）（待完善）">¶</a> Dependency Preservation（依赖保持）（待完善）</h3>
+<h3 id="3NF(Third Normal Form)"><a class="header-anchor" href="#3NF(Third Normal Form)">¶</a> 3NF(Third Normal Form)</h3>
+<p>3NF就是第三范式。</p>
+<p>3NF是对第一范式的弱化。</p>
+<p>模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>关于函数依赖集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>满足3NF，当且仅当任取<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>∈</mo><msup><mi>F</mi><mo>+</mo></msup><mo>:</mo><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">f \in F^+:\alpha \to \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.9657709999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mrel">∈</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">:</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>，满足如下条件之一：</p>
+    \beta \in \alpha\\
+    \alpha \to R\\
+    \forall A \in (\beta-\alpha)\text{ exist candidate key }C, A \in C
+
+<h3 id="Normalized（待完善）"><a class="header-anchor" href="#Normalized（待完善）">¶</a> Normalized（待完善）</h3>
+<h3 id="BCNF的局限性"><a class="header-anchor" href="#BCNF的局限性">¶</a> BCNF的局限性</h3>
+<p>不满足BCNF的模式中数据能继续分解，但<strong>满足BCNF的模式设计不一定没有冗余</strong></p>
+<p>比如说，考虑实体集包含一个ID和两个多值属性。此时将实体转化为一个关系模式，这个关系模式是BCNF，但不是一个合适的设计。</p>
+<p>此时需要新的范式，比如第四范式4NF，它是建立在多值依赖理论上的。</p>
+<h2 id="Functional Dependencies Theory"><a class="header-anchor" href="#Functional Dependencies Theory">¶</a> Functional Dependencies Theory</h2>
+<h3 id="Closure of a set of functional dependencies"><a class="header-anchor" href="#Closure of a set of functional dependencies">¶</a> Closure of a set of functional dependencies</h3>
+<p>Armstrong’s Axioms:</p>
+<ol>
+<li>自反律：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi><mo>∈</mo><mi>α</mi><mo>⇒</mo><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta \in \alpha \Rightarrow \alpha \to \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">⇒</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span></li>
+<li>增广律：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi><mo>⇒</mo><mi>γ</mi><mi>α</mi><mo>→</mo><mi>γ</mi><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta \Rightarrow \gamma \alpha \to \gamma \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">⇒</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span></li>
+<li>传递律：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi><mo>∧</mo><mi>β</mi><mo>→</mo><mi>γ</mi><mo>⇒</mo><mi>α</mi><mo>→</mo><mi>γ</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta \land \beta\to\gamma \Rightarrow \alpha \to\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mbin">∧</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mrel">⇒</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span></span></span></span></li>
+</ol>
+<h3 id="其他定理（待完善）"><a class="header-anchor" href="#其他定理（待完善）">¶</a> 其他定理（待完善）</h3>
+<ol>
+<li>Union: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi><mo separator="true">,</mo><mi>α</mi><mo>→</mo><mi>γ</mi><mo>⇒</mo><mi>α</mi><mo>→</mo><mi>β</mi><mi>γ</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta, \alpha \to \gamma \Rightarrow \alpha \to \beta\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mrel">⇒</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span></span></span></span></li>
+<li>Decomposition: $\alpha \to \beta\gamma\Rightarrow \alpha \to \beta, \alpha \to \gamma</li>
+</ol>
+<h3 id="属性闭包（待完善）"><a class="header-anchor" href="#属性闭包（待完善）">¶</a> 属性闭包（待完善）</h3>
+<p>属性闭包是定义在某个属性集（键）上的。</p>
+<p>对给定键求属性闭包的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">aplus = key</span><br><span class="line">for f:a,b in F do</span><br><span class="line">    if a is a subset of aplus do</span><br><span class="line">        aplus += b</span><br><span class="line">    end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h3 id="无关属性与正则覆盖（待完善）"><a class="header-anchor" href="#无关属性与正则覆盖（待完善）">¶</a> 无关属性与正则覆盖（待完善）</h3>
+<h4 id="无关属性"><a class="header-anchor" href="#无关属性">¶</a> 无关属性</h4>
+<p>无关属性<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>定义在某个依赖集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>中的某个依赖<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>的左端<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span></span></span></span>或右端<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>上</p>
+<p>若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>的闭包等于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>−</mo><mo>(</mo><mi>α</mi><mo>→</mo><mi>β</mi><mo>)</mo><mo>∪</mo><mo>(</mo><mo>(</mo><mi>α</mi><mo>−</mo><mi>A</mi><mo>)</mo><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">F-(\alpha \to \beta) \cup ((\alpha-A)\to\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="mbin">−</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mclose">)</span><span class="mbin">∪</span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mbin">−</span><span class="mord mathit">A</span><span class="mclose">)</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>的闭包，则称<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>是无关属性</p>
+<ul>
+<li>检测是否无关
+<ul>
+<li>
+<p>定义法</p>
+</li>
+<li>
+<p>属性闭包法</p>
+<p>考虑检测属性<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \to \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>中是否无关</p>
+<ul>
+<li>若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>∈</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">A \in \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span></span></span>：则检验简化集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>F</mi><mrow><mi mathvariant="normal">′</mi></mrow></msup></mrow><annotation encoding="application/x-tex">F&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.751892em;"></span><span class="strut bottom" style="height:0.751892em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">′</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>α</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">\alpha^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.771331em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>是否仍然包含<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>，若仍然包含则<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>是无关属性。（其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>F</mi><mrow><mi mathvariant="normal">′</mi></mrow></msup><mo>=</mo><mi>F</mi><mo>−</mo><mrow><mi>α</mi><mo>→</mo><mi>β</mi></mrow><mo>∪</mo><mo>(</mo><mi>α</mi><mo>→</mo><mo>(</mo><mi>β</mi><mo>−</mo><mi>A</mi><mo>)</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">F&#x27;=F-{\alpha\to\beta}\cup(\alpha\to(\beta-A))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.751892em;"></span><span class="strut bottom" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">′</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="mbin">−</span><span class="mord textstyle uncramped"><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span></span><span class="mbin">∪</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mrel">→</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mbin">−</span><span class="mord mathit">A</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span></li>
+<li>若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>∈</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">A \in \alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.0037em;">α</span></span></span></span>：设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi><mo>=</mo><mi>α</mi><mo>−</mo><mo>{</mo><mi>A</mi><mo>}</mo></mrow><annotation encoding="application/x-tex">\gamma = \alpha - \{A\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.0037em;">α</span><span class="mbin">−</span><span class="mopen">{</span><span class="mord mathit">A</span><span class="mclose">}</span></span></span></span>，若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi><mo>→</mo><mi>β</mi><mo>∈</mo><msup><mi>F</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">\gamma\to\beta \in F^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.9657709999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">∈</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>，也即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi><mo>⊆</mo><msup><mi>γ</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">\beta\subseteq\gamma^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.9657709999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05278em;">β</span><span class="mrel">⊆</span><span class="mord"><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>，则<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>是无关属性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="正则覆盖"><a class="header-anchor" href="#正则覆盖">¶</a> 正则覆盖</h4>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>的正则覆盖其同时满足：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>等效<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中的依赖都不含无关属性</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中的依赖各不相同</li>
+</ul>
+<p>求解方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">repeat</span><br><span class="line">    合并同键依赖</span><br><span class="line">    去除无关属性</span><br><span class="line">until(F_c不变)</span><br></pre></td></tr></table></figure>
+<h3 id="无损分解"><a class="header-anchor" href="#无损分解">¶</a> 无损分解</h3>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><msub><mi>R</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>R</mi><mn>2</mn></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">(R_1,R_2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.00773em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.00773em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>是模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>的一个无损分解当以下两个依赖至少有一个在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>F</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">F^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.771331em;"></span><span class="strut bottom" style="height:0.771331em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中：</p>
+    R_1 \cap R_2 \to R_1\\
+    R_1 \cap R_2 \to R_2
+
+<h3 id="依赖保持"><a class="header-anchor" href="#依赖保持">¶</a> 依赖保持</h3>
+<p>若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>中的依赖可以分别在分解后的模式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>R</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>R</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">R_1, R_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.00773em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.00773em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中验证，而不必联表再验证，则称为依赖保持的分解。</p>
+<p>形式化定义：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><msub><mi>F</mi><mn>1</mn></msub><mo>∪</mo><msub><mi>F</mi><mn>2</mn></msub><mo>∪</mo><mo>⋯</mo><msub><mi>F</mi><mi>n</mi></msub><msup><mo>)</mo><mo>+</mo></msup><mo>=</mo><msup><mi>F</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">    (F_1 \cup F_2 \cup \cdots F_n)^+ = F^+
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.821331em;"></span><span class="strut bottom" style="height:1.071331em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">∪</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">∪</span><span class="minner">⋯</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">n</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose"><span class="mclose">)</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord">+</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+<p>检验依赖保持（待完善）</p>
+<h2 id="函数依赖理论的运用"><a class="header-anchor" href="#函数依赖理论的运用">¶</a> 函数依赖理论的运用</h2>
+<h3 id="BCNF分解算法"><a class="header-anchor" href="#BCNF分解算法">¶</a> BCNF分解算法</h3>
+<p>检测是否违反BCNF范式：</p>
+<ol>
+<li>计算属性闭包</li>
+<li>根据属性闭包检测是否是超码</li>
+</ol>
+<h3 id="3NF分解算法（待完善）"><a class="header-anchor" href="#3NF分解算法（待完善）">¶</a> 3NF分解算法（待完善）</h3>
+<h4 id="Why not BCNF Decomposition"><a class="header-anchor" href="#Why not BCNF Decomposition">¶</a> Why not BCNF Decomposition</h4>
+<p>BCNF分解的缺陷：<strong>不满足依赖保持</strong></p>
+<p>考虑<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>如下：</p>
+    JK \to L\\
+    L \to K
+
+<p>不存在无损分解同时满足BCNF和依赖保持。</p>
+<p>但是，存在无损分解同时满足3NF和依赖保持。</p>
+<h4 id="3NF缺陷"><a class="header-anchor" href="#3NF缺陷">¶</a> 3NF缺陷</h4>
+<p>作为代价：</p>
+<ul>
+<li>3NF是存在冗余的。</li>
+<li>此外，3NF允许了空值。</li>
+</ul>
+<p>3NF测试是<em>NP-hard</em>，但是3NF分解是P的</p>
+<h3 id="分解方法"><a class="header-anchor" href="#分解方法">¶</a> 分解方法</h3>
+<p>设<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>的正则覆盖，将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">F_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>中</p>
+<h2 id="工程中的函数依赖理论"><a class="header-anchor" href="#工程中的函数依赖理论">¶</a> 工程中的函数依赖理论</h2>
+<p><strong>还没有商业级DBMS实现在一个关系上检测函数依赖关系是否满足的特性</strong>。原因是检测函数依赖的代价太高昂了。</p>
+<p>商业级DBMS实现的特性是函数依赖的弱化：主码</p>
+<h2 id="*多值依赖与4NF（第四范式）"><a class="header-anchor" href="#*多值依赖与4NF（第四范式）">¶</a> *多值依赖与4NF（第四范式）</h2>
+<h3 id="多值依赖"><a class="header-anchor" href="#多值依赖">¶</a> 多值依赖</h3>
+<p>称<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.22222em;">Y</span></span></span></span>多值决定<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>Z</mi></mrow><annotation encoding="application/x-tex">Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">Z</span></span></span></span>当且仅当：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>⟨</mo><msub><mi>y</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>1</mn></msub><mo>⟩</mo><mo>∈</mo><mi>r</mi><mo separator="true">,</mo><mo>⟨</mo><msub><mi>y</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo>⟩</mo><mo>∈</mo><mi>r</mi><mo>→</mo><mo>⟨</mo><msub><mi>y</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo>⟩</mo><mo>∈</mo><mi>r</mi><mo separator="true">,</mo><mo>⟨</mo><msub><mi>y</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>1</mn></msub><mo>⟩</mo><mo>∈</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">    \langle y_1, z_1, w_1 \rangle \in r, \langle y_1, z_2, w_2\rangle \in r \rightarrow \langle y_1, z_1, w_2\rangle \in r, \langle y_1, z_2, w_1\rangle \in r
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mopen">⟨</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.04398em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">⟩</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mpunct">,</span><span class="mopen">⟨</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.04398em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">⟩</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mrel">→</span><span class="mopen">⟨</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.04398em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">⟩</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mpunct">,</span><span class="mopen">⟨</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.04398em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">⟩</span><span class="mrel">∈</span><span class="mord mathit" style="margin-right:0.02778em;">r</span></span></span></span></span></p>
+<h3 id="对比通常的函数依赖"><a class="header-anchor" href="#对比通常的函数依赖">¶</a> 对比通常的函数依赖</h3>
+<p>函数依赖其实“禁止了某些元组的存在”；而多值依赖却是“要求了某些元组的存在“</p>
+<h3 id="4NF（第四范式）"><a class="header-anchor" href="#4NF（第四范式）">¶</a> 4NF（第四范式）</h3>
+<p>4NF是BCNF在多值依赖上的推广。简单将BCNF定义中的要求从单值依赖更换成多值依赖即可</p>
+<p>4NF要求闭包里的多值依赖要么是平凡依赖，要么是超码依赖。</p>
+<p>4NF是BCNF的进一步收紧。</p>
+<h3 id="4NF分解算法（待完善）"><a class="header-anchor" href="#4NF分解算法（待完善）">¶</a> 4NF分解算法（待完善）</h3>
+<p>基本跟BCNF分解算法一致。</p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ecafb5e8/" rel="next" title="分布式系统——代码迁移">
+                <i class="fa fa-chevron-left"></i> 分布式系统——代码迁移
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/8d5d9797/" rel="prev" title="Docker Quick Reference">
+                Docker Quick Reference <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%8C%83%E5%BC%8F%E7%90%86%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text"> 关系型数据库设计范式理论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E5%88%86%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text"> 关系模式分解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Functional%20Dependencies%EF%BC%88%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text"> Functional Dependencies（函数依赖）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%81%E4%B8%8E%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.2.</span> <span class="nav-text"> 码与函数依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E5%87%A1%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.3.</span> <span class="nav-text"> 平凡函数依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96%E9%9B%86%E7%9A%84%E9%97%AD%E5%8C%85"><span class="nav-number">1.1.4.</span> <span class="nav-text"> 函数依赖集的闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1NF%EF%BC%88%E7%AC%AC%E4%B8%80%E8%8C%83%E5%BC%8F%EF%BC%89"><span class="nav-number">1.1.5.</span> <span class="nav-text"> 1NF（第一范式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BCNF(Boyce-Codd%20Normal%20Form,%20BC%E8%8C%83%E5%BC%8F)"><span class="nav-number">1.1.6.</span> <span class="nav-text"> BCNF(Boyce-Codd Normal Form, BC范式)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EBCNF%E7%9A%84%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%BC%8F%E5%88%86%E8%A7%A3"><span class="nav-number">1.1.7.</span> <span class="nav-text"> 基于BCNF的关系模式分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dependency%20Preservation%EF%BC%88%E4%BE%9D%E8%B5%96%E4%BF%9D%E6%8C%81%EF%BC%89%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.1.8.</span> <span class="nav-text"> Dependency Preservation（依赖保持）（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3NF(Third%20Normal%20Form)"><span class="nav-number">1.1.9.</span> <span class="nav-text"> 3NF(Third Normal Form)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Normalized%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.1.10.</span> <span class="nav-text"> Normalized（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BCNF%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.1.11.</span> <span class="nav-text"> BCNF的局限性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Functional%20Dependencies%20Theory"><span class="nav-number">1.2.</span> <span class="nav-text"> Functional Dependencies Theory</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Closure%20of%20a%20set%20of%20functional%20dependencies"><span class="nav-number">1.2.1.</span> <span class="nav-text"> Closure of a set of functional dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%AE%9A%E7%90%86%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text"> 其他定理（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E9%97%AD%E5%8C%85%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text"> 属性闭包（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%85%B3%E5%B1%9E%E6%80%A7%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A6%86%E7%9B%96%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.4.</span> <span class="nav-text"> 无关属性与正则覆盖（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E5%85%B3%E5%B1%9E%E6%80%A7"><span class="nav-number">1.2.4.1.</span> <span class="nav-text"> 无关属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A6%86%E7%9B%96"><span class="nav-number">1.2.4.2.</span> <span class="nav-text"> 正则覆盖</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E6%8D%9F%E5%88%86%E8%A7%A3"><span class="nav-number">1.2.5.</span> <span class="nav-text"> 无损分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E4%BF%9D%E6%8C%81"><span class="nav-number">1.2.6.</span> <span class="nav-text"> 依赖保持</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96%E7%90%86%E8%AE%BA%E7%9A%84%E8%BF%90%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text"> 函数依赖理论的运用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BCNF%E5%88%86%E8%A7%A3%E7%AE%97%E6%B3%95"><span class="nav-number">1.3.1.</span> <span class="nav-text"> BCNF分解算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3NF%E5%88%86%E8%A7%A3%E7%AE%97%E6%B3%95%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 3NF分解算法（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Why%20not%20BCNF%20Decomposition"><span class="nav-number">1.3.2.1.</span> <span class="nav-text"> Why not BCNF Decomposition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3NF%E7%BC%BA%E9%99%B7"><span class="nav-number">1.3.2.2.</span> <span class="nav-text"> 3NF缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E8%A7%A3%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.3.</span> <span class="nav-text"> 分解方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96%E7%90%86%E8%AE%BA"><span class="nav-number">1.4.</span> <span class="nav-text"> 工程中的函数依赖理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#*%E5%A4%9A%E5%80%BC%E4%BE%9D%E8%B5%96%E4%B8%8E4NF%EF%BC%88%E7%AC%AC%E5%9B%9B%E8%8C%83%E5%BC%8F%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text"> *多值依赖与4NF（第四范式）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%80%BC%E4%BE%9D%E8%B5%96"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 多值依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E9%80%9A%E5%B8%B8%E7%9A%84%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 对比通常的函数依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4NF%EF%BC%88%E7%AC%AC%E5%9B%9B%E8%8C%83%E5%BC%8F%EF%BC%89"><span class="nav-number">1.5.3.</span> <span class="nav-text"> 4NF（第四范式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4NF%E5%88%86%E8%A7%A3%E7%AE%97%E6%B3%95%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.5.4.</span> <span class="nav-text"> 4NF分解算法（待完善）</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

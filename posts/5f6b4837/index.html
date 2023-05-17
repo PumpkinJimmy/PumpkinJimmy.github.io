@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 全局光照：光线追踪 ¶ 冯氏光照的问题 最大的问题是无法精确模拟全局光照。 具体地说：   冯氏光照简单粗暴的全局光照明： 在处理局部光照明的时候冯氏模型考虑了漫反射和镜面反射，精度已经不错了； 但处理全局光照时，冯氏光照直接将照明近似为一个全局常量和一个系数。   物体与物体之间的存在光层面上相互影响 尤其是当场景中存在多个镜面表面的物体时，同一束光反射多次，冯氏光照模型完全处理不了。 最简">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全局光照：光线追踪">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/5f6b4837/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 全局光照：光线追踪 ¶ 冯氏光照的问题 最大的问题是无法精确模拟全局光照。 具体地说：   冯氏光照简单粗暴的全局光照明： 在处理局部光照明的时候冯氏模型考虑了漫反射和镜面反射，精度已经不错了； 但处理全局光照时，冯氏光照直接将照明近似为一个全局常量和一个系数。   物体与物体之间的存在光层面上相互影响 尤其是当场景中存在多个镜面表面的物体时，同一束光反射多次，冯氏光照模型完全处理不了。 最简">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-20T02:05:48.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:57:14.912Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/5f6b4837/"/>
+
+
+
+
+
+  <title>全局光照：光线追踪 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/5f6b4837/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">全局光照：光线追踪</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-20T10:05:48+08:00">
+                2021-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="全局光照：光线追踪"><a class="header-anchor" href="#全局光照：光线追踪">¶</a> 全局光照：光线追踪</h1>
+<h2 id="冯氏光照的问题"><a class="header-anchor" href="#冯氏光照的问题">¶</a> 冯氏光照的问题</h2>
+<p>最大的问题是<strong>无法精确模拟全局光照</strong>。</p>
+<p>具体地说：</p>
+<ul>
+<li>
+<p>冯氏光照简单粗暴的全局光照明：</p>
+<p>在处理局部光照明的时候冯氏模型考虑了漫反射和镜面反射，精度已经不错了；</p>
+<p>但处理全局光照时，冯氏光照直接将照明近似为一个全局常量和一个系数。</p>
+</li>
+<li>
+<p><strong>物体与物体之间的存在光层面上相互影响</strong></p>
+<p>尤其是当场景中存在多个镜面表面的物体时，同一束光反射多次，冯氏光照模型完全处理不了。</p>
+<p>最简单的例子：渲染镜子。</p>
+<p>在冯氏光照中，镜子除了提供强镜面反射之外，完全没有照出周围环境和物体的能力。</p>
+</li>
+</ul>
+<h2 id="光线追踪法"><a class="header-anchor" href="#光线追踪法">¶</a> 光线追踪法</h2>
+<h3 id="针孔摄像模型"><a class="header-anchor" href="#针孔摄像模型">¶</a> 针孔摄像模型</h3>
+<p>说是说“光线追踪”，其实实现的时候是“视线追踪”。</p>
+<p>我们将成像平面建模为<em>针孔摄像机阵列</em>。</p>
+<p>基本的思维方法是从观察点向针孔相机方向引一条射线，然后根据光学基本原理追踪射线路径，最终找到给定点的光照取值。</p>
+<h3 id="Ray Casting（待完善）"><a class="header-anchor" href="#Ray Casting（待完善）">¶</a> Ray Casting（待完善）</h3>
+<h3 id="Whitted-Style Ray Tracing（待完善）"><a class="header-anchor" href="#Whitted-Style Ray Tracing（待完善）">¶</a> Whitted-Style Ray Tracing（待完善）</h3>
+<h3 id="求交"><a class="header-anchor" href="#求交">¶</a> 求交</h3>
+<p>有了光线追踪模型，接下来的问题就是：如何高效地求射线与模型的交点。</p>
+<h4 id="一般模型求交"><a class="header-anchor" href="#一般模型求交">¶</a> 一般模型求交</h4>
+<p>若有模型的隐函数表达，那就只能联立求解了。</p>
+<p>但由于模型一般是三角网格，所以很多可以把问题化归为与三角形求交。</p>
+<h4 id="平面求交"><a class="header-anchor" href="#平面求交">¶</a> 平面求交</h4>
+<p>略</p>
+<h4 id="三角求交"><a class="header-anchor" href="#三角求交">¶</a> 三角求交</h4>
+<p>利用<em>重心坐标</em>来计算。</p>
+<p>实际上可以联立线性方程组求解，即可判断射线与三角面片是否有交以及交点重心坐标。</p>
+<h3 id="计算瓶颈"><a class="header-anchor" href="#计算瓶颈">¶</a> 计算瓶颈</h3>
+<p>光线追踪的主要瓶颈是</p>
+<ul>
+<li><strong>每个像素对应一条射线</strong></li>
+<li><strong>每条射线需要与场景中所有模型求交</strong></li>
+<li><strong>每条射线可能被反射/折射多次</strong></li>
+</ul>
+<h2 id="光线追踪加速"><a class="header-anchor" href="#光线追踪加速">¶</a> 光线追踪加速</h2>
+<p>光线追踪效果出众，而数学建模并不复杂，但计算瓶颈巨大。</p>
+<p>关于光追的学问主要是如何加速计算。</p>
+<p>常见方法：</p>
+<ul>
+<li>Bounding Box / Bounding Volumn</li>
+<li>体素</li>
+<li>八叉树</li>
+<li>KDTree/BSP Tree</li>
+</ul>
+<h3 id="体素化（均匀网格）（待完善）"><a class="header-anchor" href="#体素化（均匀网格）（待完善）">¶</a> 体素化（均匀网格）（待完善）</h3>
+<h3 id="AABB"><a class="header-anchor" href="#AABB">¶</a> AABB</h3>
+<p>AABB: Axis-Aligned Bounding Box</p>
+<p>包围盒平面对齐轴面。这样的包围盒非常容易求交。</p>
+<p>具体来说，一共三对六个轴向平行的平面，快速求出三对交点，如果三对交点每对都有一个点进入了包围盒，那就有交了。</p>
+<h3 id="空间划分：八叉树/KD树/BSP树"><a class="header-anchor" href="#空间划分：八叉树/KD树/BSP树">¶</a> 空间划分：八叉树/KD树/BSP树</h3>
+<ul>
+<li>八叉树：把空间等分为八个卦限</li>
+<li>KD树：沿着<em>轴向</em>把空间二分</li>
+<li>BSP树：沿着<em>任意方向</em>把空间二分</li>
+</ul>
+<h3 id="KD树"><a class="header-anchor" href="#KD树">¶</a> KD树</h3>
+<p>KD树可以认为是线段树的高维推广。</p>
+<p>用在光线追踪时，我们是这样处理的：</p>
+<ul>
+<li>由于沿轴向剖分，<strong>KD树的每一个区间对应空间中的一个AABB包围盒</strong></li>
+<li><strong>将截断成线段，当作区间查询</strong></li>
+<li>判定线段是否全包含某个“区间”利用的是AABB相较判定</li>
+</ul>
+<p>缺陷：</p>
+<ul>
+<li>如何选择划分标准</li>
+<li>同一个物体可能属于多个不相交区间，因此同一个物体可能被求交多次</li>
+</ul>
+<h3 id="BVH"><a class="header-anchor" href="#BVH">¶</a> BVH</h3>
+<p>BVH: Bounding Volume Hierarchy</p>
+<p>如果一个对象被可以属于多个区间会造成麻烦，那<strong>按对象划分就好了</strong>。代价是此时不同分组物体的包围盒可能是重叠的。</p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/a4255751/" rel="next" title="图像复原">
+                <i class="fa fa-chevron-left"></i> 图像复原
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/2d51d24b/" rel="prev" title="D3.js简记">
+                D3.js简记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA"><span class="nav-number">1.</span> <span class="nav-text"> 全局光照：光线追踪</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%AF%E6%B0%8F%E5%85%89%E7%85%A7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text"> 冯氏光照的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text"> 光线追踪法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%88%E5%AD%94%E6%91%84%E5%83%8F%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text"> 针孔摄像模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ray%20Casting%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text"> Ray Casting（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Whitted-Style%20Ray%20Tracing%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text"> Whitted-Style Ray Tracing（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E4%BA%A4"><span class="nav-number">1.2.4.</span> <span class="nav-text"> 求交</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E6%A8%A1%E5%9E%8B%E6%B1%82%E4%BA%A4"><span class="nav-number">1.2.4.1.</span> <span class="nav-text"> 一般模型求交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B3%E9%9D%A2%E6%B1%82%E4%BA%A4"><span class="nav-number">1.2.4.2.</span> <span class="nav-text"> 平面求交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E6%B1%82%E4%BA%A4"><span class="nav-number">1.2.4.3.</span> <span class="nav-text"> 三角求交</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E7%93%B6%E9%A2%88"><span class="nav-number">1.2.5.</span> <span class="nav-text"> 计算瓶颈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA%E5%8A%A0%E9%80%9F"><span class="nav-number">1.3.</span> <span class="nav-text"> 光线追踪加速</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%93%E7%B4%A0%E5%8C%96%EF%BC%88%E5%9D%87%E5%8C%80%E7%BD%91%E6%A0%BC%EF%BC%89%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 体素化（均匀网格）（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AABB"><span class="nav-number">1.3.2.</span> <span class="nav-text"> AABB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86%EF%BC%9A%E5%85%AB%E5%8F%89%E6%A0%91/KD%E6%A0%91/BSP%E6%A0%91"><span class="nav-number">1.3.3.</span> <span class="nav-text"> 空间划分：八叉树&#x2F;KD树&#x2F;BSP树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KD%E6%A0%91"><span class="nav-number">1.3.4.</span> <span class="nav-text"> KD树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BVH"><span class="nav-number">1.3.5.</span> <span class="nav-text"> BVH</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 数据库：索引 ¶ 索引文件 索引文件是存放索引记录的文件。 索引记录结构：  搜索码 指针（数据记录的位置）  ¶ 索引的性能指标  支持的访问类型  B+树索引支持高效的范围查询 哈希索引支持最高效的单点查询但不支持范围查询   访问时间 修改的维护时间 空间开销  ¶ 索引类型（待完善） ¶ 顺序索引  聚簇索引（primary key 主索引） 非聚簇索引（secondary key 辅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库：索引">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/21d1d2b7/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 数据库：索引 ¶ 索引文件 索引文件是存放索引记录的文件。 索引记录结构：  搜索码 指针（数据记录的位置）  ¶ 索引的性能指标  支持的访问类型  B+树索引支持高效的范围查询 哈希索引支持最高效的单点查询但不支持范围查询   访问时间 修改的维护时间 空间开销  ¶ 索引类型（待完善） ¶ 顺序索引  聚簇索引（primary key 主索引） 非聚簇索引（secondary key 辅">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-14T19:12:51.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:57:14.988Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/21d1d2b7/"/>
+
+
+
+
+
+  <title>数据库：索引 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/21d1d2b7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库：索引</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-15T03:12:51+08:00">
+                2021-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="数据库：索引"><a class="header-anchor" href="#数据库：索引">¶</a> 数据库：索引</h1>
+<h2 id="索引文件"><a class="header-anchor" href="#索引文件">¶</a> 索引文件</h2>
+<p>索引文件是存放索引记录的文件。</p>
+<p>索引记录结构：</p>
+<ol>
+<li>搜索码</li>
+<li>指针（数据记录的位置）</li>
+</ol>
+<h2 id="索引的性能指标"><a class="header-anchor" href="#索引的性能指标">¶</a> 索引的性能指标</h2>
+<ul>
+<li>支持的访问类型
+<ul>
+<li>B+树索引支持高效的范围查询</li>
+<li>哈希索引支持最高效的单点查询但不支持范围查询</li>
+</ul>
+</li>
+<li>访问时间</li>
+<li>修改的维护时间</li>
+<li>空间开销</li>
+</ul>
+<h2 id="索引类型（待完善）"><a class="header-anchor" href="#索引类型（待完善）">¶</a> 索引类型（待完善）</h2>
+<h3 id="顺序索引"><a class="header-anchor" href="#顺序索引">¶</a> 顺序索引</h3>
+<ul>
+<li>聚簇索引（<em>primary key</em> 主索引）</li>
+<li>非聚簇索引（<em>secondary key</em> 辅索引）</li>
+</ul>
+<h2 id="B+树索引（待完善）"><a class="header-anchor" href="#B+树索引（待完善）">¶</a> B+树索引（待完善）</h2>
+<h3 id="B+树结构与性质"><a class="header-anchor" href="#B+树结构与性质">¶</a> B+树结构与性质</h3>
+<ul>
+<li>多叉的严格平衡搜索树：根节点到任意叶子节点的距离都相等</li>
+<li>设最大分叉数为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">m</span></span></span></span>，则：
+<ul>
+<li>节点可存放的key数目上限为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">m</span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span></li>
+<li><strong>叶节点存放的key数目的取值范围是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mo>⌈</mo><mo>(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn><mo>⌉</mo><mo separator="true">,</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>]</mo></mrow><annotation encoding="application/x-tex">[\lceil (m-1)/2\rceil, m-1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mopen">⌈</span><span class="mopen">(</span><span class="mord mathit">m</span><span class="mbin">−</span><span class="mord mathrm">1</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span><span class="mclose">⌉</span><span class="mpunct">,</span><span class="mord mathit">m</span><span class="mbin">−</span><span class="mord mathrm">1</span><span class="mclose">]</span></span></span></span></strong>（小心，下限不等于最小扇出数-1）</li>
+<li><strong>根节点分叉数目取值范围<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mn>2</mn><mo separator="true">,</mo><mi>m</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">[2,m]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mord mathrm">2</span><span class="mpunct">,</span><span class="mord mathit">m</span><span class="mclose">]</span></span></span></span></strong></li>
+<li><strong>非根非叶节点分叉数目取值范围<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mo>⌈</mo><mi>m</mi><mi mathvariant="normal">/</mi><mn>2</mn><mo>⌉</mo><mo separator="true">,</mo><mi>m</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">[\lceil m/2\rceil, m]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mopen">⌈</span><span class="mord mathit">m</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span><span class="mclose">⌉</span><span class="mpunct">,</span><span class="mord mathit">m</span><span class="mclose">]</span></span></span></span></strong></li>
+<li>所有叶子节点利用最后一个指针的空间作为后继指针，串成一个有序链表</li>
+<li>（区别于B树）<strong>所有Key对应的Value只存放在叶节点上</strong></li>
+<li>作为将所有Key放在叶子上的收益，叶子节点串成的有序链表可以高效地实现范围查询：只需要找到端点值对应的指针就可以顺序输出</li>
+<li>作为将所有Key放在叶子上的代价，叶节点和非叶几点必须分开处理：叶节点上的Key在分裂时不能直接抽取到非叶节点上，而是冗余存储Key；但在非叶节点上却依然可以有这样的抽取Key的建树行为。</li>
+</ul>
+</li>
+</ul>
+<h3 id="B+树查找"><a class="header-anchor" href="#B+树查找">¶</a> B+树查找</h3>
+<p>从查找的角度，B+树可以看作特殊构造的非聚簇的多级顺序索引</p>
+<h3 id="B+树插入"><a class="header-anchor" href="#B+树插入">¶</a> B+树插入</h3>
+<p>主要是利用<em>分裂</em>和<em>增高</em>来维护性质。</p>
+<p>算法思路：</p>
+<ul>
+<li>对待插入的Key找到对应的叶节点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">L</span></span></span></span></li>
+<li>若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">L</span></span></span></span>已经有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">m</span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span>个Key了，则<em>分裂</em>成两个节点，需要按序将Key平分到两个节点上；否则，直接插入。</li>
+<li>若执行了分裂，则新增的节点需要向父节点插入一个新的Key</li>
+<li>对父节点插入并递归上述算法（父节点可能还要分裂）</li>
+<li>若最终把根节点分裂了，则B+树<em>增高</em>一层：为原根节点分裂出来的两个节点添加一个共同的父节点充当新的根节点</li>
+</ul>
+<h3 id="B+树删除"><a class="header-anchor" href="#B+树删除">¶</a> B+树删除</h3>
+<p>主要是利用<em>重新分布(Redistribution)</em>、<em>合并</em>以及变矮来维护性质。</p>
+<h2 id="Hash索引（待完善）"><a class="header-anchor" href="#Hash索引（待完善）">¶</a> Hash索引（待完善）</h2>
+<h3 id="Hash文件组织"><a class="header-anchor" href="#Hash文件组织">¶</a> Hash文件组织</h3>
+<h3 id="桶溢出处理"><a class="header-anchor" href="#桶溢出处理">¶</a> 桶溢出处理</h3>
+<p>两种起因：</p>
+<ul>
+<li>Hash表的容量耗尽</li>
+<li>（更常见）由于记录的*倾斜(skew)*导致的个别桶溢出</li>
+</ul>
+<p>个别桶的溢出对标的是Hash表中的<em>冲突</em>。</p>
+<p>自然，有两种处理溢出的手法：</p>
+<ul>
+<li>Closed Hashing 使用一个溢出链来存放溢出的记录，相当于<em>链接法</em></li>
+<li>Opened Hashing 其实就是<em>开放寻址法</em></li>
+</ul>
+<p>通常，数据库使用Closed Hashing解决溢出。因为数据库中增删改查都比较多。</p>
+<h3 id="Hash索引文件"><a class="header-anchor" href="#Hash索引文件">¶</a> Hash索引文件</h3>
+<p>Hash索引是以Hash文件组织结果构建的非聚簇索引。</p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/326791a4/" rel="next" title="DBMS底层：记录管理">
+                <i class="fa fa-chevron-left"></i> DBMS底层：记录管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/9f649fbe/" rel="prev" title="形态学运算">
+                形态学运算 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E7%B4%A2%E5%BC%95"><span class="nav-number">1.</span> <span class="nav-text"> 数据库：索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text"> 索引文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">1.2.</span> <span class="nav-text"> 索引的性能指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text"> 索引类型（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E7%B4%A2%E5%BC%95"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 顺序索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B+%E6%A0%91%E7%B4%A2%E5%BC%95%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text"> B+树索引（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B+%E6%A0%91%E7%BB%93%E6%9E%84%E4%B8%8E%E6%80%A7%E8%B4%A8"><span class="nav-number">1.4.1.</span> <span class="nav-text"> B+树结构与性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B+%E6%A0%91%E6%9F%A5%E6%89%BE"><span class="nav-number">1.4.2.</span> <span class="nav-text"> B+树查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B+%E6%A0%91%E6%8F%92%E5%85%A5"><span class="nav-number">1.4.3.</span> <span class="nav-text"> B+树插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B+%E6%A0%91%E5%88%A0%E9%99%A4"><span class="nav-number">1.4.4.</span> <span class="nav-text"> B+树删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash%E7%B4%A2%E5%BC%95%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text"> Hash索引（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash%E6%96%87%E4%BB%B6%E7%BB%84%E7%BB%87"><span class="nav-number">1.5.1.</span> <span class="nav-text"> Hash文件组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%B6%E6%BA%A2%E5%87%BA%E5%A4%84%E7%90%86"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 桶溢出处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.3.</span> <span class="nav-text"> Hash索引文件</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

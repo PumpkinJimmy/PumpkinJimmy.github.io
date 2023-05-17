@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="¶ 分布式系统：体系结构  分布式系统的逻辑设计称为软件体系结构 分布式系统的物理实现称为系统体系机构  ¶ 软件体系结构的基本类别  分层体系结构 基于对象的体系结构 以数据为中心的体系结构 基于事务的体系结构  ¶ 分层体系结构  类似网络协议栈的明确分层 服务端&#x2F;客户端模型  ¶ 基于对象的体系结构  类似OOP的建模思维 网状，不分层的模型  ¶ 基于事件的体系结构  观察者模式 Publ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统：体系结构">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/2d2c9e23/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="¶ 分布式系统：体系结构  分布式系统的逻辑设计称为软件体系结构 分布式系统的物理实现称为系统体系机构  ¶ 软件体系结构的基本类别  分层体系结构 基于对象的体系结构 以数据为中心的体系结构 基于事务的体系结构  ¶ 分层体系结构  类似网络协议栈的明确分层 服务端&#x2F;客户端模型  ¶ 基于对象的体系结构  类似OOP的建模思维 网状，不分层的模型  ¶ 基于事件的体系结构  观察者模式 Publ">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-10T07:56:25.000Z">
+<meta property="article:modified_time" content="2023-05-17T13:38:27.616Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pumpkinjimmy.github.io/posts/2d2c9e23/"/>
+
+
+
+
+
+  <title>分布式系统：体系结构 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BBPumpkin的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/2d2c9e23/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分布式系统：体系结构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-10T15:56:25+08:00">
+                2021-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="分布式系统：体系结构"><a class="header-anchor" href="#分布式系统：体系结构">¶</a> 分布式系统：体系结构</h1>
+<ul>
+<li>分布式系统的逻辑设计称为<em>软件体系结构</em></li>
+<li>分布式系统的物理实现称为<em>系统体系机构</em></li>
+</ul>
+<h2 id="软件体系结构的基本类别"><a class="header-anchor" href="#软件体系结构的基本类别">¶</a> 软件体系结构的基本类别</h2>
+<ul>
+<li>分层体系结构</li>
+<li>基于对象的体系结构</li>
+<li>以数据为中心的体系结构</li>
+<li>基于事务的体系结构</li>
+</ul>
+<h3 id="分层体系结构"><a class="header-anchor" href="#分层体系结构">¶</a> 分层体系结构</h3>
+<ul>
+<li>类似网络协议栈的明确分层</li>
+<li>服务端/客户端模型</li>
+</ul>
+<h3 id="基于对象的体系结构"><a class="header-anchor" href="#基于对象的体系结构">¶</a> 基于对象的体系结构</h3>
+<ul>
+<li>类似OOP的建模思维</li>
+<li>网状，不分层的模型</li>
+</ul>
+<h3 id="基于事件的体系结构"><a class="header-anchor" href="#基于事件的体系结构">¶</a> 基于事件的体系结构</h3>
+<ul>
+<li>观察者模式</li>
+<li>Publisher/Subscriber型</li>
+<li>必然存在一个事件总线/消息总线（这就是中间件）</li>
+<li><strong>时空解耦</strong>
+<ul>
+<li>空间上<strong>匿名化</strong>（消息的发布者和接收者互不认知）</li>
+<li>时间上<strong>异步化</strong>（消息的发送者和接收者可以不同时在线）</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据为中心的体系结构"><a class="header-anchor" href="#数据为中心的体系结构">¶</a> 数据为中心的体系结构</h3>
+<ul>
+<li>其实就是通过共享数据空间来建立系统</li>
+<li>同样可以实现时空解耦</li>
+</ul>
+<h2 id="系统体系结构的基本类别"><a class="header-anchor" href="#系统体系结构的基本类别">¶</a> 系统体系结构的基本类别</h2>
+<ul>
+<li>集中式</li>
+<li>非集中式</li>
+<li>混合</li>
+</ul>
+<h2 id="应用分层"><a class="header-anchor" href="#应用分层">¶</a> 应用分层</h2>
+<ul>
+<li>用户接口层：直接与用户交互的单元，也就是“用户界面”</li>
+<li>应用处理层：包含主要的<strong>业务逻辑</strong>，但不与具体数据绑定</li>
+<li>数据层：存储数据</li>
+</ul>
+<h2 id="基于对象的体系结构-2"><a class="header-anchor" href="#基于对象的体系结构-2">¶</a> 基于对象的体系结构</h2>
+<ul>
+<li>利用面向对象的思想进行设计</li>
+<li>存在封装特性：对象内部的状态（数据）是不可访问的</li>
+</ul>
+<h2 id="RESTful架构"><a class="header-anchor" href="#RESTful架构">¶</a> RESTful架构</h2>
+<p>将分布式系统看作资源的集合。应用可以操作资源。</p>
+<ul>
+<li>资源可以通过命名机制来表示</li>
+<li>所有服务提供相同的接口</li>
+<li>使用服务的消息都是自描述的</li>
+<li>系统不记录服务调用者的状态信息（<strong>无状态</strong>）</li>
+</ul>
+<p>RESTful使用HTTP协议的理由：</p>
+<ul>
+<li>标准化：有利于提供统一接口</li>
+<li>穿透能力：HTTP请求响应能穿透大部分防火墙</li>
+</ul>
+<p>但是HTTP的网络性能较差。</p>
+<p>RESTful的缺陷：</p>
+<ul>
+<li>接口涉及复杂</li>
+</ul>
+<h2 id="协同"><a class="header-anchor" href="#协同">¶</a> 协同</h2>
+<ul>
+<li>时间上是否耦合</li>
+<li>空间上是否耦合</li>
+</ul>
+<h2 id="非集中式架构"><a class="header-anchor" href="#非集中式架构">¶</a> 非集中式架构</h2>
+<ul>
+<li>
+<p>垂直分布</p>
+<p>将系统的不同逻辑层次分散到不同机器上（异构）</p>
+</li>
+<li>
+<p>水平分布</p>
+<p>系统分布在多个逻辑上等效的节点（同构）。易于拓展。</p>
+</li>
+<li>
+<p>点对点系统</p>
+<p>彻底的去中心化，每个节点完全相同的结构，不存在严格的服务端/客户端</p>
+<p>点对点系统又分为：</p>
+<ul>
+<li>结构化</li>
+<li>非机构化</li>
+<li>混合</li>
+</ul>
+</li>
+</ul>
+<h2 id="点对点系统(P2P)"><a class="header-anchor" href="#点对点系统(P2P)">¶</a> 点对点系统(P2P)</h2>
+<h3 id="结构化P2P系统实例：Chord结构"><a class="header-anchor" href="#结构化P2P系统实例：Chord结构">¶</a> 结构化P2P系统实例：Chord结构</h3>
+<ul>
+<li>本质上是<em>分布式哈希表</em></li>
+<li>所有的桶都是节点，节点连成环状</li>
+<li>数据存放在id为哈希值的后继的节点上</li>
+<li>为加速查找，现有节点需要提供前往其他存在的节点的快速路径</li>
+<li>若系统添加/删除新节点，需要要完成数据的移动</li>
+</ul>
+<h3 id="非结构化P2P系统"><a class="header-anchor" href="#非结构化P2P系统">¶</a> 非结构化P2P系统</h3>
+<ul>
+<li>每个节点维护一个动态随机的邻接表；</li>
+<li>整个网络拓扑结构是一个随机图</li>
+<li>部分视图构建
+<ul>
+<li>主动进程主动推送邻接表中部分表项给对等节点</li>
+<li>被动进程返回相同数量的表项</li>
+</ul>
+</li>
+</ul>
+<h3 id="P2P数据搜索"><a class="header-anchor" href="#P2P数据搜索">¶</a> P2P数据搜索</h3>
+<ul>
+<li>泛洪</li>
+<li>随机游走</li>
+<li>超级对等节点与索引节点</li>
+</ul>
+<h2 id="混合架构"><a class="header-anchor" href="#混合架构">¶</a> 混合架构</h2>
+<ul>
+<li>CDN</li>
+<li>BT</li>
+</ul>
+<h2 id="中间件"><a class="header-anchor" href="#中间件">¶</a> 中间件</h2>
+<p>中间件处理的问题：</p>
+<ul>
+<li>分布式系统的透明性</li>
+<li>为体系结构充当Adapter</li>
+<li>自适应</li>
+</ul>
+<h2 id="自我管理"><a class="header-anchor" href="#自我管理">¶</a> 自我管理</h2>
+<p>管理软件：</p>
+<ul>
+<li>Promothous</li>
+<li>Grafana</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/32ea83f9/" rel="next" title="计算几何基础：仿射变换">
+                <i class="fa fa-chevron-left"></i> 计算几何基础：仿射变换
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/0/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/girl.jpg"
+                alt="BBPumpkin" />
+            
+              <p class="site-author-name" itemprop="name">BBPumpkin</p>
+              <p class="site-description motion-element" itemprop="description">MyBlog( •̀ ω •́ )y</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text"> 分布式系统：体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text"> 软件体系结构的基本类别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text"> 分层体系结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.2.</span> <span class="nav-text"> 基于对象的体系结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.3.</span> <span class="nav-text"> 基于事件的体系结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.4.</span> <span class="nav-text"> 数据为中心的体系结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text"> 系统体系结构的基本类别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%88%86%E5%B1%82"><span class="nav-number">1.3.</span> <span class="nav-text"> 应用分层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84-2"><span class="nav-number">1.4.</span> <span class="nav-text"> 基于对象的体系结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESTful%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text"> RESTful架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E5%90%8C"><span class="nav-number">1.6.</span> <span class="nav-text"> 协同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E9%9B%86%E4%B8%AD%E5%BC%8F%E6%9E%B6%E6%9E%84"><span class="nav-number">1.7.</span> <span class="nav-text"> 非集中式架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E7%B3%BB%E7%BB%9F(P2P)"><span class="nav-number">1.8.</span> <span class="nav-text"> 点对点系统(P2P)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96P2P%E7%B3%BB%E7%BB%9F%E5%AE%9E%E4%BE%8B%EF%BC%9AChord%E7%BB%93%E6%9E%84"><span class="nav-number">1.8.1.</span> <span class="nav-text"> 结构化P2P系统实例：Chord结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E7%BB%93%E6%9E%84%E5%8C%96P2P%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.2.</span> <span class="nav-text"> 非结构化P2P系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#P2P%E6%95%B0%E6%8D%AE%E6%90%9C%E7%B4%A2"><span class="nav-number">1.8.3.</span> <span class="nav-text"> P2P数据搜索</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84"><span class="nav-number">1.9.</span> <span class="nav-text"> 混合架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">1.10.</span> <span class="nav-text"> 中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E7%AE%A1%E7%90%86"><span class="nav-number">1.11.</span> <span class="nav-text"> 自我管理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
