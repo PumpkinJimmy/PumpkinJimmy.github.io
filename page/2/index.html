@@ -260,6 +260,150 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/9403bcca/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/9403bcca/" itemprop="url">Solidity合约编程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-12-09T02:23:32+08:00">
+                2021-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Solidity合约编程"><a class="header-anchor" href="#Solidity合约编程">¶</a> Solidity合约编程</h1>
+<h2 id="QuickStart"><a class="header-anchor" href="#QuickStart">¶</a> QuickStart</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.8.4;</span><br><span class="line"></span><br><span class="line">contract Coin &#123;</span><br><span class="line">    // The keyword &quot;public&quot; makes variables</span><br><span class="line">    // accessible from other contracts</span><br><span class="line">    address public minter;</span><br><span class="line"></span><br><span class="line">    // Like C++ map&lt;&gt; / Python dict</span><br><span class="line">    mapping (address =&gt; uint) public balances;</span><br><span class="line"></span><br><span class="line">    // Events allow clients to react to specific</span><br><span class="line">    // contract changes you declare</span><br><span class="line">    event Sent(address from, address to, uint amount);</span><br><span class="line"></span><br><span class="line">    // Constructor code is only run when the contract</span><br><span class="line">    // is created</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        minter = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Sends an amount of newly created coins to an address</span><br><span class="line">    // Can only be called by the contract creator</span><br><span class="line">    function mint(address receiver, uint amount) public &#123;</span><br><span class="line">        require(msg.sender == minter);</span><br><span class="line">        balances[receiver] += amount;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Errors allow you to provide information about</span><br><span class="line">    // why an operation failed. They are returned</span><br><span class="line">    // to the caller of the function.</span><br><span class="line">    error InsufficientBalance(uint requested, uint available);</span><br><span class="line"></span><br><span class="line">    // Sends an amount of existing coins</span><br><span class="line">    // from any caller to an address</span><br><span class="line">    function send(address receiver, uint amount) public &#123;</span><br><span class="line">        if (amount &gt; balances[msg.sender])</span><br><span class="line">            revert InsufficientBalance(&#123;</span><br><span class="line">                requested: amount,</span><br><span class="line">                available: balances[msg.sender]</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        balances[msg.sender] -= amount;</span><br><span class="line">        balances[receiver] += amount;</span><br><span class="line">        emit Sent(msg.sender, receiver, amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>只有<code>public</code>成员变量可以被外界访问。此时这一成员类似property，包装了Getter和Setter</li>
+<li><code>event</code>便于关心的用户通过订阅来追踪某些交易。它对于Transaction而言不是必要的。<code>emit</code>用于主动触发事件</li>
+<li><code>error</code>定义一个异常；<code>revert</code>用于抛出异常（说明：<code>revert</code>会回滚当前调用的所有操作，包括发过来的币）</li>
+<li><code>msg</code>是一个预定义的特殊变量，表示调用合约的消息
+<ul>
+<li><code>msg.sender</code>是一个<code>address</code>，表示当前调用合约的账户地址</li>
+<li><code>msg.value</code>表示调用者附带（发送）的币值</li>
+</ul>
+</li>
+<li><code>block</code>是一个预定义的特殊变量，表示当前交易所在的Block
+<ul>
+<li><code>block.timestamp</code> 时间戳</li>
+</ul>
+</li>
+<li><code>address</code>的值是一个不可算术运算的hash串，但Solidty提供对<code>address</code>的操作原语
+<ul>
+<li><code>send</code>原语（需要<code>payable</code>的账户）：向<code>address</code>发送币；<strong>转账失败返回false，不会抛出异常</strong></li>
+<li><code>transfer</code>原语：同<code>payable</code>账户；<strong>转账失败会抛出异常</strong></li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/ff303036/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2008,203 +2152,6 @@ title: 容错</p>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/d2f915a4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BBPumpkin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/girl.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BBPumpkin的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/d2f915a4/" itemprop="url">多边形网格建模</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-26T02:30:04+08:00">
-                2021-11-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="多边形网格建模"><a class="header-anchor" href="#多边形网格建模">¶</a> 多边形网格建模</h1>
-<h2 id="建模种类综述"><a class="header-anchor" href="#建模种类综述">¶</a> 建模种类综述</h2>
-<ul>
-<li>多边形网格</li>
-<li>自由曲线</li>
-<li>点云</li>
-<li>隐式曲面</li>
-<li>体素</li>
-</ul>
-<h2 id="多边形网格建模-2"><a class="header-anchor" href="#多边形网格建模-2">¶</a> 多边形网格建模</h2>
-<p>最常用的是三角形网格</p>
-<h2 id="网格（待完善）"><a class="header-anchor" href="#网格（待完善）">¶</a> 网格（待完善）</h2>
-<h3 id="流形"><a class="header-anchor" href="#流形">¶</a> 流形</h3>
-<p>嵌在三维空间中的二维流形网格的特点：</p>
-<p><strong>一条非边界边与且只与两个面相邻</strong></p>
-<h3 id="定义"><a class="header-anchor" href="#定义">¶</a> 定义</h3>
-<h3 id="性质"><a class="header-anchor" href="#性质">¶</a> 性质</h3>
-<ul>
-<li>亏格</li>
-<li>可展性</li>
-</ul>
-<h3 id="三角化"><a class="header-anchor" href="#三角化">¶</a> 三角化</h3>
-<ul>
-<li>
-<p>三角化</p>
-<p>我们有了点云之后，通常需要构建网格。如果采用三角网格。也就是三角化</p>
-</li>
-<li>
-<p>“好”的三角化</p>
-<p>所谓“好”的三角化其实是<em>所有三角形尽可能接近等边三角形</em></p>
-</li>
-<li>
-<p>Voronoi图与Delaunay三角化</p>
-</li>
-</ul>
-<h2 id="网格数据结构"><a class="header-anchor" href="#网格数据结构">¶</a> 网格数据结构</h2>
-<p>理想的网格数据结构需要如下特性：</p>
-<ul>
-<li>存储<em>几何信息</em>和<em>拓扑结构信息</em></li>
-<li>快速查询拓扑结构</li>
-<li>快速修改拓扑结构</li>
-</ul>
-<h3 id="常用结构"><a class="header-anchor" href="#常用结构">¶</a> 常用结构</h3>
-<ul>
-<li>OBJ文件
-<ul>
-<li>无冗余</li>
-<li>存储非流形模型</li>
-<li>低效的拓扑信息访问和修改</li>
-</ul>
-</li>
-<li>邻接矩阵
-<ul>
-<li>冗余</li>
-<li>高效的相邻点访问</li>
-<li>低效的相邻面访问</li>
-</ul>
-</li>
-<li>Half-Edge Structure
-<ul>
-<li>最理想的网格文件格式</li>
-<li>存在一定的冗余存储</li>
-<li>只适用于二维流形网格</li>
-<li>三个表：顶点表、<strong>边表</strong>、面表</li>
-<li>利用二维流形的性质，将一条边分成两条<em>半边（half-edge）</em></li>
-<li>边表记录如下记录：
-<ul>
-<li>半边对应的顶点</li>
-<li>半边配对的另一个顶点</li>
-<li>半边对应的面</li>
-<li>半边的下一条半边</li>
-</ul>
-</li>
-<li>边表记录可以看作“半边串成的链表”</li>
-<li><strong>常数级的邻接点、边、面的查询</strong></li>
-</ul>
-</li>
-</ul>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2259,7 +2206,7 @@ title: 容错</p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-count">156</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2270,7 +2217,7 @@ title: 容错</p>
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2281,7 +2228,7 @@ title: 容错</p>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -260,6 +260,237 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/38fdccb7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/38fdccb7/" itemprop="url">OpenGL</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-03T10:50:28+08:00">
+                2021-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="OpenGL笔记"><a class="header-anchor" href="#OpenGL笔记">¶</a> OpenGL笔记</h1>
+<h2 id="GLFW和GLAD"><a class="header-anchor" href="#GLFW和GLAD">¶</a> GLFW和GLAD</h2>
+<p><em>GLFW</em>是对OS的GUI接口的封装。跨平台创建窗口、检验实践。</p>
+<p><em>GLAD</em>省了调用的加载。</p>
+<h2 id="VAO, VBO, IBO"><a class="header-anchor" href="#VAO, VBO, IBO">¶</a> VAO, VBO, IBO</h2>
+<ul>
+<li><em>VAO</em> 顶点数组对象</li>
+<li><em>VBO</em> 顶点缓冲对象</li>
+<li><em>IBO</em> 索引缓冲对象</li>
+</ul>
+<h2 id="基本渲染管线"><a class="header-anchor" href="#基本渲染管线">¶</a> 基本渲染管线</h2>
+<ol>
+<li><em>Vertex Shader</em> 顶点着色</li>
+<li><em>Primitive Assembly</em> 图元装配</li>
+<li><em>Geometry Shader</em> 几何着色</li>
+<li><em>Rasterization</em> 光栅化</li>
+<li><em>Fragment shader</em> 片元着色</li>
+<li><em>Blending</em> 混合</li>
+</ol>
+<h2 id="常用API"><a class="header-anchor" href="#常用API">¶</a> 常用API</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glGenBuffers</span>(); <span class="comment">// 创建缓冲</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(); <span class="comment">// 绑定缓冲类型</span></span><br><span class="line"><span class="built_in">glBufferData</span>(); <span class="comment">// 数据传送到缓冲</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(); <span class="comment">// 配置着色器如何解释缓冲区中的数据输入</span></span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>();</span><br><span class="line"><span class="built_in">glBindVertexArray</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="着色器"><a class="header-anchor" href="#着色器">¶</a> 着色器</h2>
+<p>注意区分<em>着色器(Shader)<em>和</em>着色器程序(Shader Program)</em></p>
+<p>一个着色器程序是由多个着色器前后级联构成的一个完成渲染模块，也就是<em>可编程渲染管线</em>。</p>
+<p>每个着色器虽然是独立的程序，但也是着色器程序的一部分。</p>
+<p>着色器使用<code>in/out</code>关键字来指明着色器的输入、输出变量。</p>
+<h3 id="顶点着色器"><a class="header-anchor" href="#顶点着色器">¶</a> 顶点着色器</h3>
+<p>顶点着色器是基本渲染管线必须的一部分。它的输入不一定是标准坐标，但是输出必须是标准化设备坐标。</p>
+<p>在顶点着色器之后的所有坐标都应该使用标准化设备坐标。</p>
+<h3 id="片元着色器"><a class="header-anchor" href="#片元着色器">¶</a> 片元着色器</h3>
+<p>输出一个颜色，表明片元的颜色</p>
+<h3 id="Uniform"><a class="header-anchor" href="#Uniform">¶</a> Uniform</h3>
+<p>使用<code>uniform</code>关键字定义可以供整个着色器程序中任何一个着色器使用的“全局”变量。</p>
+<p>由于是全局的，可以在任何一个着色器中声明Uniform。</p>
+<p>使用<code>glGetUniformLocation</code>在主程序中获得Uniform变量的引用，以便修改。</p>
+<p>注意，<strong>要先启动着色器程序，才使用GetUniform!</strong></p>
+<h2 id="理解VBO，EBO，VAO"><a class="header-anchor" href="#理解VBO，EBO，VAO">¶</a> 理解VBO，EBO，VAO</h2>
+<ul>
+<li>顶点属性
+<ul>
+<li>其实就是一个顶点可以具有很多属性</li>
+<li>除了最基本的坐标属性（位置），还可以有：颜色、透明度，甚至是法线的坐标表示</li>
+</ul>
+</li>
+<li>VBO
+<ul>
+<li>一块拿来放顶点属性的缓冲区</li>
+<li>可以申请很多块VBO</li>
+<li>使用<code>glBufferData</code>把数据从CPU拷到VBO中</li>
+<li>但每次用于渲染的顶点只能是指定的某一块VBO缓冲</li>
+<li>使用<code>glBindBuffer(GL_ARRAY_BUFFER, your_vbo_buf)</code>来指明渲染哪一块VBO中存放的顶点</li>
+<li>为了让着色器可以正确解释VBO中的字节，必须手动指明顶点属性的存储模式（其实相当于struct指明内存分布）</li>
+<li>使用<code>glVertexAttribPointer</code>指明顶点属性的存储模式</li>
+<li>需要使用<code>glEnableVertexAttribArray</code>来启用属性</li>
+<li><strong>数据只需要传输一次，以后就不必再重复传输了</strong></li>
+</ul>
+</li>
+<li>VAO
+<ul>
+<li>所有的VBO配置工作只要做一遍，之后直接从VAO中载入配置然后渲染</li>
+<li>可以理解为一个“配置录制工具”，将配置录制到VAO中，然后每次再载入配置即可</li>
+<li>存储的配置包括：
+<ul>
+<li><code>glBind</code>绑定的是哪一块VBO</li>
+<li><code>glVertexAttribPointer</code>配置的顶点属性模式，启用的节点</li>
+<li>绑定的EBO</li>
+</ul>
+</li>
+<li>其实OpenGL是一个状态机，如果只使用一个VBO，那其实用不上VAO；但考虑到可能使用多个VBO，它们各自对应不同的顶点属性模式，每次更改绑定的VBO，都要重新配置属性，这就很麻烦，因此为每个VBO配套使用一个VAO是有好处的</li>
+</ul>
+</li>
+<li>EBO：减少重复顶点
+<ul>
+<li>在VBO中只存储不重复的顶点和它们的属性</li>
+<li>实际渲染的时候使用EBO中的索引值在VBO中取点</li>
+</ul>
+</li>
+</ul>
+<h2 id="OpenGL的顶点和PCL的点云的区别"><a class="header-anchor" href="#OpenGL的顶点和PCL的点云的区别">¶</a> OpenGL的顶点和PCL的点云的区别</h2>
+<ul>
+<li>OpenGL的Vertex和PCL的Point都是一个具有三维坐标以及其他属性的抽象的“点”</li>
+<li>但OpenGL的顶点并不是孤立的，OpenGL需要<em>组装图元</em>，也即某些点组装成三角形。</li>
+</ul>
+<h2 id="纹理"><a class="header-anchor" href="#纹理">¶</a> 纹理</h2>
+<p>所谓*纹理(Texture)*是贴图的意思。</p>
+<p>纹理可以是2D也可以是3D甚至有别的，这里主要讨论2D纹理。</p>
+<p>为了将纹理贴在正确的位置，需要为顶点指定<em>纹理坐标</em>。</p>
+<p>纹理坐标是指，将纹理归一化放在纹理坐标系的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>0</mn><mo separator="true">,</mo><mn>0</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">0</span><span class="mpunct">,</span><span class="mord mathrm">0</span><span class="mclose">)</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(1,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span>矩形区域上，然后顶点相当于映射到纹理坐标系的某个位置，然后根据坐标映射关系OpenGL将纹理贴到正确的位置去。</p>
+<h3 id="使用纹理"><a class="header-anchor" href="#使用纹理">¶</a> 使用纹理</h3>
+<ul>
+<li><code>glGenTextures</code>申请一个纹理对象</li>
+<li><code>glActivateTexture</code>激活一个纹理单元（供片段着色器渲染使用）</li>
+<li><code>glBindTexture</code>将某个纹理对象指定为当前纹理</li>
+<li><code>glTexPeremeteri</code>配置纹理属性，包括延展的策略和放大插值的策略</li>
+<li><code>glTexImage2D</code>将一张图片的数据传输到纹理对象的缓冲区</li>
+</ul>
+<p>在片段着色器中使用sampler2D类型的Uniform输入变量来输入纹理单元，使用<code>texture</code>函数来使用纹理。</p>
+<h2 id="变换"><a class="header-anchor" href="#变换">¶</a> 变换</h2>
+<h3 id="齐次坐标"><a class="header-anchor" href="#齐次坐标">¶</a> 齐次坐标</h3>
+<p>可以发现，顶点着色器中输出的标准化坐标存在第四个恒为1的分量，这个分量称为<em>齐次坐标</em>。这是因为线性变换不能表达“平移”操作，为了方便增加了这个坐标。</p>
+<h3 id="万向锁"><a class="header-anchor" href="#万向锁">¶</a> 万向锁</h3>
+<p>使用关于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">x,y,z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">x</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.04398em;">z</span></span></span></span>轴的偏角（称为<em>欧拉角</em>），我们可以给出任意一个3D空间中的旋转。不仅如此，由于角是任意角，我们还可以通过插值得到旋转的整个轨迹。</p>
+<p>但是，存在一些角，具有不唯一的旋转轨迹，从而无法使用一组欧拉角来表征唯一的运动轨迹。</p>
+<h3 id="GLM"><a class="header-anchor" href="#GLM">¶</a> GLM</h3>
+<p>为OpenGL定制的矩阵运算库，可以方便地生成各种变换矩阵。</p>
+<p><strong>陷阱：glm::mat4必须显式初始化</strong>:<br>
+<code>glm::mat4 trans = glm::mat4(1.0f);</code></p>
+<h3 id="摄像机变换与Lookat"><a class="header-anchor" href="#摄像机变换与Lookat">¶</a> 摄像机变换与Lookat</h3>
+<p>所谓摄像机变换，其实是把世界坐标系上的点变换到摄像机坐标系。</p>
+<p>利用基变换思维可以写出变换矩阵。</p>
+<p><code>glm::lookat</code>可以便捷地生成这样地变换矩阵</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trans = glm::<span class="built_in">lookat</span>(cameraPos, lookatPoint, cameraUp);</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/ed318fdc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1742,325 +1973,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/20e5b247/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BBPumpkin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/girl.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BBPumpkin的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/20e5b247/" itemprop="url">复习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-07-08T16:48:40+08:00">
-                2021-07-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="传输层"><a class="header-anchor" href="#传输层">¶</a> 传输层</h1>
-<ul>
-<li>MSS 数据段的最大长度</li>
-<li>紧急指针：在头部之后，数据之前的带外数据的边界。仅在URG=1时有效</li>
-<li>TCP和UDP的校验和都是伪IP头部+头部+<strong>数据</strong>，IP才是只做头部校验</li>
-<li>TCP选项代表：SACK，MSS协商，WinScale</li>
-<li>PSH是指建议尽快发送，不要在等攒到1MSS再发了</li>
-<li>FIN发起关闭，表示发送FIN的一方不再有数据，但可以有确认</li>
-<li>注意FIN收到ACK之后还要等2MSL</li>
-<li>只有一个超时定时器</li>
-<li>注意TCP接收方不只是收到包的时候会发ACK，在窗口变动的时候同样需要发送ACK用于<strong>通知窗口</strong></li>
-<li>Jacobson：移动平均估算RTT的均值和方差，然后令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi><mi>T</mi><mi>O</mi><mo>=</mo><mi>R</mi><mi>T</mi><msub><mi>T</mi><mi>e</mi></msub><mo>+</mo><mn>4</mn><mi>D</mi><mi>e</mi><mi>v</mi><mi>R</mi><mi>T</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">RTO=RTT_e + 4DevRTT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">e</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">+</span><span class="mord mathrm">4</span><span class="mord mathit" style="margin-right:0.02778em;">D</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span></li>
-<li>Karn：每次重传超时，RTO直接加倍，直到收到第一个非重传段的ACK再重置。此外，重传段不能作为RTT的有效采样</li>
-<li>TCP提供的是无比特错的传输。尽管校验和是弱校验，但是下层提供了强校验</li>
-<li>TCP报文段的大小还真的和接收缓冲区有关，滑动窗口流控制就是可以影响发送方发送的报文段大小</li>
-<li>well-known端口号到1024为止</li>
-<li>拥塞控制要点：
-<ul>
-<li>慢开始：开始的时候从拥塞窗口1MSS开始指数增长到门限值</li>
-<li>拥塞门限减半+拥塞避免+快恢复=AIMD</li>
-</ul>
-</li>
-<li>糊涂窗口综合征之Nagle：
-<ul>
-<li>立即发送一个数据段清空缓冲区</li>
-<li>凑够1MSS或者收到确认再发下一个</li>
-</ul>
-</li>
-<li>糊涂窗口：Clark（延迟确认）
-<ul>
-<li>接收缓冲的空闲足够大（一半或1MSS）才发送确认</li>
-</ul>
-</li>
-<li>零窗口死锁：坚持计时器+零窗口探测报文</li>
-<li>注意到TCP头部的“头部长度”字段与IP完全相同，4bit以4B为单位表示头部长度，取值范围都是20B~60B，也即一个典型的没有选项的TCP/IP报文头部是20+20=40B</li>
-<li>在TCP双方通信时，<strong>通信双方的序号是可以重复的</strong>，也就是说同一个序号，A发B和B发A是两个不同的包。</li>
-<li>TCP连接建立是约定：
-<ul>
-<li><strong>单纯的确认包不消耗序号</strong></li>
-<li><strong>SYN（包括SYN-ACK）需要消耗一个序号</strong></li>
-<li>由于通信双方的序号是可以重复的，因此<strong>双方都要需要分别给出ISN（初始序号），分别通过SYN和SYN-ACK包的序号给出</strong></li>
-</ul>
-</li>
-<li>小心发送窗口是接收窗口和拥塞窗口中的最小值，不要看拥塞窗口增加就以为发送窗口也在增加</li>
-<li>小心如果没有说明，快恢复算法是不默认启用的</li>
-<li>IP广播地址就MAC广播地址</li>
-<li>IP多播地址是通过预先根据MAC多播确认地址的前若干位，然后用IP地址的低23位替换MAC的低23位</li>
-</ul>
-<h2 id="记忆点"><a class="header-anchor" href="#记忆点">¶</a> 记忆点</h2>
-<ul>
-<li>TCP慢开始：每1 Segment的ACK使得窗口+1 MSS</li>
-<li></li>
-</ul>
-<h1 id="IP"><a class="header-anchor" href="#IP">¶</a> IP</h1>
-<h2 id="记忆点-2"><a class="header-anchor" href="#记忆点-2">¶</a> 记忆点</h2>
-<ul>
-<li>ICMP 0 - 回显请求； 8 - 回显应答；</li>
-<li>SAP： TCP - 8； UDP - 17；</li>
-<li>ABCDE类网</li>
-<li>RIP直连网距离为1</li>
-<li>IP头20B到60B</li>
-<li>IP分片偏移*8；</li>
-<li>IP头部长度*4</li>
-<li>ICMP头8B</li>
-<li>ICMP报文
-<ul>
-<li>主机不可达：路由表查不到</li>
-<li>网络不可达：私有网络</li>
-<li>TTL为0</li>
-<li>丢包：源点抑制</li>
-<li>头部校验出错</li>
-</ul>
-</li>
-<li>特殊IP地址
-<ul>
-<li>全0主机号只能用来当网络号</li>
-<li>全1主机号只能用来广播</li>
-</ul>
-</li>
-<li>OSPF建图
-<ul>
-<li>末端网</li>
-<li>中转网</li>
-<li>点对点网</li>
-</ul>
-</li>
-</ul>
-<h1 id="应用层"><a class="header-anchor" href="#应用层">¶</a> 应用层</h1>
-<h2 id="记忆点-3"><a class="header-anchor" href="#记忆点-3">¶</a> 记忆点</h2>
-<ul>
-<li>DNS
-<ul>
-<li>用UDP（TCP也用）</li>
-<li>端口号53</li>
-<li>本地DNS、权限DNS、顶级DNS、根DNS</li>
-</ul>
-</li>
-<li>端口号
-<ul>
-<li>FTP 21</li>
-<li>Telnet 23</li>
-<li>SMTP 25</li>
-<li>HTTP 80</li>
-<li>DHCP 68 （UDP）</li>
-</ul>
-</li>
-</ul>
-<h1 id="链路层"><a class="header-anchor" href="#链路层">¶</a> 链路层</h1>
-<h2 id="记忆点-4"><a class="header-anchor" href="#记忆点-4">¶</a> 记忆点</h2>
-<ul>
-<li>循环冗余码
-<ul>
-<li>k位的生成多项式需要为被除数添加<strong>k-1</strong>个0，然后余数一定是<strong>k-1</strong>位的，这k-1位直接填进被除数末尾的零处</li>
-</ul>
-</li>
-<li>校验和
-<ul>
-<li><strong>进位的1要单独加上</strong></li>
-<li>16位一组做加法</li>
-<li><strong>加出来的结果要取反码</strong></li>
-</ul>
-</li>
-</ul>
-<h1 id="错题集"><a class="header-anchor" href="#错题集">¶</a> 错题集</h1>
-<ul>
-<li>
-<p>注意，<strong>传输层重传的是同一个报文段，（UDP）具有相同的序号，但网络层不知道，两次传输的IP数据报是两个不同的包，具有不同的IP包序号</strong></p>
-<p>也就是说，如果一个传输层报文段在IP层分片传输，其中某些片丢失了，后面是不能利用传输层重传的包的片来与前面的片重组成以完整的IP数据报的。</p>
-</li>
-<li>
-<p>小心发送窗口是拥塞窗口和通知窗口的<strong>取小</strong></p>
-</li>
-<li>
-<p><strong>等待2MSL只发生在主动关闭一方发送最后ACK之后</strong>，以便重传对FIN重传ACK</p>
-</li>
-<li>
-<p>TCP流量控制：$$ 吞吐率 = SWS / RTT $$</p>
-</li>
-<li>
-<p>TCP拥塞控制中每1RTT窗口翻倍的慢开始的实现是<strong>每一个Segment的确认收到就将拥塞窗口+1</strong></p>
-</li>
-<li>
-<p>路由表的列</p>
-<ul>
-<li>目的网络号 or 目的网络IP+子网掩码</li>
-<li>下一跳IP</li>
-<li>接口</li>
-</ul>
-</li>
-<li>
-<p>关于“确认”和“可靠”和“连接”</p>
-<ul>
-<li>若要可靠必须有确认</li>
-<li>但要可靠不一定要连接（OSPF可靠扩散）</li>
-<li>要建立连接必然要有确认</li>
-<li>有确认不一定有连接（OSPF可靠扩散）</li>
-</ul>
-</li>
-<li>
-<p>注意回退N和选择性确认都是连续ARQ，都是有发送窗口的，且发送窗口的大小隐含了需要的序号个数（SWS + 1）</p>
-</li>
-<li>
-<p>吞吐量 = 有效数据率 = <strong>有效载荷长度</strong> / 时间</p>
-</li>
-<li>
-<p>链路层滑动窗口的吞吐量计算与TCP不同。</p>
-<ul>
-<li>TCP是面向字节流的，因此如果接收方对每个收到的字节都发送确认，则最快<strong>在收到第一个字节的时候就可以发送确认</strong>，因此滑动窗口开始滑动最早的时间点是<strong>第一个字节的确认被收到</strong>。由于一个字节的发送时延可以忽略不记，因此TCP的吞吐量可以这样算：</li>
-</ul>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mi>W</mi><mi>S</mi><mi mathvariant="normal">/</mi><mi>R</mi><mi>T</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">  SWS / RTT
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span></span></p>
-<ul>
-<li>链路层<strong>以帧为单位确认</strong>，因此最早的滑动时间点是<strong>第一个帧的确认被收到</strong>，但<strong>帧发送时延不可忽略</strong>，因此有如下吞吐量计算（其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span>是链路的带宽）：</li>
-</ul>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>S</mi><mi>W</mi><mi>S</mi></mrow><mrow><mi>R</mi><mi>T</mi><mi>T</mi><mo>+</mo><mi>P</mi><mi>D</mi><mi>U</mi><mi mathvariant="normal">/</mi><mi>R</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">  \frac{SWS}{RTT + PDU / R}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.36033em;"></span><span class="strut bottom" style="height:2.29633em;vertical-align:-0.936em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="mord mathit" style="margin-right:0.02778em;">D</span><span class="mord mathit" style="margin-right:0.10903em;">U</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span><span style="top:-0.2300000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="mord mathit" style="margin-right:0.05764em;">S</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
-</li>
-</ul>
-<h1 id="无线网"><a class="header-anchor" href="#无线网">¶</a> 无线网</h1>
-<ul>
-<li>802.11
-<ul>
-<li>Wifi使用CSMA/CA</li>
-<li>CSMA/CD vs. CSMA/CA
-<ul>
-<li>两个CSMA都是1-persistent CSMA，<strong>信道忙，必须持续监听，直到空才发送</strong></li>
-<li>CD是<strong>边发送边检测冲突</strong></li>
-<li>CA是<strong>发送时不检测冲突</strong>，而是尽量避免冲突（如RTS“请求发送”帧）</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>移动网络
-<ul>
-<li>3G：<strong>CDMA（码分多址）</strong></li>
-<li>4G：<strong>LTE（正交频分复用）</strong>，频带允许重叠的FDM</li>
-<li>5G：<strong>毫米波，更多的基站</strong></li>
-</ul>
-</li>
-</ul>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2115,7 +2027,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-count">156</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2126,7 +2038,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2137,7 +2049,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

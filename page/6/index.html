@@ -260,6 +260,196 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/7eea30f0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/7eea30f0/" itemprop="url">基本阴影生成</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-10-15T10:04:59+08:00">
+                2021-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基本阴影生成"><a class="header-anchor" href="#基本阴影生成">¶</a> 基本阴影生成</h1>
+<p>考虑光照遮挡生成的</p>
+<h2 id="基本概念"><a class="header-anchor" href="#基本概念">¶</a> 基本概念</h2>
+<ul>
+<li>Receiver</li>
+<li>遮挡物</li>
+<li>本影</li>
+<li>半影（penumbra）</li>
+</ul>
+<h2 id="基本类别"><a class="header-anchor" href="#基本类别">¶</a> 基本类别</h2>
+<ul>
+<li>
+<p>Attached Shadows 附着阴影</p>
+<p>由于背向光源而导致的<em>附着于模型表面</em></p>
+</li>
+<li>
+<p>Cast Shadows 投射阴影</p>
+<p>由于<em>光照遮挡</em>导致的<em>投射于Receiver</em>的阴影</p>
+</li>
+<li>
+<p>Self Shadows</p>
+</li>
+</ul>
+<h2 id="Hard Shadow vs. Soft Shadow"><a class="header-anchor" href="#Hard Shadow vs. Soft Shadow">¶</a> Hard Shadow vs. Soft Shadow</h2>
+<ul>
+<li>
+<p>Hard Shadow</p>
+<p>通常由理想点光源生成。阴影存在硬边界，不自然</p>
+</li>
+<li>
+<p>Soft Shadow</p>
+<p>引入面光源和半影区使得阴影更自然</p>
+</li>
+</ul>
+<h2 id="Planar Shadow"><a class="header-anchor" href="#Planar Shadow">¶</a> Planar Shadow</h2>
+<p>利用相似，将顶点投影到给定平面上。</p>
+<p>然后在着色时<strong>不计算漫反射和镜面反射，只算环境光</strong></p>
+<h2 id="Curved Surface Shadow"><a class="header-anchor" href="#Curved Surface Shadow">¶</a> Curved Surface Shadow</h2>
+<p>将模型渲染为全黑得到一个影子，然后当作纹理贴到Receiver上。</p>
+<p>缺点是无法渲染自遮挡产生的阴影。</p>
+<h2 id="Shadow Map"><a class="header-anchor" href="#Shadow Map">¶</a> Shadow Map</h2>
+<p>基于z-buffer的阴影生成，用于<strong>快速判断顶点是否被遮挡</strong>，可以支持自遮挡。效果可以，且性能极佳。</p>
+<p>两步走生成阴影：</p>
+<ul>
+<li><strong>将摄像机放在点光源的位置，渲染计算z-buffer，生成Shadow Map</strong></li>
+<li>将摄像机放回原位，利用Shadow Map确定每个顶点是否在阴影内</li>
+</ul>
+<p>注意：<strong>无论摄像机如何变化，只要光源和遮挡物的相对关系不变，Shadow Map就不变</strong></p>
+<p>优点：</p>
+<ul>
+<li>Shadow Map在静态场景渲染中只需要计算一次，性能高。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>Hard Shadow （点光源）</li>
+<li>重采样导致的各种问题（Shadow Map的分辨率是有限的）</li>
+<li>关于浮点运算的一些问题</li>
+</ul>
+<h2 id="Shadow Volume"><a class="header-anchor" href="#Shadow Volume">¶</a> Shadow Volume</h2>
+<p>可用于动态场景的阴影生成方法。</p>
+<p>对物体计算<strong>Shadow Volume</strong>（阴影体），然后给出摄像机，利用<em>阴影体前向面/后向面</em>来确定顶点是否存在于阴影体内，最终确定点是否被遮挡。</p>
+<p>优点：</p>
+<ul>
+<li>可以用于动态场景</li>
+<li>不存在分辨率问题</li>
+<li>精细度高</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>计算开销大</li>
+</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/deebca66/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1805,189 +1995,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/34e47b45/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BBPumpkin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/girl.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BBPumpkin的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/34e47b45/" itemprop="url">马尔可夫模型</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-09-30T16:57:30+08:00">
-                2021-09-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="马尔可夫模型"><a class="header-anchor" href="#马尔可夫模型">¶</a> 马尔可夫模型</h1>
-<h2 id="马尔可夫过程/马尔可夫链"><a class="header-anchor" href="#马尔可夫过程/马尔可夫链">¶</a> 马尔可夫过程/马尔可夫链</h2>
-<p>马尔可夫过程是满足<em>无后效性</em>的随机构成</p>
-<p>马尔可夫链是离散的马尔可夫过程。</p>
-<p>马尔可夫链定义如下：</p>
-<h2 id="MRP（马尔可夫奖励过程）"><a class="header-anchor" href="#MRP（马尔可夫奖励过程）">¶</a> MRP（马尔可夫奖励过程）</h2>
-<ul>
-<li>
-<p>Return（奖励）</p>
-</li>
-<li>
-<p>Discount</p>
-</li>
-<li>
-<p>Value Function（估值函数）</p>
-</li>
-<li>
-<p>Bellman Equation</p>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mo>=</mo><mrow><mi mathvariant="script">R</mi></mrow><mo>+</mo><mi>γ</mi><mrow><mi mathvariant="script">P</mi></mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">
-v = \mathcal{R} + \gamma \mathcal{P}v
-
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mrel">=</span><span class="mord displaystyle textstyle uncramped"><span class="mord mathcal">R</span></span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.05556em;">γ</span><span class="mord displaystyle textstyle uncramped"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mord mathit" style="margin-right:0.03588em;">v</span></span></span></span></span></p>
-<p>Bellman is linear, can be solved in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>3</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">3</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span> by Guassian Elimination or iterative method</p>
-</li>
-</ul>
-<h2 id="MDP（马尔可夫决策过程）"><a class="header-anchor" href="#MDP（马尔可夫决策过程）">¶</a> MDP（马尔可夫决策过程）</h2>
-<ul>
-<li>
-<p>Action</p>
-</li>
-<li>
-<p>Policy</p>
-</li>
-<li>
-<p>Value Function</p>
-</li>
-<li>
-<p>Action-Value Function</p>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>q</mi><mrow><mi>π</mi></mrow></msub><mo>(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo>)</mo><mo>=</mo><msub><mrow><mi mathvariant="double-struck">E</mi></mrow><mrow><mi>π</mi></mrow></msub><mo>[</mo><msub><mi>G</mi><mi>t</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>S</mi><mi>t</mi></msub><mo>=</mo><mi>s</mi><mo separator="true">,</mo><msub><mi>A</mi><mi>t</mi></msub><mo>=</mo><mi>a</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">  q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a]
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">q</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mpunct">,</span><span class="mord mathit">a</span><span class="mclose">)</span><span class="mrel">=</span><span class=""><span class="mord displaystyle textstyle uncramped"><span class="mord mathbb">E</span></span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">[</span><span class="mord"><span class="mord mathit">G</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord"><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.05764em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord mathit">s</span><span class="mpunct">,</span><span class="mord"><span class="mord mathit">A</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord mathit">a</span><span class="mclose">]</span></span></span></span></span></p>
-</li>
-<li>
-<p>Bellman Expectation Equation</p>
-</li>
-<li>
-<p>Value Function vs. Q-Function</p>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mrow><mi>π</mi></mrow></msub><mo>(</mo><mi>s</mi><mo>)</mo><mo>=</mo><msub><mi>max</mi><mrow><mi>a</mi></mrow></msub><msub><mi>q</mi><mrow><mi>π</mi></mrow></msub><mo>(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">  v_{\pi}(s) = \max_{a} q_{\pi}(s,a)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.45em;vertical-align:-0.7em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mclose">)</span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:0.6em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">a</span></span></span></span><span style="top:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="mop">max</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">q</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03588em;">π</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mopen">(</span><span class="mord mathit">s</span><span class="mpunct">,</span><span class="mord mathit">a</span><span class="mclose">)</span></span></span></span></span></p>
-</li>
-<li>
-<p>Bellman Optimality Equation</p>
-<ul>
-<li>Bellman Optimality Equation is non-linear</li>
-<li><strong>No closed form</strong></li>
-<li>Many iterative solution methods
-<ul>
-<li>Value Iteration</li>
-<li>Policy Iteration</li>
-<li>Q-Learning</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2042,7 +2049,7 @@ v = \mathcal{R} + \gamma \mathcal{P}v
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-count">156</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2053,7 +2060,7 @@ v = \mathcal{R} + \gamma \mathcal{P}v
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2064,7 +2071,7 @@ v = \mathcal{R} + \gamma \mathcal{P}v
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

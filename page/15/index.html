@@ -260,6 +260,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/da24fffd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/girl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/da24fffd/" itemprop="url">Sliding Window</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-06-09T16:52:27+08:00">
+                2021-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Sliding Window"><a class="header-anchor" href="#Sliding Window">¶</a> Sliding Window</h2>
+<p>在ARQ协议的基础上加上以下约束/特性构成基本滑动窗口策略：</p>
+<ol>
+<li>连续发送</li>
+<li>按序接收</li>
+<li>累积确认</li>
+<li>编号重用</li>
+</ol>
+<p>以下有滑动窗口的一些性质：</p>
+<p>设发送窗口大小<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">sw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span>,接收窗口大小<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">rw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span><br>
+0. 编号系统呈环状</p>
+<ol>
+<li>窗口总是单向滑动，且发送窗口与接收窗口同向滑动</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>r</mi><mi>w</mi><mo>≤</mo><mi>s</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">1 \le rw \le sw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mrel">≤</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mrel">≤</span><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span></li>
+<li>发送窗口滞后于接收窗口</li>
+<li>发送窗口中的包都是已发送未确认/未发送的，窗口外的序号有两种可能：已经发送并得到确认的包的序号，或者未使用的序号</li>
+<li>接收窗口中的序号是期待接收到的包序号。但窗口之外的序号有两种可能：已经完成接收提交给上层的包的序号，或者未使用的序号</li>
+</ol>
+<p>故有如下结论：</p>
+<ol>
+<li>
+<p>最少需要的编号数目</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>w</mi><mo>+</mo><mi>r</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">sw+rw
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.58333em;"></span><span class="strut bottom" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span></span></p>
+<p>大致理由：由于发送窗口滞后于接收窗口，且最大滞后恰好是接收窗口与发送窗口相邻，又接收窗口最大为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">sw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span>，故最少需要<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>w</mi><mo>+</mo><mi>r</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">sw+rw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.58333em;"></span><span class="strut bottom" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span>个编号</p>
+<p>大致证明：</p>
+ 有rw_l \ge sw_l\\
+ 则rw_l \le sw_r + 1\\
+
+<p>因为若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><msub><mi>w</mi><mi>l</mi></msub><mo>&gt;</mo><mi>s</mi><msub><mi>w</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">rw_l &gt; sw_r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.5391em;"></span><span class="strut bottom" style="height:0.6891em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.01968em;">l</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">&gt;</span><span class="mord mathit">s</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>，则中间的空隙中的序号必然是已经发送并被接收且被确认的序号。</p>
+<p>考虑到编号的环状结构，这本来是有可能的，但这意味着此时接收窗口滞后于发送窗口。从而这种情况被归谬了。</p>
+<p>综上即可得到结论<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><msub><mi>w</mi><mi>r</mi></msub><mo>−</mo><mi>s</mi><msub><mi>w</mi><mi>l</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">rw_r - sw_l + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.79444em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">−</span><span class="mord mathit">s</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.01968em;">l</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">+</span><span class="mord mathrm">1</span></span></span></span>即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>w</mi><mo>+</mo><mi>r</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">sw+rw</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.58333em;"></span><span class="strut bottom" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span></p>
+</li>
+</ol>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/88c26b79/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3546,131 +3699,6 @@ for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x<
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/890f0ffc/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BBPumpkin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/girl.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BBPumpkin的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/890f0ffc/" itemprop="url">关于IP、路由、子网</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-19T11:41:31+08:00">
-                2021-05-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我们为网卡配置IP地址的时候要配置子网掩码的直接目的其实是<strong>指出网络号</strong>。</p>
-<p>其实如果只是为了标识主机，只需要给出IP就够了。给出网络号其实是主机在<strong>配置自己所在的物理网络的网络号</strong>。</p>
-<p>这也是为什么配置默认网关的时候通常要求默认网关IP与主机IP位于同一个子网中。显然默认网关要和主机在同一物理网络中才能正常工作。</p>
-<p>附：检查默认网关子网号流程：首先使用主机配置的子网掩码来获得默认网关的子网号，然后比较。<br>
-子网号是否一致。</p>
-<p>注意：<strong>管理员需要为自己的子网掩码配置负责</strong></p>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3725,7 +3753,7 @@ for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x<
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">155</span>
+                  <span class="site-state-item-count">156</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -3736,7 +3764,7 @@ for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x<
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -3747,7 +3775,7 @@ for <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x<
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
