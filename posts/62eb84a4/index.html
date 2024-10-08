@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="容错 含义 容错容许系统的某些组件失效，而不会严重影响整体性能。故障发生时，系统可以进行恢复，同时可以继续任务处理。能够容错的系统是可靠的（广义）。 要求 广义上的可靠性包含如下四个方面：   Availability 可用性 系统是否准备好提供服务   Reliability 可靠性 系统持续提供服务的能力（持续运行能力）   Safety 安全性 低概率发生灾难（宕机、数据损坏、数据泄露）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容错">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/62eb84a4/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="容错 含义 容错容许系统的某些组件失效，而不会严重影响整体性能。故障发生时，系统可以进行恢复，同时可以继续任务处理。能够容错的系统是可靠的（广义）。 要求 广义上的可靠性包含如下四个方面：   Availability 可用性 系统是否准备好提供服务   Reliability 可靠性 系统持续提供服务的能力（持续运行能力）   Safety 安全性 低概率发生灾难（宕机、数据损坏、数据泄露）">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/62eb84a4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>容错 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/62eb84a4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          容错
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-08 18:10:11" itemprop="dateCreated datePublished" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E5%AE%B9%E9%94%99" tabindex="-1">容错</h1>
+<h2 id="%E5%90%AB%E4%B9%89" tabindex="-1">含义</h2>
+<p>容错容许系统的<em>某些</em>组件失效，而不会<em>严重</em>影响整体性能。故障发生时，系统可以进行<em>恢复</em>，同时可以继续任务处理。能够容错的系统是<em>可靠的</em>（广义）。</p>
+<h2 id="%E8%A6%81%E6%B1%82" tabindex="-1">要求</h2>
+<p>广义上的可靠性包含如下四个方面：</p>
+<ul>
+<li>
+<p>Availability 可用性</p>
+<p>系统是否准备好提供服务</p>
+</li>
+<li>
+<p>Reliability 可靠性</p>
+<p>系统持续提供服务的能力（持续运行能力）</p>
+</li>
+<li>
+<p>Safety 安全性</p>
+<p>低概率发生灾难（宕机、数据损坏、数据泄露）</p>
+</li>
+<li>
+<p>Maintainability 可维护性</p>
+<p>一个失效的系统修复的能力</p>
+</li>
+</ul>
+<h2 id="%E5%AE%B9%E9%94%99%E6%80%A7%E7%9B%B8%E5%85%B3%E5%BA%A6%E9%87%8F" tabindex="-1">容错性相关度量</h2>
+<p>可靠性度量：</p>
+<ul>
+<li>平均失效时间（MTTF）：直到组件失效的平均时间</li>
+<li>平均恢复时间（MTTR）：恢复一个组件的平均时间</li>
+<li>两次失效的平均时间（MTBF）：MTBF = MTTF + MTTR</li>
+</ul>
+<p>可用性度量：</p>
+<ul>
+<li>可用性考察的是某时间点上系统是否可用</li>
+</ul>
+<h2 id="%E5%A4%B1%E6%95%88%E7%9A%84%E5%88%86%E7%B1%BB" tabindex="-1">失效的分类</h2>
+<ul>
+<li>Crash Failure</li>
+<li>Omission Failure</li>
+<li>Timing Failure</li>
+<li>Response Failure</li>
+<li>Arbitrary Failure</li>
+</ul>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%B1%E8%AF%86" tabindex="-1">分布式共识</h2>
+<h3 id="%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8C%BA%E5%88%AB" tabindex="-1">与一致性的区别</h3>
+<ul>
+<li><em>共识</em>的要求比较明确：所有节点<strong>对某些操作的认识保持一致</strong></li>
+<li>一致性是更广义的概念。它存在多种模型，可能只要求数据（结果）一致甚至最终一致就可以了，不一定要操作一致。</li>
+<li><strong>共识是比一致更强的要求；若达成共识则必然成立一致</strong></li>
+<li>共识协议的开销更大，性能更低，只有最重要的部件才需要共识；其他部分可以用要求更低的一致性。</li>
+</ul>
+<h3 id="%E4%B8%8Ek-%E5%AE%B9%E9%94%99%E7%9A%84%E5%8C%BA%E5%88%AB" tabindex="-1">与K-容错的区别</h3>
+<ul>
+<li>K-容错问题中假设<strong>对一个分布式系统操作/对象存在正确的结果</strong>，可以简单地运用投票来解决</li>
+<li>共识中<em>不一定存在一个正确的结果</em>，它要求<strong>对等节点之间通过协商达成一致的状态</strong>。</li>
+</ul>
+<h3 id="%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%E5%88%86%E7%B1%BB" tabindex="-1">共识协议分类</h3>
+<ul>
+<li>“停止失效”容错（无恶意行为）
+<ul>
+<li>泛洪：适用于<strong>能准确检测停止失效</strong>的情景</li>
+<li>Paxos, Raft：无法准确检测失效</li>
+</ul>
+</li>
+<li>有恶意容错
+<ul>
+<li>拜占庭容错</li>
+<li>选举</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E5%9F%BA%E4%BA%8E%E6%B3%9B%E6%B4%AA%E7%9A%84%E5%85%B1%E8%AF%86" tabindex="-1">基于泛洪的共识</h3>
+<ul>
+<li>只适用于<strong>能够准确检测停止失效</strong>的情景</li>
+<li>适用的大前提隐含了一个非常强的条件：<strong>系统是全局同步的</strong></li>
+<li>由于系统是同步的，只需要timeout就足以探测出节点是否停止失效了</li>
+</ul>
+<h2 id="paxos" tabindex="-1">Paxos</h2>
+<h3 id="%E7%AE%80%E4%BB%8B" tabindex="-1">简介</h3>
+<p>适用非常广泛的实际系统的共识协议，前提非常宽松</p>
+<p>特性：</p>
+<ul>
+<li>适用异步系统</li>
+<li>适用于通信不可靠，消息丢失、重复、乱序的系统</li>
+<li>适用于进程会Crash Failure的情景，但不是任意型的失效</li>
+<li>适用于无恶意行为的系统</li>
+<li>可以检测出损坏的消息</li>
+<li>所有操作都是确定的，即操作一旦执行，其行为可以被准确捕获</li>
+</ul>
+<h2 id="%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99" tabindex="-1">拜占庭容错</h2>
+<p>BFT最重要的特性是适用于<strong>有恶意行为</strong>的情景</p>
+<h3 id="bft" tabindex="-1">BFT</h3>
+<h3 id="pbft" tabindex="-1">PBFT</h3>
+<p>改进了朴素的BFT算法，更高效，适用于异步系统</p>
+<h2 id="%E5%86%8D%E7%9C%8Bcap" tabindex="-1">再看CAP</h2>
+<p>结论：在通信失效的网络环境中，实现一个具有原子读写的共享内存同时又保证每一个请求得到响应式非常困难的。</p>
+<ul>
+<li>通信失效对应 Fault Tolerance</li>
+<li>原子读写对应 Consistency</li>
+<li>每个请求都得到响应对应 Availability</li>
+</ul>
+<p>失效是无法避免的现实困难。在有限的物质条件下，只能在Consistency和Availability之间做权衡：</p>
+<ul>
+<li>要么为了保证一致性牺牲可用性（也就是要等，比如银行业务）</li>
+<li>要么为了保证可用性牺牲一致性（比如互联网产品的业务，宁可存在暂时的不一致，也要保证可用和响应、避免等待）</li>
+</ul>
+<h2 id="%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B" tabindex="-1">故障检测</h2>
+<p>检测故障的核心手段是<strong>timeout</strong>机制。</p>
+<p>timeout要起作用，必须假设系统是不完全异步的（至少请求的响应时间存在明确上限），而这往往不够好。</p>
+<p><strong>timeout不够好，但目前很难做得更好</strong></p>
+<h2 id="%E5%8F%AF%E9%9D%A0c-s%E9%80%9A%E4%BF%A1" tabindex="-1">可靠C-S通信</h2>
+<h3 id="%E5%8F%AF%E9%9D%A0rpc" tabindex="-1">可靠RPC</h3>
+<p>错误类型：</p>
+<ul>
+<li>
+<p>Unable to locate sserver</p>
+<p>可能原因：服务器关闭、更新</p>
+<p>解决方法：生成报错信息</p>
+</li>
+<li>
+<p>Request Lost</p>
+<p>可能原因：网络问题</p>
+<p>解决方法：“超时重传”</p>
+</li>
+<li>
+<p>Server Crash</p>
+<p>两种情况：执行后宕机、执行前宕机</p>
+<p>解决方法：没有很好的方法</p>
+<ul>
+<li>若采用重传（<em>At least once</em>），可能会导致<strong>重复执行</strong></li>
+<li>若不做处理，直接报错（<em>At most once</em>），避免了重复执行</li>
+<li>Exactly Once: Impossible to guarantee</li>
+</ul>
+<p>结论：<strong>完全透明的服务器恢复（Exactly Once）是不可能的</strong></p>
+<p>一些可能的方案：设计<em>幂等</em>的接口。这可以保证<strong>重复多次相同操作与一次操作的效果相同</strong>。一般幂等的操作是：</p>
+<ul>
+<li>读操作</li>
+<li>严格的写覆盖操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E5%8F%AF%E9%9D%A0%E5%A4%9A%E6%92%AD" tabindex="-1">可靠多播</h2>
+<ul>
+<li>此处说的可靠说的是<strong>允许不可靠的信道</strong>，而不是<strong>允许系统存在失效节点</strong></li>
+<li>朴素的可靠多播</li>
+<li>Gossip
+<ul>
+<li>简单</li>
+<li>速度慢，概率可靠</li>
+</ul>
+</li>
+<li>容错：原子多播
+<ul>
+<li>多播的原子性：要么发给所有进程，要么不发给任何进程</li>
+<li>难点：组成员的变化</li>
+<li>实现：虚拟同步可靠多播协议</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E5%90%84%E7%A7%8D%E5%A4%9A%E6%92%AD%E6%B1%87%E6%80%BB" tabindex="-1">各种多播汇总</h3>
+<p>(TO = Total order)<br>
+| Multicast               | ordering       | TO delivery ? |<br>
+| —<br>
+date: 2021-12-01 16:27:55.422574+08:00<br>
+title: 容错</p>
+<p>-------------------- | -------------- | ------------- |<br>
+| Reliable multicast      | None           | No            |<br>
+| FIFO multicast          | FIFO-ordered   | No            |<br>
+| Casual multicast        | Casual-ordered | No            |<br>
+| Atomic multicast        | None           | Yes           |<br>
+| FIFO atomic multicast   | FIFO-ordered   | Yes           |<br>
+| Causal atomic multicast | Causal-ordered | Yes           |</p>
+<p>说明：</p>
+<ul>
+<li>
+<p>所谓的FIFO是指<strong>对于某一信道/Sender而言，先发的消息先收到</strong></p>
+<p>FIFO与Total Order的差距在于<strong>一个Receiver会接收来自不同Sender的消息，此时两个信道之间的消息的相对顺序不一定相同</strong></p>
+</li>
+<li>
+<p>所谓的Casual是指<strong>对于存在Happen-before（因果）关系的消息，“因”消息比“果”消息拍得更前</strong></p>
+<p>Casual与Total Order的差距在于<strong>许多消息并发不存在因果约束，在不同Receiver上顺序可能不同</strong>，比如两个进程各自发送消息，它们之间如果没有通信，那它们发送的消息通常就不存在因果依赖了。</p>
+</li>
+<li>
+<p>所谓Atomaic其实是要求<strong>所有的节点收到的消息序列相同（包含消息集合相同和消息顺序相同）</strong>，也即<em>全序一致（Total order delivery）</em> 。其中不要求顺序是否FIFO或者Casual，强调节点之间的一致</p>
+</li>
+</ul>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E6%8F%90%E4%BA%A4" tabindex="-1">分布式提交</h2>
+<ul>
+<li>比原子多播更高的要求：系统所有节点（<strong>包括可能失效的节点</strong>）以相同的顺序执行相同的操作</li>
+<li>因为要保证可能失效的节点也要执行相同的操作，因此<strong>系统单点失效会导致正常节点阻塞</strong>。实际系统中不可能无限地等待，最终结果是：因为超时失效，节点都不执行操作</li>
+</ul>
+<h3 id="%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%882pc%EF%BC%89" tabindex="-1">两阶段提交（2PC）</h3>
+<p>基本思路都是：</p>
+<ol>
+<li>Coordinator发起投票</li>
+<li>大家一致通过，即大家都同意提交，则操作生效</li>
+<li><strong>任何一个节点投反对票，或者任何一个节点没有投票，都认为不提交</strong></li>
+</ol>
+<p>核心思想是：<strong>同意提交需要全票通过，不同意提交只需要一票否决</strong></p>
+<p>状态机（待完善）：</p>
+<p>失效恢复（待完善）：</p>
+<p>2PC的问题：可能被阻塞</p>
+<h3 id="%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%883pc%EF%BC%89" tabindex="-1">三阶段提交（3PC）</h3>
+<h2 id="%E7%B3%BB%E7%BB%9F%E6%81%A2%E5%A4%8D" tabindex="-1">系统恢复</h2>
+<p>恢复的两类模式：</p>
+<ul>
+<li>Forward error recovery: 找到一个<strong>新的正确的后继状态</strong>
+<ul>
+<li>典型的例子是纠删码</li>
+</ul>
+</li>
+<li>Backward error recovery：<strong>回滚到上一个没有错误的状态</strong>
+<ul>
+<li>更常见</li>
+<li><strong>需要回滚就需要日志</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="checkpoint-%E6%A3%80%E6%9F%A5%E7%82%B9" tabindex="-1">Checkpoint 检查点</h3>
+<ul>
+<li>Happen-before Checkpoint轴（待完善）</li>
+<li>基于Coordinator的全局Checkpoint
+<ul>
+<li>方法：类似2PC分布式提交，请求各个节点保存checkpoint</li>
+</ul>
+</li>
+<li>无Coordinator
+<ul>
+<li>只能自己保存</li>
+<li>然后互相协作</li>
+</ul>
+</li>
+</ul>
+<h3 id="message-log-%E6%B6%88%E6%81%AF%E6%97%A5%E5%BF%97" tabindex="-1">Message Log 消息日志</h3>
+<ul>
+<li>检查点代价偏高</li>
+<li>另一种可行的恢复方法是借助消息日志*重放(Replay)*操作</li>
+<li>重放的问题在于<strong>对于非幂等的操作（典型的如新建），重复操作会带来不一致</strong></li>
+</ul>
+<h4 id="%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95%E6%96%B9%E5%BC%8F" tabindex="-1">日志记录方式</h4>
+<ul>
+<li>孤儿消息</li>
+<li>悲观协议：必须等待一个不稳定的消息被日志记录才能发送下一个消息</li>
+<li>乐观协议：回滚依赖消息（Replay依赖消息）</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/e7820888/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/0/" rel="next" title="Tikz Graph">
+      Tikz Graph <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%B9%E9%94%99"><span class="nav-number">1.</span> <span class="nav-text">容错</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AB%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E6%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E9%94%99%E6%80%A7%E7%9B%B8%E5%85%B3%E5%BA%A6%E9%87%8F"><span class="nav-number">1.3.</span> <span class="nav-text">容错性相关度量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%B1%E6%95%88%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.</span> <span class="nav-text">失效的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%B1%E8%AF%86"><span class="nav-number">1.5.</span> <span class="nav-text">分布式共识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.1.</span> <span class="nav-text">与一致性的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8Ek-%E5%AE%B9%E9%94%99%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.2.</span> <span class="nav-text">与K-容错的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%E5%88%86%E7%B1%BB"><span class="nav-number">1.5.3.</span> <span class="nav-text">共识协议分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%B3%9B%E6%B4%AA%E7%9A%84%E5%85%B1%E8%AF%86"><span class="nav-number">1.5.4.</span> <span class="nav-text">基于泛洪的共识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paxos"><span class="nav-number">1.6.</span> <span class="nav-text">Paxos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.6.1.</span> <span class="nav-text">简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99"><span class="nav-number">1.7.</span> <span class="nav-text">拜占庭容错</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bft"><span class="nav-number">1.7.1.</span> <span class="nav-text">BFT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pbft"><span class="nav-number">1.7.2.</span> <span class="nav-text">PBFT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E7%9C%8Bcap"><span class="nav-number">1.8.</span> <span class="nav-text">再看CAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B"><span class="nav-number">1.9.</span> <span class="nav-text">故障检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0c-s%E9%80%9A%E4%BF%A1"><span class="nav-number">1.10.</span> <span class="nav-text">可靠C-S通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0rpc"><span class="nav-number">1.10.1.</span> <span class="nav-text">可靠RPC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E5%A4%9A%E6%92%AD"><span class="nav-number">1.11.</span> <span class="nav-text">可靠多播</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E5%A4%9A%E6%92%AD%E6%B1%87%E6%80%BB"><span class="nav-number">1.11.1.</span> <span class="nav-text">各种多播汇总</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%8F%90%E4%BA%A4"><span class="nav-number">1.12.</span> <span class="nav-text">分布式提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%882pc%EF%BC%89"><span class="nav-number">1.12.1.</span> <span class="nav-text">两阶段提交（2PC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%883pc%EF%BC%89"><span class="nav-number">1.12.2.</span> <span class="nav-text">三阶段提交（3PC）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%81%A2%E5%A4%8D"><span class="nav-number">1.13.</span> <span class="nav-text">系统恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#checkpoint-%E6%A3%80%E6%9F%A5%E7%82%B9"><span class="nav-number">1.13.1.</span> <span class="nav-text">Checkpoint 检查点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#message-log-%E6%B6%88%E6%81%AF%E6%97%A5%E5%BF%97"><span class="nav-number">1.13.2.</span> <span class="nav-text">Message Log 消息日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95%E6%96%B9%E5%BC%8F"><span class="nav-number">1.13.2.1.</span> <span class="nav-text">日志记录方式</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

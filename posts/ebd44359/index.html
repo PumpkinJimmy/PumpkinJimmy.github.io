@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分布式系统的一致性 前言 以下讨论的一致性是狭义上的进程之间的一致性。 CAP定理 CAP定理是指分布式系统中，Consistency（一致性）, Availability（可用性）, Partition tolerance（分区容错性）不可兼得  一致性：进程之间保持绝对的共识 可用性：任何时刻保证进程是可以正常服务的 分区容错性：（待完善）  实际中将不得不对这三个因素，尤其是C和A做权衡：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统的一致性">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/ebd44359/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="分布式系统的一致性 前言 以下讨论的一致性是狭义上的进程之间的一致性。 CAP定理 CAP定理是指分布式系统中，Consistency（一致性）, Availability（可用性）, Partition tolerance（分区容错性）不可兼得  一致性：进程之间保持绝对的共识 可用性：任何时刻保证进程是可以正常服务的 分区容错性：（待完善）  实际中将不得不对这三个因素，尤其是C和A做权衡：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-18T23:53:58.000Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/ebd44359/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式系统的一致性 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/ebd44359/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式系统的一致性
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-19 07:53:58" itemprop="dateCreated datePublished" datetime="2021-11-19T07:53:58+08:00">2021-11-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 18:10:11" itemprop="dateModified" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7" tabindex="-1">分布式系统的一致性</h1>
+<h2 id="%E5%89%8D%E8%A8%80" tabindex="-1">前言</h2>
+<p>以下讨论的一致性是狭义上的<em>进程</em>之间的一致性。</p>
+<h2 id="cap%E5%AE%9A%E7%90%86" tabindex="-1">CAP定理</h2>
+<p>CAP定理是指分布式系统中，Consistency（一致性）, Availability（可用性）, Partition tolerance（分区容错性）<strong>不可兼得</strong></p>
+<ul>
+<li>一致性：进程之间保持绝对的共识</li>
+<li>可用性：任何时刻保证进程是可以正常服务的</li>
+<li>分区容错性：（待完善）</li>
+</ul>
+<p>实际中将不得不对这三个因素，尤其是C和A做权衡：</p>
+<ul>
+<li>常见的事务系统（如银行）必须保证一致性，代价是会影响可用性（其实就是慢）</li>
+</ul>
+<h2 id="%E5%A4%8D%E5%88%B6%EF%BC%88replication%EF%BC%89" tabindex="-1">复制（Replication）</h2>
+<p>复制的目的：</p>
+<ul>
+<li>性能</li>
+<li><strong>可用性</strong></li>
+</ul>
+<p>复制的主要问题：<strong>一致性问题</strong></p>
+<p>保证副本之间的一致性所面临的挑战：</p>
+<ul>
+<li>确保临界操作都要正确互斥</li>
+<li><strong>在所有副本之间的必须以相同的顺序执行临界操作</strong></li>
+<li>保证全局一致性的代价太高，可能只能做到<em>最终一致性</em></li>
+</ul>
+<p>面临的临界操作冲突：</p>
+<ul>
+<li>读写冲突</li>
+<li>写写冲突<br>
+（注意：读和读之间是可以并发的，不存在冲突）</li>
+</ul>
+<p>三个级别的一致性模型：</p>
+<ol>
+<li>连续一致性</li>
+<li>因果一致性</li>
+<li>最终一致性</li>
+</ol>
+<h2 id="%E4%BB%A5%E6%95%B0%E6%8D%AE%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B" tabindex="-1">以数据为中心的一致性模型</h2>
+<p>说明：一致性的度量是“结果导向”的。也就是说，我们说“一致性”就是说结果的数值是一样的。</p>
+<h3 id="%E4%B8%80%E8%87%B4%E6%A0%87%E5%87%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E4%B8%80%E8%87%B4%E6%80%A7" tabindex="-1">一致标准：连续一致性</h3>
+<p>连续一致性：数据一致性的三个维度：</p>
+<ol>
+<li>数值偏差</li>
+<li>新旧偏差</li>
+<li>顺序偏差</li>
+</ol>
+<p>因为绝对的一致性不可实现，实际系统中考察一致性的重要度量就是连续一致性的三个维度：我们能在多大程度上数据的差异我们可以容忍并视作是“等同的”</p>
+<ul>
+<li>
+<p>数值偏差</p>
+<p>这是最直观的情形。如果副本之间的某个数据对象具有“数值语义”，则<strong>对象在副本中的绝对值偏差不超过容忍，则认为对象达成一致</strong></p>
+</li>
+<li>
+<p>新旧偏差</p>
+<p>对于非数值语义的数据变量，我们认为<strong>不太旧的版本的变量是一致的</strong></p>
+</li>
+<li>
+<p>顺序偏差</p>
+</li>
+</ul>
+<h3 id="%E4%B8%80%E8%87%B4%E7%9A%84%E6%93%8D%E4%BD%9C%E9%A1%BA%E5%BA%8F" tabindex="-1">一致的操作顺序</h3>
+<ul>
+<li>
+<p>顺序一致性</p>
+<p>顺序一致性要求<strong>在所有副本上，所有临界操作都以相同的顺序执行</strong></p>
+</li>
+<li>
+<p>因果一致性</p>
+<p>因果一致性是弱化的连续一致性。</p>
+<p>因果一致性<strong>只要保证Happen-before顺序成立，不要求每个副本上操作执行顺序相同</strong></p>
+</li>
+</ul>
+<h3 id="%E5%88%86%E7%BB%84%E6%93%8D%E4%BD%9C%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">分组操作（待完善）</h3>
+<h2 id="%E4%BB%A5%E5%AE%A2%E6%88%B7%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B%EF%BC%9A%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7" tabindex="-1">以客户为中心的一致性模型：最终一致性</h2>
+<p>比因果一致性更弱的一致性的场景：最终一致性。</p>
+<p>最终一致性的内涵：<strong>如果系统一直没有修改，则数据的各个副本会逐渐变成一致</strong></p>
+<p>最终一致性只要求系统<strong>对于单个客户端自身的“视图”是一致的</strong>，对分布式系统内部状态的一致性没有要求</p>
+<p>说明1：以下说明中，强调<em>同一客户端</em>不意味着“同一个副本”。抽象而言，同一个客户端其实是指同一个身份，这个身份可能依赖某种标识手段。</p>
+<p>说明2：我们在讨论写读一致性以及单调写时，都存在“写在后”的情况。此时由于没有配套一个读操作，好像写操作带来的“视图”的改变不可知。因此，讨论这两方面时，我们假设<em>存在一个上帝视角可以考察副本中一个对象的值“最终的取值”</em></p>
+<p><strong>单调读</strong>：对同一个客户端来说，每次读取同一个变量，<strong>不会得到比之前读的更旧版本的值</strong></p>
+<p><strong>单调写</strong>：对同一个客户端来说，<strong>写操作的生效要保证按需生效（Happen-before顺序成立）</strong></p>
+<p><strong>读写一致性(read after write)</strong>：</p>
+<ul>
+<li>对同一个客户端而言，<strong>它的写操作总是在它之后的读取之前完成。写后读到的总是写后值</strong></li>
+</ul>
+<p><strong>写读一致性(write after read)</strong>：</p>
+<ul>
+<li>对同一个客户端而言，<strong>它的写操作至少基于最近一次读到的值生效（覆盖最近读到的值）</strong></li>
+<li>违反写读一致性的例子：客户端A、B并发，初始<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">x=x_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>，客户端A写<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x=x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>, 客户端B先读<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq>，再写<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x=x_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>。此时，客户端读到的值、<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq>实际的取值为<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_0, x_1), (x_0, x_2), (x_1, x_2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></eq>都是符合最终一致性的，但是若是<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_1, x_1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></eq>，则违反最终一致性。因为读到<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>之后，对于B而言，写<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>操作是后发生的，该操作应该覆盖<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>，但最终不满足这一点，因此不符合最终一致性。</li>
+</ul>
+<h2 id="%E5%A4%8D%E5%88%B6%E7%AE%A1%E7%90%86" tabindex="-1">复制管理</h2>
+<ul>
+<li>三类复制：
+<ul>
+<li>Permenant Replicas</li>
+<li>Server-initial Replicas</li>
+<li>Client-initial Replicas</li>
+</ul>
+</li>
+<li>更新模式：Push vs. Pull
+<ul>
+<li>Pull 适合大规模、大量客户端的系统（成本更低），但是需要主动拉去更新</li>
+<li>Push 成本更高，但可以同步更新</li>
+</ul>
+</li>
+<li>折中的更新模式：Lease（租约）
+<ul>
+<li>在Push和Pull之间动态切换</li>
+<li><strong>在Lease有效期内对象是基于Push更新的；过期之后就切换为基于Pull的</strong></li>
+<li>自适应指定Lease的策略同样有多种</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">一致性协议（待完善）</h2>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/c85b8ed3/" rel="prev" title="智能合约">
+      <i class="fa fa-chevron-left"></i> 智能合约
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/fe48acc4/" rel="next" title="Static Game（待完善）">
+      Static Game（待完善） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">分布式系统的一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cap%E5%AE%9A%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">CAP定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%EF%BC%88replication%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">复制（Replication）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E6%95%B0%E6%8D%AE%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">以数据为中心的一致性模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%A0%87%E5%87%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.4.1.</span> <span class="nav-text">一致标准：连续一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E7%9A%84%E6%93%8D%E4%BD%9C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">一致的操作顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%93%8D%E4%BD%9C%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">分组操作（待完善）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%AE%A2%E6%88%B7%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B%EF%BC%9A%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.5.</span> <span class="nav-text">以客户为中心的一致性模型：最终一致性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%AE%A1%E7%90%86"><span class="nav-number">1.6.</span> <span class="nav-text">复制管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">一致性协议（待完善）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

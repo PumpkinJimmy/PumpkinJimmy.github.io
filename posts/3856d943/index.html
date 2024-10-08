@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Digit System Technology  encapsulation of IC  SIP DIP   Scale of IC （待完善） Programmable IC  PLD FPGA    半导体：逻辑门 两种典型的工艺：  TTL CMOS（主流）  我们关注逻辑门的如下参数：   功耗 门部件的功耗   延迟 信号传递的延迟   噪声容限 对噪声的容忍能力（与电压有关）   负">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Digit System">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/3856d943/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="Digit System Technology  encapsulation of IC  SIP DIP   Scale of IC （待完善） Programmable IC  PLD FPGA    半导体：逻辑门 两种典型的工艺：  TTL CMOS（主流）  我们关注逻辑门的如下参数：   功耗 门部件的功耗   延迟 信号传递的延迟   噪声容限 对噪声的容忍能力（与电压有关）   负">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-19T03:15:15.000Z">
+<meta property="article:modified_time" content="2021-06-19T03:15:15.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/3856d943/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Digit System | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/3856d943/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Digit System
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-19 11:15:15" itemprop="dateCreated datePublished" datetime="2021-06-19T11:15:15+08:00">2021-06-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="digit-system" tabindex="-1">Digit System</h1>
+<h2 id="technology" tabindex="-1">Technology</h2>
+<ul>
+<li>encapsulation of IC
+<ul>
+<li>SIP</li>
+<li>DIP</li>
+</ul>
+</li>
+<li>Scale of IC<br>
+（待完善）</li>
+<li>Programmable IC
+<ul>
+<li>PLD</li>
+<li>FPGA</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E5%8D%8A%E5%AF%BC%E4%BD%93%EF%BC%9A%E9%80%BB%E8%BE%91%E9%97%A8" tabindex="-1">半导体：逻辑门</h2>
+<p>两种典型的工艺：</p>
+<ul>
+<li>TTL</li>
+<li><strong>CMOS</strong>（主流）</li>
+</ul>
+<p>我们关注逻辑门的如下参数：</p>
+<ul>
+<li>
+<p>功耗</p>
+<p>门部件的功耗</p>
+</li>
+<li>
+<p>延迟</p>
+<p>信号传递的延迟</p>
+</li>
+<li>
+<p>噪声容限</p>
+<p>对噪声的容忍能力（与电压有关）</p>
+</li>
+<li>
+<p>负载能力（对TTL）</p>
+<p>一个TTL门后面可以连接的（我们称为<em>驱动</em>的）门的数量是有限的，我们称之为逻辑门的<em>负载能力</em></p>
+<p>一个逻辑门驱动能力有限的原因是（以<em>拉电流</em>为例），随着其驱动的门越多，电路拉电流越大，驱动门的压降越低，导致<strong>高电平过低</strong>，从而门失效</p>
+</li>
+</ul>
+<h3 id="cmos" tabindex="-1">CMOS</h3>
+<ul>
+<li>
+<p>CMOS电路基本单元：MOSFET（场效应管）</p>
+<p>Two Type</p>
+<ul>
+<li>P-Channel P沟道</li>
+<li>N-Channel N沟道</li>
+</ul>
+<p>N-Channel相当于<em>高有效</em>，P-Channel相当于<em>低有效</em></p>
+<p><strong>Three Terminal</strong></p>
+<ul>
+<li>G(Gate) 栅极</li>
+<li>D(Drain) 漏极</li>
+<li>S(Source) 源极</li>
+</ul>
+<p>其中漏极和源极提供电位的电极，栅极控制场效应管的通/断，相当于电流的“闸门”</p>
+<p>通常，栅极充当输入，漏极充当输出，源极提供电压</p>
+</li>
+<li>
+<p>Tri-state Gate(三态门)</p>
+<p>除了高,低电平,增加一个高阻抗态(Z).在高阻抗状态下，无论输入是什么，漏极电流都非常的小，想当于门成为了一个电阻非常大的部件。高阻抗状态相当于断路，具有保护内部的作用。</p>
+<p>注意区别低电平和高阻抗。高阻抗状态下输出与Vcc和GND都不相连，几乎没有电流；低电平状态下输出与GND相连。</p>
+</li>
+<li>
+<p>Open-Drain</p>
+<p>一种源极接地、漏极未连接的构造。这样构造的门不受主体电路电压的驱动，不能直接工作，必须要在漏极附近外接电压Vcc。这样构造的好处是允许单独外接电压，不受输入门的驱动能力的限制。</p>
+</li>
+</ul>
+<h3 id="ttl" tabindex="-1">TTL</h3>
+<p>TTL IC的基本部件是<strong>三极管</strong></p>
+<p>三级管的三极：</p>
+<ul>
+<li>基极</li>
+<li>集电极</li>
+<li>发射极</li>
+</ul>
+<p>这三极分别对应CMOS场效应管：</p>
+<ul>
+<li>栅极</li>
+<li>漏极</li>
+<li>源极</li>
+</ul>
+<p>除了构成逻辑门，三极管还可以构造其他电路（比如放大电路）</p>
+<p>三极管存在两路电流：基极电流和集电极电流</p>
+<h3 id="%E4%B8%89%E6%80%81%E9%97%A8" tabindex="-1">三态门</h3>
+<p>三态门</p>
+<ul>
+<li>在高、低态之外增加一个“高阻态”</li>
+<li>高阻态作用1：保护电路。处于高阻态时，“高阻”意味着施加高电压也不会损毁内部电路</li>
+<li>高阻态作用2：表征“无效”状态。在许多情境下，输入端是0或者1都是有效的输入，此时想要真正的“使能”特性，加一个与门不够了，使用一个带使能开关的三态门才是正解。</li>
+</ul>
+<h2 id="%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF" tabindex="-1">时序电路</h2>
+<h3 id="%E9%94%81%E5%AD%98%E5%99%A8" tabindex="-1">锁存器</h3>
+<h3 id="%E8%A7%A6%E5%8F%91%E5%99%A8" tabindex="-1">触发器</h3>
+<h3 id="one-shot" tabindex="-1">One-Shot</h3>
+<h3 id="timer" tabindex="-1">Timer</h3>
+<h3 id="counter" tabindex="-1">Counter</h3>
+<ul>
+<li>Counter本质上就是实现分频Clock</li>
+<li>异步Counter：易级联拓展，不准（组合电路带来的延迟会导致计数器的高位逐渐偏差）</li>
+<li>同步Counter：准，难级联拓展</li>
+</ul>
+<h3 id="%E9%80%9A%E7%94%A8%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF%EF%BC%9A%E7%8A%B6%E6%80%81%E6%9C%BA" tabindex="-1">通用时序电路：状态机</h3>
+<p>两种状态机模型：</p>
+<ol>
+<li>
+<p>摩尔机</p>
+<p><strong>下一状态只与当前状态有关</strong></p>
+<p>典型的摩尔机例子：计数器。下一个数的数只与上一个有关。</p>
+</li>
+<li>
+<p>米利机</p>
+<p><strong>下一状态与当前状态以及一组输入有关</strong></p>
+<p>典型的米利机例子：带计数方向的计数器。下一个输出与输入的方向以及上一时刻的数有关。</p>
+</li>
+</ol>
+<h3 id="memory" tabindex="-1">Memory</h3>
+<ul>
+<li>
+<p>ROM</p>
+</li>
+<li>
+<p>ROM 只读存储器</p>
+</li>
+<li>
+<p>PROM Programmable ROM 可以修改的ROM（使用一些诸如熔丝一样一次性写入的物理结构）</p>
+</li>
+<li>
+<p>EPROM Erasable PROM 可擦除的PROM 可以使用专用设备（如紫外线）擦除，操作昂贵，现在用的少</p>
+</li>
+<li>
+<p>EEPROM Electronic Erasable PROM 电可擦除PROM，擦写不需要专用设备，用的比较多</p>
+<p>实际上现在EEPROM的种类和结构很多，原理各不相同。原则上，Flash也能算是EEPROM，但Flash的结构与传统EEPROM相去甚远，因此单独拎出来。</p>
+<p>在要求少量数据反复擦写+非易失的场合，传统EEPROM还是有优势的</p>
+</li>
+<li>
+<p>Flash 结构类似CMOS场效应管，但栅极构造很不同，可以不仅可以控制通断，还可以控制多少电荷多少</p>
+</li>
+<li>
+<p>EEPROM vs. Flash</p>
+<ul>
+<li>Flash面积小、电路简单、廉价；EEPROM电路复杂，贵</li>
+<li>Flash以块为单位擦除（类似扇区）；EEPROM以字节为单位擦除</li>
+<li>Flash写数据很慢（4~6ms）；EEPROM写数据较快一点</li>
+<li>Flash寿命擦写寿命有限</li>
+</ul>
+</li>
+<li>
+<p>RAM</p>
+<ul>
+<li>SRAM：触发器构成</li>
+<li>DRAM：电容构成
+<ul>
+<li>只需要一个MOS管+一个电容就可以存一个bit</li>
+<li>电容充电为1，没有充电为0</li>
+<li>破坏性读出：为了读到1，DRAM存储单元中的电容需要放电。因此DRAM的读出是破坏性的，读完必须把数据重新写入回去。</li>
+<li>刷新：电容会漏电，需要周期性地<em>刷新</em>，也就是把存储单元中的信息重新充进去才行.可以发现，写和刷新的操作本质上是一样的，只不过刷新是周期性的，读不是</li>
+<li>地址复用：对于组织成行-列的大容量DRAM，常采用<em>地址线复用</em>的技巧，在一个周期内，在一组地址线输入两次来分两次输入行、列地址。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/88c26b79/" rel="prev" title="Outline">
+      <i class="fa fa-chevron-left"></i> Outline
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/16242cf1/" rel="next" title="ODE">
+      ODE <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#digit-system"><span class="nav-number">1.</span> <span class="nav-text">Digit System</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#technology"><span class="nav-number">1.1.</span> <span class="nav-text">Technology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8A%E5%AF%BC%E4%BD%93%EF%BC%9A%E9%80%BB%E8%BE%91%E9%97%A8"><span class="nav-number">1.2.</span> <span class="nav-text">半导体：逻辑门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cmos"><span class="nav-number">1.2.1.</span> <span class="nav-text">CMOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ttl"><span class="nav-number">1.2.2.</span> <span class="nav-text">TTL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%80%81%E9%97%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">三态门</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF"><span class="nav-number">1.3.</span> <span class="nav-text">时序电路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%81%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">锁存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#one-shot"><span class="nav-number">1.3.3.</span> <span class="nav-text">One-Shot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#timer"><span class="nav-number">1.3.4.</span> <span class="nav-text">Timer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#counter"><span class="nav-number">1.3.5.</span> <span class="nav-text">Counter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E6%97%B6%E5%BA%8F%E7%94%B5%E8%B7%AF%EF%BC%9A%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">1.3.6.</span> <span class="nav-text">通用时序电路：状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memory"><span class="nav-number">1.3.7.</span> <span class="nav-text">Memory</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

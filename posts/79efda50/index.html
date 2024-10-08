@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="期货   签订如下合同：  按照当前的价格（行使价） 在未来约定的时间（到期日） 购入一定的标的物（可以是大宗商品或者股票）    盈亏的基本形式  若标的物市值上升，则按照行使价买入的合同相当于以低于市价的价格买入商品，节约了资金 若标的物市值下降，则按照行使价买入的合同相当于以高于市价的价格买入商品，浪费了资金    期货可以交易：通过交易合同   期货交易  看涨时买入期货，看跌时卖出期货">
+<meta property="og:type" content="article">
+<meta property="og:title" content="期货与期权">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/79efda50/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="期货   签订如下合同：  按照当前的价格（行使价） 在未来约定的时间（到期日） 购入一定的标的物（可以是大宗商品或者股票）    盈亏的基本形式  若标的物市值上升，则按照行使价买入的合同相当于以低于市价的价格买入商品，节约了资金 若标的物市值下降，则按照行使价买入的合同相当于以高于市价的价格买入商品，浪费了资金    期货可以交易：通过交易合同   期货交易  看涨时买入期货，看跌时卖出期货">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-17T03:27:35.000Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.276Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="金融">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/79efda50/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>期货与期权 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/79efda50/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          期货与期权
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-17 11:27:35" itemprop="dateCreated datePublished" datetime="2023-05-17T11:27:35+08:00">2023-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 18:10:11" itemprop="dateModified" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%87%91%E8%9E%8D/" itemprop="url" rel="index"><span itemprop="name">金融</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="%E6%9C%9F%E8%B4%A7" tabindex="-1">期货</h2>
+<ul>
+<li>
+<p>签订如下合同：</p>
+<ul>
+<li>按照当前的价格（<em>行使价</em>）</li>
+<li>在未来约定的时间（<em>到期日</em>）</li>
+<li>购入一定的标的物（可以是大宗商品或者股票）</li>
+</ul>
+</li>
+<li>
+<p>盈亏的基本形式</p>
+<ul>
+<li>若标的物市值上升，则按照行使价买入的合同相当于以低于市价的价格买入商品，节约了资金</li>
+<li>若标的物市值下降，则按照行使价买入的合同相当于以高于市价的价格买入商品，浪费了资金</li>
+</ul>
+</li>
+<li>
+<p>期货可以交易：通过交易合同</p>
+</li>
+<li>
+<p>期货交易</p>
+<ul>
+<li>看涨时买入期货，看跌时卖出期货</li>
+<li>套利、平仓
+<ul>
+<li>现代期货市场中，大多数交易者并不会在到期日真正交割标的物</li>
+<li>期货交易者会在到期日之前将买入的期货卖出，或者将卖出的期货买入，这就是<em>平仓</em></li>
+<li>看涨的交易者若成功买入，则可以以高于行使价的市价卖出期货来获得利润；看跌的交易者若成功卖出，则可以以低于行使价的市价买入期货平仓以简介获得利润</li>
+<li>反之则会亏损</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%9C%9F%E6%9D%83" tabindex="-1">期权</h2>
+<ul>
+<li>期权 = 由合同持有者决定是否执行交割的期货</li>
+<li>期权分为<em>买入期权(CALL)<em>和</em>卖出期权(PUT)</em>
+<ul>
+<li>买入期权就是预约在<em>到期日</em>按照<em>行使价</em>买入标的物的合同，但是合同的持有者可以决定是否真的在到期日执行买入</li>
+<li>卖出期权就是预约在<em>到期日</em>按照<em>行使价</em>卖出标的物的合同，但是合同的持有者可以决定是否真的在到期日执行卖出</li>
+</ul>
+</li>
+<li>期权合同的持有者需要在签署合同时向交易的对家支付<em>权利金</em></li>
+<li>期权同样可以交易</li>
+<li>买入股票期权与直接买入股票的核心区别：买入股票期权的最大亏损被权利金锁死
+<ul>
+<li>直接买入股票，则投资者的盈亏与股票市值的涨跌相同（除去手续费）</li>
+<li>买入股票期权的投资者，其最大盈利等于市值上涨的幅度减去权利金，但最大亏损至多是亏损掉全部权利金，即便股票头寸的跌幅大于权利金
+<ul>
+<li>亏损下限的原理：当股票跌幅大于权利金时，期权持有者选择“不执行合约”，则只会亏损掉权利金</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>卖出期权与直接做空股票的区别也依此类推</li>
+</ul>
+<h2 id="%E6%9C%9F%E8%B4%A7%E4%B8%8E%E6%9C%9F%E6%9D%83" tabindex="-1">期货与期权</h2>
+<ul>
+<li>注意到期货的初始价格等于按行使价计的总货值</li>
+<li>期权的初始价格等于<em>权利金</em>，而不直接从行使价计算；权利金才是我们通常说的初始的<em>期权价格</em>
+<ul>
+<li>然而权利金确实存在行使价一定关系：通常行使价低于当前市价的，权利金会更高</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%87%91%E8%9E%8D/" rel="tag"># 金融</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/27a8b506/" rel="prev" title="数据库恢复">
+      <i class="fa fa-chevron-left"></i> 数据库恢复
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/9c8d1a2b/" rel="next" title="辐射度量学">
+      辐射度量学 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%9F%E8%B4%A7"><span class="nav-number">1.</span> <span class="nav-text">期货</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%9F%E6%9D%83"><span class="nav-number">2.</span> <span class="nav-text">期权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%9F%E8%B4%A7%E4%B8%8E%E6%9C%9F%E6%9D%83"><span class="nav-number">3.</span> <span class="nav-text">期货与期权</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="文件系统 基本概念   域(Field)，也称“字段”，某一个数据域，对应数据库的“列”；   记录(Record)，是域的集合，对应数据库的“行”；   文件(File)，是**有标识（文件名）**的记录的集合，对应数据库的一个表的数据。实际上不一定是按记录组织的，也有可能单纯就是域的集合。更有甚者，文件其实可以根本没有结构，就是一组二进制文件而已。 绝大部分的用户文件都是被视为字节流的，OS不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="File">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/2cad992e/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="文件系统 基本概念   域(Field)，也称“字段”，某一个数据域，对应数据库的“列”；   记录(Record)，是域的集合，对应数据库的“行”；   文件(File)，是**有标识（文件名）**的记录的集合，对应数据库的一个表的数据。实际上不一定是按记录组织的，也有可能单纯就是域的集合。更有甚者，文件其实可以根本没有结构，就是一组二进制文件而已。 绝大部分的用户文件都是被视为字节流的，OS不">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-01T03:15:34.000Z">
+<meta property="article:modified_time" content="2021-07-01T03:15:34.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/2cad992e/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>File | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/2cad992e/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          File
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-01 11:15:34" itemprop="dateCreated datePublished" datetime="2021-07-01T11:15:34+08:00">2021-07-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F" tabindex="-1">文件系统</h1>
+<h2 id="%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5" tabindex="-1">基本概念</h2>
+<ul>
+<li>
+<p><em>域(Field)</em>，也称“字段”，某一个数据域，对应数据库的“列”；</p>
+</li>
+<li>
+<p><em>记录(Record)</em>，是域的集合，对应数据库的“行”；</p>
+</li>
+<li>
+<p><em>文件(File)</em>，是**有标识（文件名）**的记录的集合，对应数据库的一个表的数据。实际上不一定是按记录组织的，也有可能单纯就是域的集合。更有甚者，文件其实可以根本没有结构，就是一组二进制文件而已。</p>
+<p>绝大部分的用户文件都是被视为字节流的，OS不负责处理文件结构。</p>
+</li>
+<li>
+<p>文件系统通常是指文件集合及其组织方式，以及支持的操作</p>
+</li>
+<li>
+<p>区分文件系统和文件管理系统：</p>
+<ul>
+<li>文件系统是从物理到逻辑的整套系统</li>
+<li>文件管理系统是在文件系统抽象操作层面的管理软件。也称VFS（虚拟文件系统）</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84" tabindex="-1">文件系统软件架构</h2>
+<ul>
+<li>驱动层：直接与IO设备通信</li>
+<li>物理IO：面向块（磁盘通常是块设备）的IO基本操作</li>
+<li>基本IO管理系统：负责调度</li>
+<li>逻辑IO：访问文件记录</li>
+<li>访问软件：文件系统的增删读写操作</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9A%84%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84" tabindex="-1">文件内容的组织结构</h2>
+<p>注意，以下的大部分内容对OS并不是重点。因为解释一个用户文件的内容的结构往往不是OS的工作。这些结构更多时候是由数据库软件维护的。当然，有一些很特殊的文件的结构是OS维护的，比如目录文件。</p>
+<p>文件内容组织结构基本上分两种：</p>
+<ol>
+<li>无结构：字节流文件</li>
+<li>有结构：记录式文件</li>
+</ol>
+<p>具体来说有如下一些具体形式：</p>
+<ul>
+<li>堆（Pile）：<strong>注意不是支持优先队列操作的堆(Heap)</strong>，一种简单的文件顺序摆放的简单组织方式。基本没有结构，文件可以变长没有限制，文件与文件之间使用分隔符分割。但根据给定文件名查找某个文件只能顺序扫描，效率低，唯一的优势只有简单</li>
+<li>顺序结构：对标典型的数据库无索引表数据。基于记录保存，每个记录的格式完全相同。每个记录有一个存储顺序编号的<em>关键域（主键）</em>，好处是格式固定，结构性强，缺点是不够灵活，且依然需要顺序查找</li>
+<li>顺序索引文件（主键索引）：对关键域建立顺序索引，显著提高查找速度，减少文件访问次数。缺点是只支持主键。可以建立多级顺序索引文件。</li>
+<li>索引文件：利用数据结构（典型的是B树）支持对任何一列建立快速查找的索引。性能表现好，事实上的SQL数据库标准索引技术。缺点是一定的管理开销。</li>
+<li>直接索引文件（哈希索引）：类哈希表提供的<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></eq></li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9A%E7%9B%AE%E5%BD%95" tabindex="-1">文件实现：目录</h2>
+<p>文件目录是文件管理结构的集合。<strong>它是文件管理系统的核心数据结构。</strong></p>
+<p>“目录”二字给人顺序表的暗示，但实际上文件根目录的组织结构是有多种的：</p>
+<ul>
+<li>一个顺序表，也称文件分配表（FAT）</li>
+<li>树形结构，目录项组织为查找树结构，如Linux的inode</li>
+</ul>
+<p>两个要点：</p>
+<ul>
+<li>目录本身的信息也是使用文件来保存的（称为目录文件），根目录除外。</li>
+<li>目录是存储在磁盘上的，不像页表之类的通常放在内存中</li>
+<li>目录项在一些朴素实现（如FAT）中等效于FCB（文件控制块）</li>
+<li>在如Unix的现代FS中目录项其实是<em>符号目录项</em></li>
+</ul>
+<h3 id="%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84" tabindex="-1">多级目录结构</h3>
+<p>由于目录是顺序存储的，因此查找单个根目录的平均复杂度是<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></eq>.</p>
+<p>可以采用多级目录（树形）来组织文件。虽然是树形的，<strong>但目录树不是查找树，因此不能改进最坏情况下的时间复杂度</strong>。</p>
+<p>多级目录实际上是<strong>多级顺序索引</strong>，可以<strong>改进平均查找性能</strong>。</p>
+<h3 id="%E6%94%B9%E8%BF%9B%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95" tabindex="-1">改进的多级目录</h3>
+<ul>
+<li>将目录项（FCB）分为两部分</li>
+<li>符号目录项：只包含用于索引的最基本信息：符号名（文件名）和文件内部号（Unix的inode号）</li>
+<li>基本目录项：完整的FCB信息（Unix的inode）</li>
+</ul>
+<p>注：inode的信息存在专用的磁盘区域，由于线性存储，可以直接使用inode号获知所在的扇区。此外，inode在内存是有缓存的（见下文）</p>
+<h3 id="%E6%94%B9%E8%BF%9B%E6%96%87%E4%BB%B6%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A5%BD%E5%A4%84" tabindex="-1">改进文件多级目录的好处</h3>
+<ul>
+<li>提高检索效率
+<ul>
+<li>所谓的多级目录本质上是<strong>多级顺序索引</strong>；</li>
+<li>在磁盘上工作的算法的主要考量是<strong>减少读盘次数</strong>；</li>
+<li>改进多级目录的手法缩减目录项尺寸，只保留必要的索引信息，从而<strong>显著减小目录索引大小，减少读盘次数</strong></li>
+<li>即便不考虑读盘次数，</li>
+</ul>
+</li>
+<li>提供对文件别名的支持
+<ul>
+<li>使用多个符号目录项（对应多个目录下的不同名文件）指向同一个基本目录项</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB" tabindex="-1">文件共享</h2>
+<p>两类文件共享：</p>
+<ul>
+<li>多个进程使用同一个路径名访问并发同一个文件。这里强调<strong>文件的并发访问</strong></li>
+<li>使用不同的文件名描述同一个文件。这不是并发访问，而是<strong>文件别名</strong></li>
+</ul>
+<h3 id="%E6%96%87%E4%BB%B6%E5%88%AB%E5%90%8D" tabindex="-1">文件别名</h3>
+<ul>
+<li>软链接
+<ul>
+<li>较常用，与被引用文件无关</li>
+<li>实质上是一个单独的存储着被引用文件的路径名</li>
+<li>存储代价稍高</li>
+</ul>
+</li>
+<li>硬链接
+<ul>
+<li>较少用</li>
+<li>实质上是为同一文件资源、同一个文件的inode创建多一个符号目录项</li>
+<li>存储代价稍低</li>
+<li>有额外的管理成本：需要为inode增加引用计数</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6" tabindex="-1">文件访问控制</h2>
+<p>同样有两层含义：</p>
+<ul>
+<li>所谓的文件<em>权限管理</em></li>
+<li>文件的<em>并发访问</em></li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C" tabindex="-1">文件系统操作</h2>
+<ol>
+<li>查找并打开文件</li>
+<li>创建文件</li>
+<li>删除文件</li>
+<li>列出目录中的文件</li>
+</ol>
+<h2 id="unix%2Flinux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F" tabindex="-1">Unix/Linux文件系统</h2>
+<p>Unix对文件的定义是<strong>存储在大容量辅存中的数据数据对象</strong>。</p>
+<p>Unix对文件对象和文件名做了分离。一个文件对应一个<em>inode对象</em>，一个inode对象可以绑定多个文件名（这就是所谓的<em>硬链接</em>）</p>
+<ul>
+<li>基于inode的文件分配与管理
+<ul>
+<li>符号目录项-基本目录项分离的改进多级目录</li>
+<li>每个符号目录项只有两个字段：inode号和文件名</li>
+<li>inode存放在文件系统格式化时候就已经分配好的inode table中</li>
+<li><strong>每个inode对应一个文件实体（的元信息）</strong></li>
+<li><strong>不像FAT12，根目录也被作为一个目录文件来管理，且通常该根目录对应的就是inode 0</strong></li>
+<li>根目录是一个目录文件的好处是，根目录也可以动态扩容</li>
+</ul>
+</li>
+<li>两个类树结构：
+<ul>
+<li>存在于inode中的辅存块（簇）索引分配结构</li>
+<li>存在于多级目录文件中符号目录项</li>
+</ul>
+</li>
+<li>Linux超级块：用于存放已挂在的文件系统的信息。在extFS中主要是inode位图和空闲数据块位图</li>
+<li>一些参数（Linux 64位）
+<ul>
+<li>默认磁盘块大小是4K（与页框大小吻合，巧合？）</li>
+<li>inode 13个直接块索引，一级、二级、三级间接块各一个</li>
+<li>4K块大小的ext2/ext3的单文件最大是2TB</li>
+</ul>
+</li>
+<li>Linux一个物理磁盘分成多个分区，每个分区可以看作一个逻辑上的磁盘，可以建立自己的文件系统</li>
+<li>Windows下的<em>卷</em>类似分区，区别是卷可以“跨磁盘”，但分区不行</li>
+</ul>
+<h2 id="fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F" tabindex="-1">FAT12文件系统</h2>
+<ul>
+<li>FAT12文件系统主要针对软盘</li>
+<li>组成部件（按在磁盘上的顺序）
+<ul>
+<li>写在MBR中的一个写有文件系统参数的表</li>
+<li>FAT1 &amp; FAT2表</li>
+<li>根目录表</li>
+<li>数据</li>
+</ul>
+</li>
+<li>根目录表中的目录项包含<strong>文件名</strong>、文件大小、<strong>文件属性</strong>，<strong>首簇号</strong>等主要文件元信息。</li>
+<li>FAT12文件系统支持多级目录（有目录类型的文件），但是不支持改进的符号文件名索引机制，因此<strong>没有将目录项切分为用于检索的符号目录项和保存信息的基本目录项</strong></li>
+<li>FAT12最特别的<strong>FAT表</strong>
+<ul>
+<li>FAT表的每一项一共12bit</li>
+<li><strong>每一项都对应一个簇，每个簇都映射到一个或多个扇区</strong></li>
+<li>这12bit的含义：<strong>当前簇后继的下一个簇的簇号</strong>，也就是链表结构</li>
+<li><strong>FAT12假定给一个文件分配的扇区并不一定是连续的，因此需要一个链表结构来指名文件的下一个簇的簇号，也就是下一个扇区的扇区号</strong></li>
+<li>0xfff表示该簇是最后一个了</li>
+<li>0xff0表示坏簇</li>
+<li>否则，FAT表项表示下一个簇的簇号</li>
+<li>使用FAT表的最主要动机是<strong>快速定位文件的某个位置对应的扇区号，减少读盘</strong>。因为<strong>若将下一个簇号存储在对应扇区中，则在顺序读取文件的时候必须将一个扇区载入才能访问直到下一个扇区的扇区号，FAT表可以在表内快速索引</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%BE%85%E5%AD%98%E7%AE%A1%E7%90%86" tabindex="-1">文件实现与辅存管理</h2>
+<ul>
+<li>文件分配表
+<ul>
+<li>负责管理辅存空间，记录外存分配状况</li>
+<li>在FAT12中是“FAT1表”</li>
+</ul>
+</li>
+<li>文件分配
+<ul>
+<li>所谓的<em>分配方法</em>不仅是分配辅存空间的方法，更重要的是<strong>分配方法决定访问文件（尤其是大文件）特定位置内容的性能</strong></li>
+<li>因此文件分配的正式名称应该是<strong>文件实现</strong></li>
+</ul>
+</li>
+<li>物理分配方法
+<ul>
+<li>连续分配（磁带）</li>
+<li>链接分配（FAT12）</li>
+<li>索引分配（Unix）</li>
+</ul>
+</li>
+<li>连续分配
+<ul>
+<li>实际上就是内存的动态分区管理</li>
+<li>增长和删除都很不便</li>
+<li>一般需要预分配</li>
+</ul>
+</li>
+<li>链接分配
+<ul>
+<li>文件分得的块可以不连续</li>
+<li>使用单链表穿起来</li>
+<li>使用专门的FAT表来记录这一链表，加快查询速度</li>
+</ul>
+</li>
+<li>索引分配（Unix-inode为例子）
+<ul>
+<li>允许这样的操作：<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></eq>时间获知文件第n个块的块号</li>
+<li>实现方式：所谓<em>直接映射</em>和多级索引。inode的文件分配信息部分可以看作一个长15的存放指针的顺序表。<strong>前13个位置，第i个位置其实就是文件第i个块的块号（LBA）</strong></li>
+<li>第14个元素开始是<em>间接块指针</em>，这里存放的块号是<strong>存放了下一级索引表（直接映射表）的块的块号</strong></li>
+</ul>
+</li>
+<li>空闲空间管理
+<ul>
+<li>位图</li>
+<li>链式空闲表（类似堆内存管理）</li>
+<li>索引</li>
+<li>空闲块列表</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E5%85%B6%E4%BB%96" tabindex="-1">其他</h2>
+<ul>
+<li>
+<p>为什么明明一次读一个扇区和一次读n个扇区的时间差不多，但依然要减少目录项大小来减少目录扇区数</p>
+<p>这是因为<strong>文件占据的扇区不一定是连续的</strong>，所谓读n个扇区的时间接近读一个扇区是指<strong>读连续n个扇区，由于不需要重复寻道，从而增加的时间消耗很少</strong>。</p>
+</li>
+<li>
+<p>簇（区块）<br>
+<strong>正是因为连续读n个扇区的时间是差不多，才有了簇的概念。簇是指连续的若干个扇区组合而成的磁盘数据交换单位</strong></p>
+</li>
+<li>
+<p>索引分配法</p>
+<ul>
+<li>索引分配法最重要的特性是<strong>通过直接索引和多级索引，提供对文件特定一个簇的近似随机访问性能</strong>，这一点对数据库引擎尤其重要。</li>
+<li>对大文件的随机访问允许数据库利用索引大幅加速数据访问。</li>
+<li>如果不支持随机访问，即便B树索引和哈希表索引能快速求得目标簇位置，也避免不了顺序访问的巨大时间开销。</li>
+</ul>
+</li>
+<li>
+<p>梳理文件系统</p>
+<ul>
+<li>文件系统与IO子系统高度耦合，通常文件系统的下层就是IO子系统</li>
+<li>IO子系统提供的底层
+<ul>
+<li>磁盘调度</li>
+<li>块设备IO</li>
+</ul>
+</li>
+<li>辅存管理：<strong>解决如何为文件实体分配空间，如何记录文件实体占用的辅存空间</strong>
+<ul>
+<li>文件分配管理</li>
+<li>空闲空间管理</li>
+</ul>
+</li>
+<li>目录管理：<strong>解决如何记录文件集合，如何查找给定名称的文件</strong>
+<ul>
+<li><strong>FCB（目录项）</strong></li>
+<li>符号目录项</li>
+<li>目录文件</li>
+<li>多级目录</li>
+</ul>
+</li>
+<li>文件管理系统：为上层用户文件标准操作集及实现</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/eaa225ea/" rel="prev" title="np">
+      <i class="fa fa-chevron-left"></i> np
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/794381c6/" rel="next" title="review">
+      review <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">文件系统软件架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9A%84%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">文件内容的组织结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9A%E7%9B%AE%E5%BD%95"><span class="nav-number">1.4.</span> <span class="nav-text">文件实现：目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">多级目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95"><span class="nav-number">1.4.2.</span> <span class="nav-text">改进的多级目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E6%96%87%E4%BB%B6%E5%A4%9A%E7%BA%A7%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">1.4.3.</span> <span class="nav-text">改进文件多级目录的好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="nav-number">1.5.</span> <span class="nav-text">文件共享</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%88%AB%E5%90%8D"><span class="nav-number">1.5.1.</span> <span class="nav-text">文件别名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">文件访问控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C"><span class="nav-number">1.7.</span> <span class="nav-text">文件系统操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unix/linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.</span> <span class="nav-text">Unix&#x2F;Linux文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.9.</span> <span class="nav-text">FAT12文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%BE%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.10.</span> <span class="nav-text">文件实现与辅存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.11.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

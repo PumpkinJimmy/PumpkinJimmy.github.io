@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="以太坊：区块链2.0 智能合约 传统合约的特点：  合约生效到合约执行可能存在时间差 传统合约依赖可信任的公证人 如果存在违约，需要依赖政府、法院来强制执行  智能合约的特点：  事件驱动 价值转移 自动执行  应用于区块链上的智能合约  区块链本质上是一个激励驱动的分布式共识系统 区块链的透明性、多方验证、不可篡改特性非常适合于智能合约  以太坊简介 对比特币的一些改进：  出块时间15s，大幅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太坊：区块链2.0">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/cb0efc5f/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="以太坊：区块链2.0 智能合约 传统合约的特点：  合约生效到合约执行可能存在时间差 传统合约依赖可信任的公证人 如果存在违约，需要依赖政府、法院来强制执行  智能合约的特点：  事件驱动 价值转移 自动执行  应用于区块链上的智能合约  区块链本质上是一个激励驱动的分布式共识系统 区块链的透明性、多方验证、不可篡改特性非常适合于智能合约  以太坊简介 对比特币的一些改进：  出块时间15s，大幅">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-28T02:04:04.000Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/cb0efc5f/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>以太坊：区块链2.0 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/cb0efc5f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          以太坊：区块链2.0
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-28 10:04:04" itemprop="dateCreated datePublished" datetime="2021-10-28T10:04:04+08:00">2021-10-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 18:10:11" itemprop="dateModified" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E4%BB%A5%E5%A4%AA%E5%9D%8A%EF%BC%9A%E5%8C%BA%E5%9D%97%E9%93%BE2.0" tabindex="-1">以太坊：区块链2.0</h1>
+<h2 id="%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6" tabindex="-1">智能合约</h2>
+<p>传统合约的特点：</p>
+<ul>
+<li>合约生效到合约执行可能存在时间差</li>
+<li>传统合约依赖可信任的公证人</li>
+<li>如果存在违约，需要依赖政府、法院来强制执行</li>
+</ul>
+<p>智能合约的特点：</p>
+<ul>
+<li>事件驱动</li>
+<li>价值转移</li>
+<li>自动执行</li>
+</ul>
+<h3 id="%E5%BA%94%E7%94%A8%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE%E4%B8%8A%E7%9A%84%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6" tabindex="-1">应用于区块链上的智能合约</h3>
+<ul>
+<li>区块链本质上是一个激励驱动的分布式共识系统</li>
+<li>区块链的透明性、多方验证、不可篡改特性非常适合于智能合约</li>
+</ul>
+<h2 id="%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%AE%80%E4%BB%8B" tabindex="-1">以太坊简介</h2>
+<p>对比特币的一些改进：</p>
+<ul>
+<li>出块时间15s，大幅减少交易延迟</li>
+<li>挖矿谜题对内存要求高，从而限制ASIC的使用</li>
+<li>为了将使用PoS替代PoW</li>
+</ul>
+<p>另外，以太坊最突出的新特性是<strong>智能合约</strong></p>
+<ul>
+<li>以太坊支持智能合约，使得区块链有了更广阔的应用（而不仅仅是发币）</li>
+<li>以太坊促进了DApp(Distributed App)的发展</li>
+</ul>
+<h3 id="%E5%AF%B9%E6%AF%94%E6%AF%94%E7%89%B9%E5%B8%81" tabindex="-1">对比比特币</h3>
+<ul>
+<li>支持智能合约</li>
+<li>增加叔块(Uncle Block)奖励，减少出块实践</li>
+<li>Ghost共识</li>
+<li>更加活跃的开源社区</li>
+</ul>
+<h3 id="%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8" tabindex="-1">典型应用</h3>
+<ul>
+<li>溯源存证</li>
+<li>数字资产发行与流通</li>
+<li>数据共享</li>
+<li>游戏</li>
+</ul>
+<h2 id="%E4%BB%A5%E5%A4%AA%E5%9D%8A%E8%B4%A6%E6%88%B7%E7%BB%93%E6%9E%84" tabindex="-1">以太坊账户结构</h2>
+<ul>
+<li>地址（公钥哈希得）</li>
+<li>余额</li>
+<li>主动发起交易得次数（写作Nounce）</li>
+</ul>
+<p>注意以太坊账户会记录余额，不需要UTXO算</p>
+<h3 id="nounce%E7%9A%84%E4%BD%9C%E7%94%A8" tabindex="-1">Nounce的作用</h3>
+<p>其实是为了编号某用户发起的交易，以防范<em>重放攻击</em></p>
+<h3 id="%E4%B8%A4%E7%A7%8D%E8%B4%A6%E6%88%B7" tabindex="-1">两种账户</h3>
+<ul>
+<li>
+<p>通常账户（外部账户）</p>
+</li>
+<li>
+<p>合约账户</p>
+<p>有代码的账户，能触发执行智能合约。</p>
+<p>有额外的代码哈希和存根地址</p>
+</li>
+</ul>
+<h3 id="%E5%AF%B9%E6%AF%94utxo" tabindex="-1">对比UTXO</h3>
+<p>UTXO不存储账户余额，理论上隐私保护更好。</p>
+<p>但为了支持（智能合约相关）额外功能，以太坊不希望用户能任意地创建新身份。</p>
+<h2 id="%E4%BA%A4%E6%98%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">交易数据结构（待完善）</h2>
+<p>交易：</p>
+<ul>
+<li>通常的交易
+<ul>
+<li>from</li>
+<li>to</li>
+<li>金额</li>
+</ul>
+</li>
+<li><strong>智能合约</strong>
+<ul>
+<li>
+<p>from</p>
+</li>
+<li>
+<p>to</p>
+</li>
+<li>
+<p>value（金额）</p>
+</li>
+<li>
+<p>gasPrice（手续费）</p>
+</li>
+<li>
+<p><strong>data</strong></p>
+<p>这里面包含了智能合约的用户数据和<strong>程序</strong></p>
+</li>
+<li>
+<p><strong>gasLimit</strong></p>
+<p>合约可用的gas的上限。这一上限的设置是为例<strong>防止合约程序不停机</strong><br>
+EVM：执行智能合约代码的虚拟环境。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>注意智能合约的代码除了直接来源于data，还可能来源于“引用另一个交易中的data”</p>
+<h2 id="%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E5%88%86%E5%8F%89" tabindex="-1">以太坊的分叉</h2>
+<ul>
+<li>以太网的出块时间是15s，因此会频繁分叉</li>
+<li>如果按照传统的比特币“最长链”原则去认证和奖励出块。这意味着<strong>在分叉中不被认可的块得不到任何出块奖励</strong></li>
+<li>在以太坊频繁分叉的背景下，这样的奖励机制会打击矿工的积极性</li>
+</ul>
+<p>解决方案就是<strong>奖励叔块</strong></p>
+<h3 id="%E5%8F%94%E5%9D%97" tabindex="-1">叔块</h3>
+<ul>
+<li>每个区块至多接受两个叔块</li>
+<li>叔块不能重复获得奖励</li>
+<li>随着距离越远，叔块的奖励越来越少</li>
+<li><strong>叔块的交易不被执行</strong></li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/b6dc1679/" rel="prev" title="Alpha-Beta剪枝">
+      <i class="fa fa-chevron-left"></i> Alpha-Beta剪枝
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/cc351245/" rel="next" title="贝塞尔曲线">
+      贝塞尔曲线 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%EF%BC%9A%E5%8C%BA%E5%9D%97%E9%93%BE2.0"><span class="nav-number">1.</span> <span class="nav-text">以太坊：区块链2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="nav-number">1.1.</span> <span class="nav-text">智能合约</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE%E4%B8%8A%E7%9A%84%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="nav-number">1.1.1.</span> <span class="nav-text">应用于区块链上的智能合约</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.</span> <span class="nav-text">以太坊简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E6%AF%94%E7%89%B9%E5%B8%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">对比比特币</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">典型应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%E8%B4%A6%E6%88%B7%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">以太坊账户结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nounce%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">Nounce的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E8%B4%A6%E6%88%B7"><span class="nav-number">1.3.2.</span> <span class="nav-text">两种账户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94utxo"><span class="nav-number">1.3.3.</span> <span class="nav-text">对比UTXO</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E6%98%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">交易数据结构（待完善）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E5%88%86%E5%8F%89"><span class="nav-number">1.5.</span> <span class="nav-text">以太坊的分叉</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%94%E5%9D%97"><span class="nav-number">1.5.1.</span> <span class="nav-text">叔块</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

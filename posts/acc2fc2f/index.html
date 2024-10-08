@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Computer Network Introduction 网络协议层次结构 OSI七层参考模型：  应用层 表示层 会话层 运输层 网络层 数据链路层 物理层  常见教学五层结构：  应用层 运输层 网络层 数据链路层 物理层  实际Internet四层结构：  应用层 运输层 网络层 物理网络层  应用层：  为专门的应用提供服务 传输单位为Message（报文、消息） 协议非常多，比如：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer Network">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/acc2fc2f/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="Computer Network Introduction 网络协议层次结构 OSI七层参考模型：  应用层 表示层 会话层 运输层 网络层 数据链路层 物理层  常见教学五层结构：  应用层 运输层 网络层 数据链路层 物理层  实际Internet四层结构：  应用层 运输层 网络层 物理网络层  应用层：  为专门的应用提供服务 传输单位为Message（报文、消息） 协议非常多，比如：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-02T02:46:51.000Z">
+<meta property="article:modified_time" content="2021-06-02T02:46:51.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/acc2fc2f/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Computer Network | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/acc2fc2f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Computer Network
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-02 10:46:51" itemprop="dateCreated datePublished" datetime="2021-06-02T10:46:51+08:00">2021-06-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="computer-network" tabindex="-1">Computer Network</h1>
+<h2 id="introduction" tabindex="-1">Introduction</h2>
+<h3 id="%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84" tabindex="-1">网络协议层次结构</h3>
+<p>OSI七层参考模型：</p>
+<ul>
+<li>应用层</li>
+<li>表示层</li>
+<li>会话层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<p>常见教学五层结构：</p>
+<ul>
+<li>应用层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>数据链路层</li>
+<li>物理层</li>
+</ul>
+<p>实际Internet四层结构：</p>
+<ul>
+<li>应用层</li>
+<li>运输层</li>
+<li>网络层</li>
+<li>物理网络层</li>
+</ul>
+<p>应用层：</p>
+<ul>
+<li>为<em>专门的应用</em>提供服务</li>
+<li>传输单位为Message（报文、消息）</li>
+<li>协议非常多，比如：
+<ul>
+<li>HTTP: Web</li>
+<li>SSL/TLS: Security</li>
+<li>SMTP/POP3: Email</li>
+<li>DNS</li>
+<li>FTP: File</li>
+<li>DHCP: Configuration</li>
+</ul>
+</li>
+<li>由于Unix风格和历史原因，应用层协议偏好<em>基于文本</em>的形式</li>
+</ul>
+<p>表示层：</p>
+<ul>
+<li>数据的表示、压缩、转换、加密</li>
+<li>对标HTTP <em>Accept-Encoding</em>与SSL/TLS</li>
+</ul>
+<p>会话层</p>
+<ul>
+<li>提供会话功能（比如IP电话、视频）</li>
+<li>对标RTMP、RTP等流媒体传输协议</li>
+</ul>
+<p>传输层（运输层）：</p>
+<ul>
+<li>提供<em>进程与进程</em>之间的通信</li>
+<li>传输单位为Segment（报文段）</li>
+<li>TCP、UDP</li>
+<li>这一层的TCP可以提供<em>有连接</em>、<em>有确认</em>的<em>可靠传输服务</em></li>
+</ul>
+<p>网络层（网际层）：</p>
+<ul>
+<li>提供<em>主机与主机</em>之间在<em>互连网络</em>中的通信</li>
+<li>传输单位为Datagram（数据报）</li>
+<li>最重要的功能其实是<strong>路由选择</strong></li>
+<li>IP协议的提供的服务是<em>无连接</em>的<em>不可靠服务（尽最大努力交付服务）</em></li>
+<li>协议：
+<ul>
+<li>代表性协议是<em>IP</em></li>
+<li>路由选择协议
+<ul>
+<li>RIP</li>
+<li>OSPF</li>
+<li>BGP</li>
+</ul>
+</li>
+<li>ICMP</li>
+</ul>
+</li>
+<li>IP协议实际上是因特网协议族的最底层，<strong>物理网络层不属于因特网协议族</strong>。这是因为<strong>IP协议连接的物理网络的各个子网可以是异构的</strong>，或者说互连网络连接的各个子网可以采用不同的链路层协议和物理层协议</li>
+</ul>
+<p>数据链路层：</p>
+<ul>
+<li>提供主机与主机之间在<em>直连网络</em>中的通信</li>
+<li>传输单位为Frame（帧）</li>
+<li>负责数据的校验</li>
+<li>协议：
+<ul>
+<li>PPP（点到点）</li>
+<li>Ethernet（多路访问网络）</li>
+<li>ARP（基于MAC地址的链路层通信）</li>
+</ul>
+</li>
+</ul>
+<h3 id="concepts" tabindex="-1">Concepts</h3>
+<ul>
+<li>
+<p>SAN, LAN, MAN, WAN</p>
+<p>SAN: System Area Network</p>
+</li>
+<li>
+<p>Internet</p>
+<p>Internet = Host + Link + Router</p>
+</li>
+<li>
+<p>PDU, SDU, PCI, SAP</p>
+<ul>
+<li>PDU: Protocol Data Unit，也即包（Packet）</li>
+<li>SDU: Service Data Unit; PCI: Protocol Control Information，一般作为header</li>
+<li>PDU = PCI + SDU</li>
+<li>SAP: Service Access Point</li>
+</ul>
+</li>
+<li>
+<p>时延：</p>
+<ul>
+<li>处理时延：与路由器处理性能有关</li>
+<li>排队时延：与拥塞有关</li>
+<li>传输时延：与通信链路带宽有关</li>
+<li>传播时延：
+<ul>
+<li>与通信介值、通信距离有关</li>
+<li>注意<strong>光纤的传播时延大于铜线</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>因特网：全球最大的互联网</p>
+<ul>
+<li>因特网=边缘部分+路由器+通信链路</li>
+<li>因特网=边缘部分+接入网+主干网</li>
+</ul>
+</li>
+<li>
+<p>带宽 vs. 吞吐量</p>
+<ul>
+<li>带宽：通信链路的数据率的理论上限</li>
+<li>吞吐量：通信链路实际的数据率</li>
+<li>通常吞吐量达不到是跑不满带宽的。原因很多，包括：
+<ul>
+<li>通信环境差，信号失真严重，数据在传输中出现差错</li>
+<li><strong>协议控制信息/ARQ重传的额外开销</strong>。注意到<strong>链路为主机提供了数据通信的通道，但通道上传输的不一定是有效载荷，非有效载荷的部分都不记作有效传输的数据，最终都会成为降低吞吐量的部分</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8" tabindex="-1">信道复用</h2>
+<ul>
+<li>
+<p>Multiplex</p>
+<ul>
+<li>FDM: Frequency Division Multiplex</li>
+<li>TDM/WDM: Time/Wave Division Multiplex</li>
+<li>CDM: Code Division Multiplex (3G: CDMA)</li>
+<li>Statistical Multiplex</li>
+</ul>
+</li>
+<li>
+<p>Switching</p>
+<ul>
+<li>Circuit Switching: FDM,TDM,CDM, Telephone</li>
+<li><strong>Packet Switching</strong>: Statistical Multiplex, Computer Network</li>
+</ul>
+</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/1ad9df94/" rel="prev" title="计算机启动流程">
+      <i class="fa fa-chevron-left"></i> 计算机启动流程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/88c26b79/" rel="next" title="Outline">
+      Outline <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#computer-network"><span class="nav-number">1.</span> <span class="nav-text">Computer Network</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">网络协议层次结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#concepts"><span class="nav-number">1.1.2.</span> <span class="nav-text">Concepts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">信道复用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

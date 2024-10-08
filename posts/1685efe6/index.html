@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OS复习 计组 术语  中断  由计算机系统内部或外部引起的，将一个正在运行的进程暂停，并将控制权交给专门的处理程序的一个事件。   程序状态字（PSW）  包含当前进程运行状态的存储字，包含内容如内存使用、是否允许中断、运行模式等   多级存储体系  不使用单一存储器而是使用多类价格递减、速度递减、容量递增的存储器构成的分层存储体系。   空间局部性  访问操作在空间上存在聚集   时间局部性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS复习">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/1685efe6/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="OS复习 计组 术语  中断  由计算机系统内部或外部引起的，将一个正在运行的进程暂停，并将控制权交给专门的处理程序的一个事件。   程序状态字（PSW）  包含当前进程运行状态的存储字，包含内容如内存使用、是否允许中断、运行模式等   多级存储体系  不使用单一存储器而是使用多类价格递减、速度递减、容量递增的存储器构成的分层存储体系。   空间局部性  访问操作在空间上存在聚集   时间局部性">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-06T05:10:15.000Z">
+<meta property="article:modified_time" content="2021-07-06T05:10:15.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/1685efe6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OS复习 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/1685efe6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OS复习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-06 13:10:15" itemprop="dateCreated datePublished" datetime="2021-07-06T13:10:15+08:00">2021-07-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="os%E5%A4%8D%E4%B9%A0" tabindex="-1">OS复习</h1>
+<h2 id="%E8%AE%A1%E7%BB%84" tabindex="-1">计组</h2>
+<h3 id="%E6%9C%AF%E8%AF%AD" tabindex="-1">术语</h3>
+<ul>
+<li>中断
+<ul>
+<li>由计算机系统内部或外部引起的，将一个正在运行的进程暂停，并将控制权交给专门的处理程序的一个事件。</li>
+</ul>
+</li>
+<li>程序状态字（PSW）
+<ul>
+<li>包含当前进程运行状态的存储字，包含内容如内存使用、是否允许中断、运行模式等</li>
+</ul>
+</li>
+<li>多级存储体系
+<ul>
+<li>不使用单一存储器而是使用多类价格递减、速度递减、容量递增的存储器构成的分层存储体系。</li>
+</ul>
+</li>
+<li>空间局部性
+<ul>
+<li>访问操作在空间上存在聚集</li>
+</ul>
+</li>
+<li>时间局部性
+<ul>
+<li>相较其他位置，最近访问过的位置接下来更有可能被访问到</li>
+</ul>
+</li>
+<li>异步操作
+<ul>
+<li>指一个操作相对于另一个操作的时序是不明确的，或者说相对于另一个操作而言，不是有规律地或可预期地发生的</li>
+</ul>
+</li>
+</ul>
+<h2 id="os-intro" tabindex="-1">OS Intro</h2>
+<h3 id="%E6%A6%82%E5%BF%B5" tabindex="-1">概念</h3>
+<p>操作系统的三个目标：</p>
+<ul>
+<li>易用：让计算机易于使用</li>
+<li>有效：允许更高效地利用计算机资源</li>
+<li>可拓展：容易为OS开发新的功能</li>
+</ul>
+<p>OS的三个身份：</p>
+<ul>
+<li><strong>用户与计算机的接口</strong>
+<ul>
+<li>对应易用性</li>
+<li>屏蔽计算机的底层细节，提供接口</li>
+<li>三个层次的接口：ISA，ABI，API</li>
+</ul>
+</li>
+<li><strong>资源管理器</strong>
+<ul>
+<li>对应高效性</li>
+</ul>
+</li>
+<li>可拓展的平台：对应可拓展性</li>
+<li>OS类别
+<ul>
+<li>批处理</li>
+<li>多道批处理</li>
+<li>分时系统</li>
+<li>*实时系统</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%9C%AF%E8%AF%AD-1" tabindex="-1">术语</h3>
+<ul>
+<li>作业
+<ul>
+<li>要运行的单个程序，可能包括数据，以及执行指令</li>
+</ul>
+</li>
+<li>批处理
+<ul>
+<li>将作业<strong>成批提交给计算机，然后不再干预</strong></li>
+</ul>
+</li>
+<li>多道批处理系统
+<ul>
+<li>支持两个及以上的计算机任务并发运行的系统</li>
+</ul>
+</li>
+<li>分时系统
+<ul>
+<li>允许多个<em>用户</em>（而不仅仅是多个作业）共享处理器时间的系统。</li>
+</ul>
+</li>
+<li>实时系统
+<ul>
+<li>支持执行实时任务（存在完成任务的最后期限）的系统</li>
+</ul>
+</li>
+<li>执行上下文
+<ul>
+<li>程序执行的系统环境，包括处理器的寄存器的值、处理器当前的状态，资源的状态（如页表）等</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B" tabindex="-1">进程模型</h2>
+<h3 id="%E6%A6%82%E5%BF%B5-1" tabindex="-1">概念</h3>
+<ul>
+<li>OS管理程序执行的目标
+<ul>
+<li>实现系统资源共享</li>
+<li>实现单处理器上多道程序的切换</li>
+<li>充分利用处理器和IO设备</li>
+</ul>
+</li>
+<li>进程
+<ul>
+<li>正在计算机上运行的程序的实体</li>
+<li>可以被处理器调度、可以分派的实体</li>
+<li>包含一组可执行指令、一个当前状态和一组相关系统资源</li>
+<li>处理器调度的独立单位</li>
+<li>资源分配的基本单位</li>
+</ul>
+</li>
+<li>进程的特征
+<ul>
+<li>动态性：具有声明周期</li>
+<li>并发性：逻辑上多个进程同时在运行</li>
+<li>独立性：处理器调度和资源分配的独立单位</li>
+<li>异步性：进程之间独立地运行</li>
+<li>具有结构特征：进程映像</li>
+</ul>
+</li>
+<li>进程包含的元素
+<ul>
+<li>标识符pid</li>
+<li>状态state</li>
+<li>优先级prio</li>
+<li>程序计数器pc</li>
+<li>内存指针memory pointer</li>
+<li>处理器上下文context(regs)</li>
+<li>IO信息</li>
+</ul>
+</li>
+<li>六/七状态进程模型
+<ul>
+<li>运行</li>
+<li>就绪</li>
+<li>阻塞</li>
+<li>挂起</li>
+<li>起始</li>
+<li>结束</li>
+</ul>
+</li>
+<li>挂起
+<ul>
+<li>指的是<strong>进程映像部分或全部换出到了外存中</strong></li>
+<li>挂起状态的出现是因为<strong>在没有虚存的情况下，进程映像需要全部在内存中，进程才能正常运行</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A" tabindex="-1">术语解释</h3>
+<ul>
+<li>进程
+<ul>
+<li>正在计算机上正在执行的，能够分配给处理器运行的，由一组程序代码（一组可执行代码）、与代码相关联的数据集、一个当前状态和一组相关系统资源表征的执行实体。</li>
+</ul>
+</li>
+<li>进程派生
+<ul>
+<li>OS为一个进程的显式请求创建一个新的进程，并指定该新进程的父进程为发起请求的进程</li>
+</ul>
+</li>
+<li>进程映像
+<ul>
+<li>用户数据、用户程序、进程用户栈与系统栈以及进程控制块（PCB）的集合</li>
+<li>进程映像就是进程概念的实体</li>
+</ul>
+</li>
+<li>阻塞态
+<ul>
+<li>进程由于某些原因（如IO操作、系统调用、缺页），进程继续执行的条件还未满足，因而还不能执行的状态。</li>
+</ul>
+</li>
+<li>就绪态
+<ul>
+<li>进程做好准备，可以分派处理器立刻开始执行</li>
+</ul>
+</li>
+<li>抢占
+<ul>
+<li>中断一个正在运行但还未结束的进程，并将处理器分派给另一个进程来执行的操作</li>
+</ul>
+</li>
+<li>进程切换
+<ul>
+<li>OS中断一个正在运行的进程、保存其执行上下文，并恢复另一个就绪进程的上下文、将控制权交给该就绪进程的过程。</li>
+</ul>
+</li>
+<li>挂起态
+<ul>
+<li>进程并没有在执行的，且进程映像的部分或全部换出到了外存中的一种状态。</li>
+</ul>
+</li>
+<li>交换
+<ul>
+<li>将某进程的一部分或全部移到辅存中</li>
+</ul>
+</li>
+<li>调度</li>
+<li>特权指令</li>
+<li>用户模式（用户态）
+<ul>
+<li>处理器执行用户程序时所处的、不允许执行特权指令、不允许访问受保护内存、不允许直接访问IO的一种处理器运行状态。</li>
+</ul>
+</li>
+<li>系统模式（内核态）
+<ul>
+<li>处理器执行系统内核程序时所处的、允许执行任何指令、允许访问任意内存以及直接使用IO的一种处理器特权运行状态。</li>
+</ul>
+</li>
+<li>模式切换
+<ul>
+<li>处理器运行状态（特指内核/用户态）的切换</li>
+</ul>
+</li>
+<li>原语</li>
+<li>内核</li>
+<li>宏内核</li>
+<li>微内核</li>
+</ul>
+<h2 id="%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98" tabindex="-1">并发问题</h2>
+<h3 id="%E6%9C%AF%E8%AF%AD-2" tabindex="-1">术语</h3>
+<ul>
+<li>可重用资源
+<ul>
+<li>一次只能供一个进程使用，不会因为使用的消耗的资源</li>
+<li>处理器，IO通道，内存，外存，设备，文件，信号量</li>
+</ul>
+</li>
+<li>可消耗资源
+<ul>
+<li>可以被创建和销毁的资源</li>
+<li>信号、消息、缓冲区数据</li>
+</ul>
+</li>
+<li>死锁</li>
+<li>死锁预防</li>
+<li>死锁避免</li>
+<li>死锁检测</li>
+<li>银行家算法
+<ul>
+<li>也即<strong>资源分配拒绝策略</strong>，以安全状态为核心的死锁避免策略</li>
+</ul>
+</li>
+<li>安全状态
+<ul>
+<li>至少存在一个不会导致死锁的资源分配序列的状态。等价于<strong>所有进程都能运行到结束</strong></li>
+</ul>
+</li>
+<li>联合进程图
+<ul>
+<li>呈现两个进程竞争资源的进展以及执行路径</li>
+</ul>
+</li>
+<li>资源分配图
+<ul>
+<li>圈为进程，方框为资源，请求边和分配边</li>
+</ul>
+</li>
+<li>互斥</li>
+<li>抢占</li>
+<li>占有且等待</li>
+<li>循环等待</li>
+<li>饥饿</li>
+<li>管道</li>
+<li>内存屏障</li>
+<li>消息</li>
+<li>自旋锁
+<ul>
+<li>一个进程在无限循环中执行，等待锁变量指明锁可用的互斥机制</li>
+</ul>
+</li>
+<li>哲学家就餐问题</li>
+<li>竞态问题
+<ul>
+<li>由于多个并发进程对共享变量的访问和操作导致执行的结果取决于并发进程指令执行的相对时序的问题</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E7%BA%BF%E7%A8%8B" tabindex="-1">线程</h2>
+<ul>
+<li>线程的优点
+<ul>
+<li>创建和终止的速度快</li>
+<li>切换的开销更小（因为保存和恢复的上下文较少）</li>
+<li>通信效率高：同一个线程派生出来的子线程天然地共享全局变量，不需要系统调用就可以访问共享资源。</li>
+</ul>
+</li>
+<li><strong>线程不是系统资源分配的单位</strong>，线程独占的资源主要是自己的处理器上下文和栈空间（以及thread_local静态）。</li>
+<li>线程只有就绪-执行-阻塞三个状态，<strong>线程没有终止态和挂起态</strong></li>
+<li>用户级线程
+<ul>
+<li>用户级线程是用户态模拟的线程</li>
+<li>对内核是不可见的</li>
+<li>该线程的切换不需要模式切换（需要内核态来处理）</li>
+<li>调度算法由用户程序实现</li>
+<li>朴素实现的问题：
+<ul>
+<li>一个线程阻塞（如发起系统调用）会导致所有兄弟线程页阻塞（解决方案是注册回调，使用非阻塞调用）</li>
+<li>不能充分利用SMP</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>内核级线程
+<ul>
+<li>可以充分利用SMP</li>
+<li>内核例程自身可以使用多线程</li>
+<li>最大的缺点是需要模式切换和上下文切换</li>
+</ul>
+</li>
+<li>宏内核的特点
+<ul>
+<li>水平分层</li>
+<li>只有层与层之间相互通信</li>
+<li>若下层发生变动会影响到上层</li>
+<li>高性能</li>
+</ul>
+</li>
+<li>微内核的特点
+<ul>
+<li>内核只包含最小功能集，其余服务均运行在内核态</li>
+<li>模块化</li>
+<li>垂直分层</li>
+<li>可拓展</li>
+<li>一致接口</li>
+<li>可靠性高：微内核可以被严格测试</li>
+<li>性能差</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A-1" tabindex="-1">术语解释</h3>
+<ul>
+<li>线程
+<ul>
+<li>轻量级进程，处理器调度执行的基本单位</li>
+</ul>
+</li>
+<li>线程控制块</li>
+<li>用户级线程</li>
+<li>内核线程</li>
+<li>消息</li>
+</ul>
+<h2 id="io" tabindex="-1">IO</h2>
+<h3 id="%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A" tabindex="-1">名词解释</h3>
+<ul>
+<li>块
+<ul>
+<li>作为块设备处理单元的一组二进制数据</li>
+</ul>
+</li>
+<li>面向块的设备</li>
+<li>面向流的设备</li>
+<li>程序控制IO</li>
+<li>中断控制IO</li>
+<li>DMA
+<ul>
+<li>一种IO控制模式。处理器向DMA控制器发送IO命令，DMA控制器负责处理主存与IO的数据交换；只有当所有数据块传输完成后DMA才通知控制器。</li>
+</ul>
+</li>
+<li>IO通道：具有自己独立处理器甚至是独立存储空间的IO模块</li>
+<li>IO处理器：类似IO通道</li>
+<li>设备IO（物理IO）
+<ul>
+<li>将上层IO请求变成适当的IO指令序列和参数，使用缓冲技术提高利用率</li>
+</ul>
+</li>
+<li>逻辑IO
+<ul>
+<li>将设备当成逻辑资源来使用，不管行设备控制细节。</li>
+</ul>
+</li>
+<li>IO缓冲区</li>
+<li>循环缓冲区
+<ul>
+<li>多于两个的一组逻辑上循环的缓冲区</li>
+</ul>
+</li>
+<li>spooling
+<ul>
+<li>外围设备与处理器交换数据时为减少时延，同时将一个独占设备虚拟出多个逻辑上的设备实现独占设备共享，使用辅助存储器器（输入井，输出井）作为缓冲的IO技术</li>
+</ul>
+</li>
+<li>磁道</li>
+<li>扇区</li>
+<li>寻道时间
+<ul>
+<li>磁头移动到目标磁道所需要的时间</li>
+</ul>
+</li>
+<li>磁头</li>
+<li>磁盘缓存</li>
+<li>RAID</li>
+</ul>
+<h2 id="%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86" tabindex="-1">内存管理</h2>
+<h3 id="%E6%A6%82%E5%BF%B5-2" tabindex="-1">概念</h3>
+<p>内存管理的首要目的：</p>
+<ul>
+<li>满足多道程序并发</li>
+</ul>
+<p>内存管理的需求：</p>
+<ul>
+<li>重定位</li>
+<li>共享</li>
+<li>保护</li>
+<li>逻辑组织
+<ul>
+<li>分段</li>
+<li>便于提供多种层次上的内存保护</li>
+<li>便于模块化地组织和共享内存</li>
+</ul>
+</li>
+<li>物理组织
+<ul>
+<li>分页</li>
+<li>主存和辅存的信息交换和管理</li>
+</ul>
+</li>
+</ul>
+<p>静态分区：内碎片<br>
+动态分区：</p>
+<ul>
+<li>消除内碎片，产生外碎片</li>
+<li>需要定期压缩来消除外碎片</li>
+<li>放置算法
+<ul>
+<li>最佳适配（最差）</li>
+<li>首次适配（通常最好）</li>
+<li>下次适配</li>
+</ul>
+</li>
+<li><strong>伙伴系统</strong>：固定分区和可变分区的折中
+<ul>
+<li>只允许对齐2^k大小进行动态分区分配</li>
+</ul>
+</li>
+<li></li>
+<li>重定位
+<ul>
+<li>逻辑地址：与当前数据在内存中的物理分配地址无关的访问地址</li>
+<li>相对地址是逻辑地址的一个例子</li>
+<li>一个简单粗暴的方法是基于一个基地址寄存器，也就是分段</li>
+</ul>
+</li>
+<li>分段
+<ul>
+<li>将用户程序按逻辑划分为多个长度不等的部分，借助段表管理、基于基地址来计算物理地址的内存管理方案</li>
+<li>与动态分区管理的区别在于，动态分区管理为一个进程分配了一个分区。而分段可以为一个进程分配多个物理上不连续的段。</li>
+</ul>
+</li>
+<li>动态运行时加载
+<ul>
+<li>可重定位加载（也称静态重定位）的缺点是在加载时通过地址空间的转换一次性将程序中的所有逻辑地址转换为物理地址。但如果要进程在执行过程中的物理地址总是在变化，那载入时绑定的物理地址就失效了。</li>
+<li>动态运行时加载其实就是在指令执行的那一刻再计算一个逻辑地址对应的物理地址。</li>
+<li>动态运行时加载的实际实现方案就是分页</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8" tabindex="-1">虚拟存储器</h3>
+<p>虚拟地址：<br>
+虚拟内存的地址空间中的一个地址，该地址对应一个可以访问的存储位置，且如同它是主存的一部分。</p>
+<p>虚拟存储器是如何提高系统利用率的：</p>
+<ol>
+<li>进程映像的部分驻留：任何特定进程只需要装入其部分的块，因此<strong>内存中有足够大的空间放置更多的进程</strong></li>
+<li>进程可以拥有独立的、巨大的逻辑地址空间（甚至比物理内存本身还要大）：通过维护和切换页表，各个进程可以拥有很大的虚拟地址空间</li>
+</ol>
+<p>页表项的构成：</p>
+<ul>
+<li>控制位：表明该页的状态</li>
+<li>页框号</li>
+</ul>
+<p>多级页表：</p>
+<ul>
+<li>主要作用是<strong>减少页表所占的连续空间大小</strong></li>
+<li>缺点是更慢的地址转换</li>
+<li>基本方法是<strong>一级页表下的每一个页表项对应存放了二级页表所在页框（的页框号）</strong>。通过查一级页表可以得到二级页表所在的页，然后就可以查二级页表查到给定页号对应的页框号</li>
+</ul>
+<p>反向页表（倒排页表）的项：</p>
+<ul>
+<li>页号</li>
+<li><strong>进程标识符</strong>：标识使用该页的进程</li>
+<li>控制位：表明该页的状态</li>
+</ul>
+<p>常规页表存在CR3页表切换，但反向页表整个OS只有一个，因为页表项中有进程标识符</p>
+<h3 id="%E5%88%86%E6%AE%B5-vs.-%E5%88%86%E9%A1%B5" tabindex="-1">分段 vs. 分页</h3>
+<ul>
+<li>虚拟内存实现和地址转换方面，分页能做的其实分段也能做</li>
+<li>分页<strong>几乎可以认为消除了内存碎片</strong></li>
+<li>分段<strong>容易支持共享和保护</strong>，应位分段系统是可见的。</li>
+</ul>
+<h3 id="%E7%AD%96%E7%95%A5" tabindex="-1">策略</h3>
+<ul>
+<li>调页
+<ul>
+<li>请求调页</li>
+<li>预调页</li>
+</ul>
+</li>
+<li>放置策略</li>
+<li>置换策略
+<ul>
+<li>OPT 最佳（不可实现）</li>
+<li>LRU</li>
+<li>FIFO</li>
+<li>Clock
+<ul>
+<li>为备选页添加一个访问位（R位）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>驻留集管理
+<ul>
+<li>置换范围
+<ul>
+<li>全局：所有进程的页</li>
+<li>局部：当前进程的页</li>
+</ul>
+</li>
+<li>进程页框分配策略
+<ul>
+<li>静态：进程启动时确定进程能分配到的页框的数目</li>
+<li>动态：进程运行过程中动态调整分配到的页框数目</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>清除策略：对页的修改合适写入辅存中</li>
+<li>加载控制（联系长程调度，作业调度）</li>
+<li>挂起</li>
+</ul>
+<h3 id="vsws%E5%B7%A5%E4%BD%9C%E9%9B%86%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5" tabindex="-1">VSWS工作集管理策略</h3>
+<h3 id="%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A-2" tabindex="-1">术语解释</h3>
+<ul>
+<li><strong>重定位</strong>
+<ul>
+<li>将程序的逻辑地址空间变换成内存中的实际物理地址空间的过程</li>
+</ul>
+</li>
+<li>动态运行时加载
+<ul>
+<li>只有在执行指令的之后才计算指令中使用的逻辑地址的物理位置的动态加载方式</li>
+</ul>
+</li>
+<li>动态分区
+<ul>
+<li>将内存划分为可变长度的块分配给用户程序的内存管理方案</li>
+</ul>
+</li>
+<li>压缩：
+<ul>
+<li>通过移动进程映像在内存中的物理位置，使得各个进程占用的内存空间连续，并使得空闲空间连成一片，从而消除内碎片</li>
+</ul>
+</li>
+<li>伙伴加载：固定分区和可变分区的折中</li>
+<li>逻辑地址
+<ul>
+<li>与当前数据在内存中的物理分配地址无关的访问地址</li>
+</ul>
+</li>
+<li>动态加载
+<ul>
+<li>载入用户程序时动态地将进程载入到某个对用户程序来说未知的地址处的程序加载方式，要求用户程序使用逻辑地址而非物理地址</li>
+</ul>
+</li>
+<li>逻辑组织
+<ul>
+<li>分段</li>
+<li>便于提供多种层次上的内存保护</li>
+<li>便于模块化地组织和共享内存</li>
+</ul>
+</li>
+<li>物理组织
+<ul>
+<li>分页</li>
+<li>主存和辅存的信息交换和管理</li>
+</ul>
+</li>
+<li>共享
+<ul>
+<li>允许多个进程受控地访问内存的同一个部分的机制</li>
+</ul>
+</li>
+<li>保护
+<ul>
+<li>由硬件支持的静止进程非法访问某些内存未知的机制</li>
+</ul>
+</li>
+<li>分页
+<ul>
+<li>将内存划分为大小固定且相等的块，借助页表来进行管理的内存管理方案</li>
+</ul>
+</li>
+<li>分段
+<ul>
+<li>将用户程序按逻辑划分为多个长度不等的部分，借助段表管理、基于基地址来计算物理地址的内存管理方案</li>
+</ul>
+</li>
+<li>虚拟内存
+<ul>
+<li>基于逻辑地址的动态运行时内存管理方案的，支持使用备用的存储空间（如辅存）来扩充主存和进程地址空间的存储管理技术</li>
+</ul>
+</li>
+<li>关联映射</li>
+<li>内碎片
+<ul>
+<li>分配给用户的内存中存在的不可利用的小内存片段</li>
+<li>通常存在于固定分区管理和页式管理</li>
+</ul>
+</li>
+<li>外碎片
+<ul>
+<li>未分配给用户的内存中用户内存空间与用户内存空间之间的不可利用的小内存片段</li>
+<li>通常出现在动态分区管理和段式存储管理</li>
+</ul>
+</li>
+<li>页框
+<ul>
+<li>物理内存空间划分而成的等大小的块</li>
+</ul>
+</li>
+<li>页
+<ul>
+<li>分页式存储器系统中，具有一个逻辑地址的、长度固定的数据块。在虚拟存储器中，页也是辅存和主存交换数据的基本单位。</li>
+</ul>
+</li>
+<li>页框
+<ul>
+<li>物理内存中用于保存一个页的数据的大小固定且与页大小相同的连续块。</li>
+</ul>
+</li>
+<li>缺页中断</li>
+<li>页面放置策略</li>
+<li>页面替换策略</li>
+<li>页表
+<ul>
+<li>记录每个页的页框号（如果确实在内存中）和页的状态（如是否在内存中，是否被访问过，是否被修改过等）</li>
+</ul>
+</li>
+<li>段表</li>
+<li>页面抖动
+<ul>
+<li>由于刚调出的页面立刻又需要访问，从而马上又调入，如此短时间内频繁地对个别页面调入调出地导致辅存IO繁忙而处理器利用率低的现象称为页面抖动。</li>
+</ul>
+</li>
+<li>驻留集
+<ul>
+<li>进程已装入内存的页面的集合</li>
+</ul>
+</li>
+<li>工作集
+<ul>
+<li>某段时间间隔内进程要访问的页面的集合</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86" tabindex="-1">文件管理</h2>
+<ul>
+<li>物理文件结构
+<ul>
+<li>连续分配</li>
+<li>链式分配</li>
+<li>索引分配</li>
+</ul>
+</li>
+<li>空闲空间管理
+<ul>
+<li>位表</li>
+<li>链接空闲区：将可变长度的连续空闲区串成链表</li>
+<li>索引：将所有空闲空间视为一个索引分配的文件</li>
+<li>空间块列表：一种稀疏表示，将空闲块的块号放在一个线性表里。在空闲空间很多的时候表会非常的大，因此需要发在磁盘上，同时为了防止空闲空间分配的耗时过长，会将该表当作栈或者队列，然后将表的一部分放在内存中，提高速度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%9C%AF%E8%AF%AD-3" tabindex="-1">术语</h3>
+<ul>
+<li>文件分配表
+<ul>
+<li>指明文件在辅存中的物理位置的表</li>
+</ul>
+</li>
+<li>文件管理系统
+<ul>
+<li>一组为文件的用户或使用文件的应用程序提供文件操作相关服务的系统软件</li>
+</ul>
+</li>
+<li>逻辑IO：使用户和应用程序能够访问文件记录</li>
+<li>工作目录：相对于当前进程或者交互式用户而言的当前目录</li>
+<li>记录组块：将记录组织成物理文件系统的块来执行IO的策略</li>
+<li>定长组块：使用定长的记录，将若干完整记录保存到一个块中</li>
+<li>变成跨越式组块：变长记录，并紧缩到块中，使得块中不存在未使用的空间，但可能某些记录会跨块</li>
+<li>变长非跨越式组块：不允许跨块的变长组块</li>
+<li>预分配：创建文件时预先声明文件的最大尺寸</li>
+<li>卷：一组在辅存上可寻址的对操作系统或者应用程序连续的但在物理设备上不一定连续的扇区的集合构成的逻辑磁盘</li>
+<li>磁盘分配表：等于空闲区分配表</li>
+</ul>
+<h2 id="io-1" tabindex="-1">IO</h2>
+<h3 id="%E6%9C%AF%E8%AF%AD-4" tabindex="-1">术语</h3>
+<ul>
+<li>块</li>
+<li>面向块的设备</li>
+<li>面向流的设备</li>
+<li>单缓冲</li>
+<li>双缓冲</li>
+<li>循环缓冲区</li>
+<li>缓冲池</li>
+<li>逻辑IO
+<ul>
+<li>设备无关的、将IO设备当成逻辑资源来处理的软件IO模块</li>
+</ul>
+</li>
+<li>设备IO
+<ul>
+<li>请求的操作和数据被转换成适当的IO指令、</li>
+</ul>
+</li>
+<li>中断驱动IO</li>
+<li>IO通道</li>
+<li>IO处理器</li>
+<li>DMA
+<ul>
+<li>直接内存访问</li>
+</ul>
+</li>
+<li>寻道时间</li>
+<li>旋转延迟</li>
+<li>磁盘缓存</li>
+<li>扇区</li>
+<li>磁道</li>
+<li>磁头</li>
+<li>最短服务时间优先
+<ul>
+<li>优先选择导致最小寻道时间的请求</li>
+</ul>
+</li>
+<li>SCAN（电梯算法）
+<ul>
+<li>要求磁头臂只沿一个方向移动，并在途中满足所有未完成的请求，直到到达这个方向的最后一个磁道或者该方向上没有其他请求为止才反转服务方向的一种磁盘IO调度算法</li>
+</ul>
+</li>
+<li>C-SCAN
+<ul>
+<li>只允许SCAN采用一个方向，到头之后立刻返回磁盘相反方向的末端，然后再次扫描</li>
+</ul>
+</li>
+<li>RAID
+<ul>
+<li>独立磁盘冗余阵列</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%A6%82%E5%BF%B5-3" tabindex="-1">概念</h3>
+<ul>
+<li>
+<p>IO子系统基本架构</p>
+<ul>
+<li>用户进程 - 逻辑IO - 设备IO - 调度与控制 - 硬件</li>
+<li>其中逻辑IO是一个统称，它通常是<strong>设备无关层</strong></li>
+<li>设备IO也称<em>物理IO</em>，是负责产生设备特定的IO命令和参数</li>
+<li>调度与控制也称驱动层，涉及中断及其处理，是真正与设备直接通信的一层。通常IO缓冲区和磁盘调度也是在这一层完成</li>
+</ul>
+</li>
+<li>
+<p>RAID</p>
+<ul>
+<li>RAID是一组物理磁盘驱动器，而OS将其视作单个逻辑驱动器（磁盘冗余阵列）</li>
+<li>数据分布在物理驱动器阵列中（条带化）</li>
+<li>使用若能关于磁盘容量保存奇偶校验信息，数据具有可恢复性</li>
+<li>RAID 0
+<ul>
+<li>无冗余</li>
+<li>并发请求，高数据传送能力</li>
+</ul>
+</li>
+<li>RAID 1
+<ul>
+<li>完全镜像备份</li>
+<li>完全冗余，易于恢复</li>
+<li>读性能有优势</li>
+</ul>
+</li>
+<li>RAID 2
+<ul>
+<li>冗余</li>
+<li>汉明码纠错</li>
+<li>没有性能优势</li>
+<li>只适用于磁盘错误很多的情形</li>
+</ul>
+</li>
+<li>RAID 3 ~ 6
+<ul>
+<li>冗余</li>
+<li>奇偶校验，从冗余数据和奇偶校验码中恢复</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>三种设备</p>
+<ul>
+<li>
+<p>独占设备：如打印机</p>
+<p>独占设备的特点是<strong>一个进程申请了该设备后，在该设备的使用完成之前，别的进程都不可以使用该设备</strong>，如打印机不应该在同一张纸上打印不同进程要打印的东西</p>
+</li>
+<li>
+<p>分时共享设备：如磁盘</p>
+<p>分时共享设备的特点是：<strong>同一时刻仍然不能有多个进程使用设备，但并发进程可以分时复用设备</strong>，如进程的磁盘访问请求可以拆分成许多个簇的读写，这样可以处理某进程的若干个请求之后切换处理另一个进程的磁盘访问请求。</p>
+</li>
+<li>
+<p>虚拟设备：SPOOLing假脱机技术</p>
+<p>SPOOLing的特点是<strong>通过输入井和输出井将一个独占式的物理设备虚拟出多个逻辑设备供多个进程共享</strong></p>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID</p>
+</li>
+</ul>
+<h2 id="%E5%9D%91%E7%82%B9" tabindex="-1">坑点</h2>
+<ul>
+<li>段相关的计算不要忘记检查段界限</li>
+</ul>
+<h2 id="%E9%94%99%E9%A2%98" tabindex="-1">错题</h2>
+<h3 id="%E8%BF%9B%E7%A8%8B" tabindex="-1">进程</h3>
+<ul>
+<li>设备分配不会创建新进程</li>
+<li>管道是特殊的文件（或者说，只是具有文件管理系统的统一接口而没有辅存上的实体，类似设备文件），<strong>管道只存在内存中</strong>；<strong>管道是半双工的通信，且类似生产者-消费者模型中的有界队列，读或者写都有可能阻塞</strong></li>
+<li>题目有时要求“最大限度并发”，这是需要考虑一些不需要互斥的情况：
+<ul>
+<li><strong>某个共享变量没有写</strong></li>
+<li><strong>三个以上的进程可以分别互斥来充分并发</strong></li>
+<li>考虑一种情况：进程P1、P2、P都用到了共享变量y，但<strong>只有P3写了y</strong>，此时<strong>P1与P3、P2与P3分别互斥，使用两个不同的互斥锁，因为P1和P2之间是不必互斥的</strong></li>
+</ul>
+</li>
+<li>哲学家就餐问题如果不使用管程和条件变量，则n个位置只允许n-1个人同时就餐</li>
+<li>注意银行家算法的安全状态时<strong>存在一个安全的进程结束序列</strong>。也就是说，只有当前存在一个进程可以运行结束还不行，必须<strong>后续每一步都有一个进程能运行结束</strong></li>
+</ul>
+<h3 id="%E6%96%87%E4%BB%B6" tabindex="-1">文件</h3>
+<ul>
+<li>打开文件的时候不必立即从辅存读入输入，<strong>打开文件需要的是读入FCB(inode缓存)</strong></li>
+<li>逻辑索引（索引文件）的目的是<strong>加快在文件中定位特性数据的速度</strong>，也就是数据库的索引查询服务，面向的是<strong>用户</strong>；物理索引（inode多级间接块）的目的是<strong>管理分配给该文件的块</strong>，面向的是<strong>系统</strong></li>
+<li>物理文件分配相关：
+<ul>
+<li>连续分配：适合随机存取，难以扩容（顺序表）</li>
+<li>链表分配：不可随机存器，容易扩容（链表）</li>
+<li>索引分配：支持近似随机存取，也容易扩容</li>
+<li>注意FAT文件分配表作为一种原始的物理文件管理结构，等效于<strong>同时继承了文件分配和空闲空间管理</strong></li>
+</ul>
+</li>
+<li>小心按簇分配会有少量的内碎片，换句话说，小心一个文件要分得完整的簇</li>
+<li>所谓的<strong>逻辑格式化</strong>其实就是在磁盘上初始化物理文件系统的必要信息的过程</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/4992e67a/" rel="prev" title="Matlab quickref">
+      <i class="fa fa-chevron-left"></i> Matlab quickref
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/767e4302/" rel="next" title="LP">
+      LP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#os%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">OS复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%BB%84"><span class="nav-number">1.1.</span> <span class="nav-text">计组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.1.1.</span> <span class="nav-text">术语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os-intro"><span class="nav-number">1.2.</span> <span class="nav-text">OS Intro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">术语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">进程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A"><span class="nav-number">1.3.2.</span> <span class="nav-text">术语解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">并发问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">术语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">术语解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io"><span class="nav-number">1.6.</span> <span class="nav-text">IO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="nav-number">1.6.1.</span> <span class="nav-text">名词解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.7.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5-2"><span class="nav-number">1.7.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8"><span class="nav-number">1.7.2.</span> <span class="nav-text">虚拟存储器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%AE%B5-vs.-%E5%88%86%E9%A1%B5"><span class="nav-number">1.7.3.</span> <span class="nav-text">分段 vs. 分页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">1.7.4.</span> <span class="nav-text">策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vsws%E5%B7%A5%E4%BD%9C%E9%9B%86%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.7.5.</span> <span class="nav-text">VSWS工作集管理策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD%E8%A7%A3%E9%87%8A-2"><span class="nav-number">1.7.6.</span> <span class="nav-text">术语解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-number">1.8.</span> <span class="nav-text">文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD-3"><span class="nav-number">1.8.1.</span> <span class="nav-text">术语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io-1"><span class="nav-number">1.9.</span> <span class="nav-text">IO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD-4"><span class="nav-number">1.9.1.</span> <span class="nav-text">术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5-3"><span class="nav-number">1.9.2.</span> <span class="nav-text">概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%91%E7%82%B9"><span class="nav-number">1.10.</span> <span class="nav-text">坑点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E9%A2%98"><span class="nav-number">1.11.</span> <span class="nav-text">错题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.11.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6"><span class="nav-number">1.11.2.</span> <span class="nav-text">文件</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="数据链路层 提供在直连网络上节点之间的通信服务 四个主要功能：  framing 形成帧  在header中包含校验码、地址、和SAP（指名帧的上层协议）   error detect 差错检验、纠错 error control 发现丢包、重复、错序、溢出，提供流量控制  注：这些特性用于提供可靠传输服务，但并不是所有的链路层协议都提供可靠传输服务的，所有这些功能不一定有（互联网络中的可靠传输服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据链路层">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/c8c4683d/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="数据链路层 提供在直连网络上节点之间的通信服务 四个主要功能：  framing 形成帧  在header中包含校验码、地址、和SAP（指名帧的上层协议）   error detect 差错检验、纠错 error control 发现丢包、重复、错序、溢出，提供流量控制  注：这些特性用于提供可靠传输服务，但并不是所有的链路层协议都提供可靠传输服务的，所有这些功能不一定有（互联网络中的可靠传输服务">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-09T02:32:02.000Z">
+<meta property="article:modified_time" content="2021-06-09T02:32:02.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/c8c4683d/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据链路层 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/c8c4683d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据链路层
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-09 10:32:02" itemprop="dateCreated datePublished" datetime="2021-06-09T10:32:02+08:00">2021-06-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82" tabindex="-1">数据链路层</h2>
+<p>提供在<strong>直连网络</strong>上节点之间的通信服务</p>
+<p>四个主要功能：</p>
+<ul>
+<li>framing 形成帧
+<ul>
+<li>在header中包含校验码、地址、和SAP（指名帧的上层协议）</li>
+</ul>
+</li>
+<li>error detect 差错检验、纠错</li>
+<li>error control 发现丢包、重复、错序、溢出，提供流量控制
+<ul>
+<li>注：这些特性用于提供可靠传输服务，但并不是所有的链路层协议都提供可靠传输服务的，所有这些功能不一定有（互联网络中的可靠传输服务由TCP提供，毕竟IP协议是不可靠传输协议）</li>
+</ul>
+</li>
+<li>medium access control 介值访问控制
+<ul>
+<li>用于处理多路访问网络（比如以太网）中的碰撞问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="error-detect" tabindex="-1">Error Detect</h3>
+<ul>
+<li>
+<p>Parity 奇偶校验码</p>
+<ul>
+<li>保证传输比特和校验位中1的个数为偶数/奇数（偶校验/）</li>
+<li>可以将原始的包数据排列成二维矩阵，然后采用二维的奇偶校验码即可实现检错和一位纠错</li>
+<li>可以拓展为<em>海明码</em></li>
+</ul>
+</li>
+<li>
+<p>CheckSum 检验和</p>
+<ul>
+<li>利用加法器，将传输比特流分段相加再<strong>取反得到校验和</strong></li>
+<li>常见的分段长度是16bit</li>
+<li><strong>若加法过程中的产生的超过16bit的进位，则需要扔掉这个进位，然后+1</strong></li>
+<li>传输比特+校验和得到全1码</li>
+<li>由于依赖加法，且是弱校验，一般不用于链路层，而是用于网络层和传输层</li>
+</ul>
+</li>
+<li>
+<p>CRC 循环冗余校验</p>
+<ul>
+<li>利用<em>生成多项式</em>和<em>模2除法</em>实现</li>
+<li>硬件实现简单高效</li>
+<li>检错率很高</li>
+</ul>
+</li>
+<li>
+<p>CRC算法概述：</p>
+<ol>
+<li>将生成多项式编码为二进制</li>
+<li>根据生成多项式的二进制编码位数n，<strong>在原数据的后面加上n-1个0</strong>。（这样做的目的其实是方便直接将后续除出来的余数加到数据末尾，而余数位数至多是n-1）</li>
+<li>对加0之后的数据进行模2除法：所谓模2除法可以当作常规的竖式除法，只不过“减”的时候用的是按位异或</li>
+<li>将上面得到的余数拼接到原数据最后</li>
+</ol>
+<p>以上步骤使得接受方收到数据后使用相同的生成多项式做模2除法的时候，若数据没有差错，则</p>
+</li>
+</ul>
+<h3 id="reliable-data-transfer-(link-ver.)" tabindex="-1">Reliable Data Transfer (Link ver.)</h3>
+<p>需要分类讨论：点到点和多路访问网络。因为点到点网络的情形相对简单：不会原生出现重复、错序和碰撞，主要会发生丢包错误</p>
+<p>点到点：</p>
+<ul>
+<li>
+<p>接收方使用序号来发现中间的丢包（由于点到点网络不会错序到达，所有中间确实的编号必然是丢了）</p>
+</li>
+<li>
+<p>接收方收到的包检验出错（且无法纠错），则丢弃该包，相当于该包丢失了</p>
+</li>
+<li>
+<p>发送方等待接收方的<em>确认帧</em>，若某一个包没有确认，则认为该包丢失了，需要<em>重传</em></p>
+</li>
+<li>
+<p>由于接收方无法检出所有的丢包（比如序号最后的连续若干个包丢失），所以不能简单地等待接收方对所有发出的包进行确认</p>
+</li>
+<li>
+<p>正确的做法是为每个发送的帧设置<em>超时计时器</em>，一旦超时视为丢包，进行<strong>超时重传</strong></p>
+</li>
+<li>
+<p>ARQ：自动重传</p>
+<ul>
+<li>两种策略：停止等待协议，连续确认协议</li>
+<li>停止等待协议
+<ul>
+<li>每次发送一帧，然后等待确认，发送成功收到确认才发送下一帧，否则重传</li>
+<li>较简单，但效率非常低，因为必须等待确认才能发送下一帧（尤其是在传播时延较大的信道）</li>
+</ul>
+</li>
+<li>可能出现的问题&amp;解决方案
+<ul>
+<li>
+<p>帧丢失/帧校验出错</p>
+<p>发送方超时重传，接收方等待重传</p>
+</li>
+<li>
+<p>确认帧丢失</p>
+<p>发送方超时重传，接收方收到重复帧（丢弃重复），发出重复确认</p>
+</li>
+<li>
+<p>帧迟到/确认帧迟到</p>
+<p>发送方超时重传，接收方收到重复帧（丢弃重复），发出重复确认（丢弃重复），发送方收到重复确认</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>连续ARQ</p>
+<p>连续ARQ是指可以连续发送多个帧，不必等待确认</p>
+<ul>
+<li>滑动窗口协议
+<ul>
+<li>发送窗口：通过划定发送方连续传输的最大边界来实现流量控制</li>
+<li>当发送窗口中的帧得到确认时可以将窗口右移，表示后续的帧可以继续发送了</li>
+<li>一般采用<em>累计确认</em>的方法，即收到确认号n表示序号n及其之前的全部帧都已收到</li>
+</ul>
+</li>
+</ul>
+<p>若第n帧丢失，但n+1帧开始正常收到（也即<em>错序到达</em>），有两种策略：</p>
+<ul>
+<li>
+<p>Go Back N</p>
+<p>第n帧丢失，则从第n帧开始重传（尽管n+1帧以后的已经收到了），然后丢弃重复收到的帧</p>
+</li>
+<li>
+<p>Selective Repeat</p>
+<p>增加否定性确认确认帧（NAK），表示n之前的全部帧都已收到，但第n帧丢失了。</p>
+<p>发现这种丢失时，接收方暂存错序到达的帧，并发送NAK</p>
+<p>在这种策略下，超时时间将适当增大（比如2RTT），只重传丢失的帧，并最终在收到适合的累积确认ACK后避免重传n+1开始错序到达的帧</p>
+<p>在信道较差的情况下，这种策略会有负面影响（超时时间增大，重传延迟）</p>
+<p>为了暂存错序到达的帧，接收方需要接收窗口</p>
+<p>注意，在该策略下接收窗口大小&lt;=发送窗口</p>
+</li>
+</ul>
+<p>改进滑动窗口：</p>
+<ul>
+<li>SACK 选择确认：选择错序到达的帧进行确认，减少重传</li>
+<li>Delay ACK 延迟确认：在接收到一帧后不立即发确认，等一段时间再发确认。由于基于累计确认机制，可以少发一些ACK</li>
+<li>捎带确认。由于是全双工通信，在接收方发数据的同时捎带上ACK</li>
+</ul>
+</li>
+</ul>
+<h3 id="ppp" tabindex="-1">PPP</h3>
+<p>PPP = Point-to-Point Protocol</p>
+<p>PPP协议是一种用于<strong>点到点网络</strong>的数据链路层协议。</p>
+<p>PPP提供的是<strong>不可靠传输服务</strong></p>
+<p>PPP数据帧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">标志 地址 控制 协议 数据 校验码 标志</span><br></pre></td></tr></table></figure>
+<ul>
+<li>标志规定是0x7E</li>
+<li>地址固定为0xFF, 控制固定为0x03</li>
+</ul>
+<p>透明传输问题：</p>
+<ul>
+<li>
+<p>作为链路层协议，PPP帧的定界依赖帧开头和结尾的<strong>0x7E标志</strong>。但是SDU中有可能本来就有0x7E，故为了实现<em>透明传输</em>，需要对SDU数据中的特殊字符来进行<em>转义</em></p>
+</li>
+<li>
+<p>转义的具体操作包括：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x7e -&gt; 0x7d-5e</span><br><span class="line">0x7d -&gt; 0x7d-5d</span><br><span class="line">所有小于0x20的字节 -&gt; 0x7d-(原字节+0x20)</span><br><span class="line">如0x01 -&gt; 0x7d-21</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>PPP协议的协商：</p>
+<p>PPP协议允许通信双方对通信细节进行“协商”，使用的协议是LCP(Link Control Protocol)</p>
+<h3 id="nic" tabindex="-1">NIC</h3>
+<p>NIC(Network Interface Card)，网络接口卡，俗称“网卡”。</p>
+<p>链路层主要通过NIC及其驱动程序来实现的。</p>
+<h3 id="%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E7%BD%91%E7%BB%9C%26%E4%BB%8B%E5%80%BC%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE" tabindex="-1">多路访问网络&amp;介值访问控制协议</h3>
+<p>多路访问链路也称广播链路，指一组主机共享同一传输介质。广播链路的好处是节省线材，容易支持广播；缺点是一旦有多台主机同时发送会导致链路中的信号相互干扰，称为<em>碰撞</em></p>
+<p>为了解决广播链路的冲突问题，一些专门由于处理广播链路冲突的协议称为**MAC(Media Access Control)**协议</p>
+<p>目前，在多路访问链路中常将数据链路层细分为*LLC(Logic Link Communication)<em>层和</em>MAC(Media Access Control)*层</p>
+<p>最著名的的多路访问网络协议是<strong>以太网(Ethenet)</strong></p>
+<p>Slotted：一种MAC策略，规定将时间分为若干等长的片，称为“槽（slot）”。帧只能在slot的开始发送，也即<em>将发送时机同步到slot起始时刻</em>.可以证明这一策略能提高效率减少碰撞。</p>
+<p>历史上曾经出现过Slotted ALOHA协议，不进行载波监听直接发送，冲突则重传，效率是较一般的。</p>
+<p>CSMA</p>
+<ul>
+<li>CSMA = Carrier Sense Multiple Access 载波监听多路访问</li>
+<li>这是一种MAC策略，是指<strong>发送前，需要监听信道是否空闲</strong></li>
+<li>几种具体的CSMA：
+<ul>
+<li>
+<p>1-persistent CSMA （以太网采用）</p>
+<p>发送前先监听信道，信道空，立即发送；否则持续监听，直到信道空，立即发送</p>
+</li>
+<li>
+<p>non-persistent CSMA （常见于低功耗的场景）</p>
+<p>(1) 发送前先监听信道，信道空，立即发送；(2) 否则延迟一段随机长度的时间，转(1)</p>
+</li>
+<li>
+<p>p-persistent CSMA</p>
+<p>类似1-persistent CSMA，但是在信道空的时候以概率p发送（区别于以概率1发送）</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>CSMA/CD协议</p>
+<ul>
+<li>
+<p>全称 Carrier Sense Multiple Access / Collision Detection</p>
+</li>
+<li>
+<p>是以太网使用的MAC协议</p>
+</li>
+<li>
+<p><strong>CSMA/CD基本流程</strong>：</p>
+<ul>
+<li>1-persistent CSMA, 信道空立即发送，否则持续监听至信道空再发送</li>
+<li>边发送边检测冲突，如果发送完毕都没有检测到冲突，则发送成功</li>
+<li>若发送时检测到冲突，则停止发送并发送32bit干扰位加强冲突信号</li>
+<li>冲突发生时采用<em>二进制指数退避算法</em>随机延迟一段时间再<strong>回到1-persistent</strong>（也即随机延迟之后不是立即发送，而是回到1-persistent持续监听的过程中）</li>
+</ul>
+</li>
+<li>
+<p>监听信道的时候，必须要有一段连续时间的空闲才能算空闲。比如96b。</p>
+</li>
+<li>
+<p>二进制指数退避算法</p>
+<p>基本做法：在第<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></eq>次冲突时随机延迟<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></eq>个时间片，其中<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>∈</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">k\in Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span></span></span></span></eq>从区间<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><msup><mn>2</mn><mrow><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">)</mo></mrow></msup><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 2^{\min(i, 10)}-1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.138em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mtight">10</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span></eq>中随机选取。</p>
+<p>注意：</p>
+<ul>
+<li>第10次之后不再增大选取范围，因此该算法也称<em>截断式</em>二进制指数退避算法</li>
+<li>第16次冲突之后将不再重试，直接向上层返回发送失败。</li>
+</ul>
+<p>第<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></eq>次冲突概率：<br>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo fence="true">{</mo><mtable rowspacing="0.36em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mfrac><mn>1</mn><msup><mn>2</mn><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msup></mfrac><mo separator="true">,</mo><mtext> </mtext><mi>i</mi><mo>≤</mo><mn>10</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mfrac><mn>1</mn><msup><mn>2</mn><mn>9</mn></msup></mfrac><mo separator="true">,</mo><mtext> </mtext><mi>i</mi><mo>&gt;</mo><mn>10</mn></mrow></mstyle></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">
+  \begin{cases}
+  \frac{1}{2^{i-1}},\ i \le 10\\
+  \frac{1}{2^9},\ i &gt; 10
+  \end{cases}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7571em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">10</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">10</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></eqn></section></p>
+<p>冲突次数期望：<br>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>0.64</mn><mtext>左右</mtext></mrow><annotation encoding="application/x-tex">
+  0.64左右
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.64</span><span class="mord cjk_fallback">左右</span></span></span></span></span></eqn></section></p>
+</li>
+</ul>
+<h3 id="%E4%BB%A5%E5%A4%AA%E7%BD%91" tabindex="-1">以太网</h3>
+<p>以下内容为10Mbps以太网协议的规定</p>
+<p>以太网MAC帧格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">前导字符 目的地址 源地址 类型/长度 有效载荷 帧校验序列</span><br></pre></td></tr></table></figure>
+<ul>
+<li>前导字符包括7B的<em>同步字符</em>和1B的<em>起始定界符</em>，这一部分可以不视为帧的一部分</li>
+<li>目的地址就是MAC地址</li>
+<li>源地址也是MAC地址</li>
+<li>“类型/长度”字段
+<ul>
+<li>该字段存在历史包袱
+<ul>
+<li>DIXv2格式：最初的格式，在该格式中该字段表示“类型”</li>
+<li>802.3帧（原）：该字段表示“长度”</li>
+<li>802.3帧（1997年修订）：也是现在的格式，表示类型/长度</li>
+</ul>
+</li>
+<li>该字段原本表示的是上层协议类型，即SAP</li>
+<li>但有效载荷是变长的，且<em>最小长度是46B，不足的字节会填充</em>，不得不使用该字段表示有效载荷的真实长度</li>
+<li>但幸好，表示SAP的数值都大于1500（有效载荷最大长度）</li>
+<li>综上，使用如下表示规则：
+<ul>
+<li>若该字段大于1500，则将其解释为SAP</li>
+<li>若该字段不足1500，则将其解释为有效载荷实际长度</li>
+<li>但这一策略仍然有问题：当类型/长度字段表示长度时将无法表示SAP。解决方案是增加抽象层次，拓展帧格式，在有效载荷中继续添加header以表示SAP</li>
+</ul>
+</li>
+<li>实际上，目前的网卡实现基本都不会将该字段解释为长度，基本用不到那个复杂的拓展格式。也即<strong>现在的以太网实现总是将“类型/长度”字段解释为SAP</strong>，<strong>由上层协议保证帧有效载荷长度不小于1500</strong></li>
+</ul>
+</li>
+<li>帧校验序列是CRC-32</li>
+</ul>
+<p>关于以太网MAC地址：</p>
+<ul>
+<li>MAC地址6B，分为三种：单播地址、多播地址、广播地址</li>
+<li>单播地址也称物理地址，一个网卡需要绑定唯一的MAC单播地址（网卡出厂时厂商保证MAC地址唯一）。但实际上网卡的MAC地址可以更改，且只需要在同一以太网中唯一即可。</li>
+<li>广播地址全1</li>
+<li>由于以太网实际上是广播信道，以太网网卡是会接收所有正确的帧的，对于单播/多播，网卡检查目标地址是否符合，</li>
+</ul>
+<p>最短帧问题</p>
+<ul>
+<li>问题出在以太网<em>边发送边检测冲突</em>，换句话说<em>不发送不检测冲突</em>。</li>
+<li>由于传播时延，一个节点从发送到其冲突传播回到节点<strong>至多需要2RTT</strong>。为了保证当冲突到达发送端的时候发送端仍在检测冲突（也即<em>仍在发送</em>），必须根据网络带宽设置<em>最小有效载荷长度</em>，从而保证<em>最小帧长度</em>，保证在2RTT之内节点仍在发送。以10Mbps以太网为例，2RTT约等于51.2微秒，对应的最小帧长度是64B</li>
+</ul>
+<p><strong>争用窗口</strong>：</p>
+<ul>
+<li>使用符号<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span></eq>表示</li>
+<li>通常<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mn>2</mn><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">T</mi><mi mathvariant="normal">T</mi></mrow></mrow><annotation encoding="application/x-tex">\tau=2\mathrm{RTT}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathrm">RTT</span></span></span></span></span></eq>。</li>
+<li>争用窗口的意义是：若信道空闲，某主机准备发送数据，则在长度<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span></eq>的时间内，是有可能与其他节点产生冲突的。通俗地说，这一窗口内有可能出现相互<em>争用</em>信道导致冲突。</li>
+<li>一般CSMA/CD的退避算法的延迟时间片也是<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span></eq>。这是因为如果退避时间片小于争用窗口</li>
+</ul>
+<p>*PPPoE：</p>
+<p>实际上，PPP协议用于点对点链路，但以太网作为一种广泛使用的有线广播型物理网络，提供的却是多路访问网络。某些时候我们希望在以太网的基础上使用<em>逻辑上的点对点链路</em>。在数据链路层，除了常用的LLC，还有一种PPPoE（PPP over Ethernet）的协议实现这种特性。</p>
+<h3 id="%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84%E7%89%A9%E7%90%86%E8%AE%BE%E5%A4%87" tabindex="-1">以太网的物理设备</h3>
+<ul>
+<li>
+<p>最初的同轴电缆</p>
+<p>这种方案是真正意义上的完全共用物理介值。</p>
+<p>一台主机故障，整个网络的无法工作。早已淘汰。</p>
+</li>
+<li>
+<p>集线器</p>
+<p>这种设备的行为就是简单地模拟同轴电缆总线的功能：收到信号立刻转发至所有其他线路，收到冲突则转发冲突。</p>
+<p><strong>集线器没有存储转发的功能</strong>。从这一意义上说，集线器工作在物理层上（面向比特传输）。</p>
+<p><strong>集线器的所有接口共用同一个冲突域</strong>。也即集线器连接的任何两个同时发送则会冲突。</p>
+<p>现已很少用了</p>
+</li>
+<li>
+<p>交换机</p>
+<ul>
+<li><strong>交换机具有存储转发的功能</strong></li>
+<li>交换机的各个端口<strong>各自属于不同的冲突域</strong>。这是因为交换机能够存储转发，检查目标地址，只将帧转发到合适的端口，故端口之间不会冲突</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%89%A9%E5%B1%95%E5%B1%80%E5%9F%9F%E7%BD%91%26%E9%80%8F%E6%98%8E%E7%BD%91%E6%A1%A5" tabindex="-1">扩展局域网&amp;透明网桥</h3>
+<ul>
+<li>
+<p>用<em>网桥</em>连接若干个LAN可以建造一个更大的LAN，称为桥接局域网或者扩展局域网。</p>
+</li>
+<li>
+<p>原来的局域网称为扩展局域网的一部分，称为该局域网的一个网段（Segment）</p>
+<p>其实“网段”有多种定义，此处取如下定义：</p>
+<p><strong>共享同一个冲突域的局域网称为一个网段</strong></p>
+</li>
+<li>
+<p>由于网桥对局域网的拓展对主机是不可见的，换句话说，对于主机来讲拓展局域网仍然是一个局域网，具有统一的操作接口和协议。因此这样对主机透明的网桥设备也称为<em>透明网桥</em></p>
+</li>
+<li>
+<p>网桥工作在链路层，因为网桥面向帧进行工作。</p>
+</li>
+<li>
+<p>网桥具有<em>一个</em>MAC地址，可以认为它是同时连接多个局域网的特殊主机</p>
+</li>
+<li>
+<p>网桥对应的产品恰恰是<strong>交换机</strong></p>
+</li>
+<li>
+<p>网桥的三种操作</p>
+<ul>
+<li>flood：网桥<strong>广播</strong>某一网段的发送帧到所有端口，同时<strong>不将其发回发送信息的网段本身</strong>，称为*泛洪（flood）*这一操作并不是真正的广播，因为发送网段自己没有接受这一广播</li>
+<li>forward：若某一网段的主机<em>单播</em>信息，且目标主机是<em>另一个网段</em>的，且<strong>通向目标主机的端口确定</strong>，则网桥需要将信息转发（forward）目标主机所在的端口。</li>
+<li>filter：若某一网段的主机单播信息，且目标主机是<em>同一网段</em>的，则网桥不做任何转发操作，简单地过滤（filter）掉或者说丢弃（discard）收到的帧即可。</li>
+</ul>
+</li>
+<li>
+<p>网桥需要维护一个表记录各个主机所在网段，该表称为转发表。</p>
+</li>
+<li>
+<p>转发表的<em>自学习</em></p>
+<ul>
+<li>转发表具有<em>自学习</em>特性，每次主机发送帧的时候根据帧的源地址字段，自动记录该主机所属网段对应接口</li>
+<li>新入网的主机可能在转发表中没有记录，若此时有主机向该新入网主机的发送信息，网桥会直接flood该帧</li>
+<li>由于网络拓扑结构可能会变化（比如一台已经有记录的主机从一个网段转移至另一个网段），转发表的记录可能会<em>过期</em>。因此网桥会为每一条记录设置TTL（生存时间）。当记录过期时，网桥将该记录删除。</li>
+<li>因此，完整的网桥自学习策略是：
+<ul>
+<li>当收到一帧，若源地址没有记录，则添加转发表记录；若源地址对应记录已存在，则<strong>更新转发表记录，重置TTL</strong></li>
+<li>当一条记录超时了，删除该记录</li>
+</ul>
+</li>
+<li>实际上，由于实际的网络中的主机总是在发送帧，这一策略往往可以保证转发表对网络的拓扑结构是最新的。</li>
+</ul>
+</li>
+<li>
+<p>多网桥与广播风暴</p>
+<p>考虑多个网桥构造的有环的网络链路拓扑结构。若网段1的主机发一帧给一台在网段2中的不在转发表中的主机，网桥1先收到这一帧后，只能使用flood操作向网段2广播。flood操作之后，链路有环，网桥2收到来自网段2的广播后，也需要flood，在网段1中广播一帧。此时网桥1在网段1中又收到了一帧，再次向网段2广播。如此反复，导致局域网中无休止地传输同一帧。这一现象称为<em>广播风暴</em></p>
+<p>广播风暴的根源是链路的拓扑结构中有回路</p>
+<p>解决广播风暴的最直接方法是新加入的目的主机随便发送一帧。这样就可以更新所有网桥的转发表。有了转发表的记录，以该主机为目的主机的单播帧不再需要flood而是forward，从而消除了广播风暴。</p>
+<p>更系统的方法是将网络拓扑结构简化为<em>生成树</em></p>
+</li>
+<li>
+<p>生成树协议</p>
+<ul>
+<li>
+<p>Bridge ID（BID）由2B的“优先权”（默认都是32769）和6B的网桥MAC地址构成。</p>
+</li>
+<li>
+<p>我们规定，<strong>BID最小的节点是根网桥</strong></p>
+</li>
+<li>
+<p>利用配置消息BPDU来建立生成树</p>
+<ul>
+<li>BPDU包含当前根BID，到根的距离，发送BID，发送端口</li>
+<li>一开始，所有的网桥以自己为根向其相邻网桥发送BPDU帧。</li>
+<li>一轮发送后，所有节点都会收到相邻节点的BPDU帧。根据收到的BPDU，若发现收到的BPDU<em>优于</em>自己，则调整策略，认为该较小的BID才是根，并以此结论为基准发送新的BPDU</li>
+<li>在若干轮BPDU多播之后，最终只有局域网中BID最小的网桥才被公认为根，且所有网桥都可以计算出到根网桥的最短</li>
+</ul>
+</li>
+<li>
+<p>所谓“优”，是指对BPDU的<code>&lt;根桥ID，根开销，发送桥ID，发送端口&gt;</code>按照字典序比较，字典序较小的BPDU视为“更优”的BPDU</p>
+<ul>
+<li>也即先比较根桥ID，较小者为更优</li>
+<li>根桥ID相同，根开销较小者更优</li>
+<li>根桥ID相同，根开销相同，发送桥ID较小者更优</li>
+<li>根桥ID相同，根开销相同，发送桥ID相同，发送端口较小者更优</li>
+</ul>
+</li>
+<li>
+<p>有了所谓“优”的定义，我们有如下两个概念：</p>
+<ol>
+<li>
+<p>端口最优配置消息</p>
+<p>对于网桥的每个端口，都有一个<strong>端口最优配置消息</strong>，它是目前从该端口收到的最优的配置消息</p>
+</li>
+<li>
+<p>网桥最优配置消息</p>
+<p>比较所有的端口最优配置消息和网桥自己产生的配置消息，从中选最优的，然后对其做计算改写生成以自己为发送桥的一个最优的配置消息，称为网桥最优配置消息</p>
+</li>
+</ol>
+</li>
+<li>
+<p>每个端口选择到根网桥的最短路所走的端口进行转发。称此端口称为<em>根端口</em>。实际操作中，选择具有最优配置消息的端口作为根端口（显然如果是自体消息最优则当前桥为根，没有根端口）</p>
+</li>
+<li>
+<p>每个网段只匹配距离根最近的网桥，该网段连接该网桥的端口称为该网段的<em>指定端口</em>。实际操作中网段的指定端口由网桥来决定。网桥会比较每个端口的端口最优配置消息和当前桥的网桥最优配置消息，若比不过，则该端口是（属于某网段的）一个指定端口。</p>
+</li>
+<li>
+<p><strong>数据帧只能通过根端口和指定端口进行通信</strong>。既不是跟端口又不是指定端口称为阻塞端口。</p>
+</li>
+<li>
+<p>拓展思考：为什么简单地使用BFS构造生成树。原因是这些节点没有共享存储器，通信完全依赖消息。也即，如果将局域网系统是<em>不共享内存</em>的<em>对称多处理</em>系统，所以采用的算法可说是<em>分布式算法</em>，因此不能简单地使用BFS</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91" tabindex="-1">虚拟局域网</h3>
+<p>与扩展局域网相反，扩展局域网试图利用网桥将在物理上分离的多个局域网连接在一起，虚拟局域网（VLAN）试图<strong>将在物理上相连的多个主机分离成多个虚拟的逻辑上独立的局域网</strong>。主要实现手段就是为网桥的各个端口配置VLAN ID，帧只在VLAN ID相同的端口之间通信。</p>
+<p>若同一个VLAN的主机连在多个不同网桥的上，则必须允许网桥之间的连接能转发VLAN ID不同的帧。称网桥之间的链路端口为<em>Trunk端口</em>。实际上，只有在Trunk端口上传输的帧才需要加VLAN ID</p>
+<p>VLAN改动了协议头部，但仍然可以采用以太网，且可以不改动以太网帧结构：令类型字段使用0x8100取值，然后扩充的字段放到有效载荷部分。</p>
+<h3 id="%E4%BA%A4%E6%8D%A2%E6%9C%BA" tabindex="-1">交换机</h3>
+<p>交换机基本构成和原理是：</p>
+<ul>
+<li>多个端口，每个端口配置一个缓冲区（用于存储转发、排队）</li>
+<li>使用<em>交换结构</em>（Switching Fabrics）来进行端口之间的数据交换</li>
+</ul>
+<p>几种常见的交换结构</p>
+<ul>
+<li>总线式：端口共享一根总线，使用某高速总线协议来交换数据，有点是价格低廉</li>
+<li>纵横式：每个输入端口引一根线，然后每个输出端口都有一根线连在这根线上。性能较高，价格较贵，用的较少</li>
+</ul>
+<p>转发方式：</p>
+<ul>
+<li>存储转发（Store and Forward）：交换机从端口接收到了整个帧之后再转发。这是最符合理论的操作，大部分交换机都是这种方式。</li>
+<li>直通（Cut through）：收到header，解析完成后，立即逐bit转发。类似集线器的工作模式。容易证明这种方式比存储转发快。问题是可能由于争用窗口问题导致冲突</li>
+<li>无碎片（Fragment free）：同直通，只不过要收到64B再转发。由于争用窗口长度，可以避免冲突。</li>
+<li>适应性交换（Adaptive switching）：自适应使用采用以上三种方式中的一种。</li>
+<li>实际产品中广泛使用了直通（意味着其效率提升得到实践的验证）</li>
+</ul>
+<p>全双工模式：</p>
+<p>如果交换机常常是直连主机的，则可以通过连接两对线分别用于发送和接收，来实现<em>全双工通信</em>。（注意由于是全双工通信，可以关闭CSMA/CD）</p>
+<p>自适应：</p>
+<p>站点周期性使用快速链路脉冲进行<em>协商</em>，自适应选择10M/100M/1000Mbps的以太网</p>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/c45a417b/" rel="prev" title="OS">
+      <i class="fa fa-chevron-left"></i> OS
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/88c26b79/" rel="next" title="Outline">
+      Outline <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="nav-number">1.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#error-detect"><span class="nav-number">1.1.</span> <span class="nav-text">Error Detect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reliable-data-transfer-(link-ver.)"><span class="nav-number">1.2.</span> <span class="nav-text">Reliable Data Transfer (Link ver.)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ppp"><span class="nav-number">1.3.</span> <span class="nav-text">PPP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nic"><span class="nav-number">1.4.</span> <span class="nav-text">NIC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E7%BD%91%E7%BB%9C&%E4%BB%8B%E5%80%BC%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.5.</span> <span class="nav-text">多路访问网络&amp;介值访问控制协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="nav-number">1.6.</span> <span class="nav-text">以太网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84%E7%89%A9%E7%90%86%E8%AE%BE%E5%A4%87"><span class="nav-number">1.7.</span> <span class="nav-text">以太网的物理设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E5%B1%80%E5%9F%9F%E7%BD%91&%E9%80%8F%E6%98%8E%E7%BD%91%E6%A1%A5"><span class="nav-number">1.8.</span> <span class="nav-text">扩展局域网&amp;透明网桥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="nav-number">1.9.</span> <span class="nav-text">虚拟局域网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-number">1.10.</span> <span class="nav-text">交换机</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

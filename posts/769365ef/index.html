@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="网络层 交换技术  电路交换（Circuit Switch） 包交换（Packet Switch）  虚电路  交换式虚电路（暂时的） 永久虚电路 虚电路是有有连接的 可以保证带宽 虚电路基本被淘汰了。因为需要保证带宽的情形直接租用专用物理线路即可。   数据报  数据报是无连接的     两种交换技术的根本区别在于信道复用技术。  电路交换采用TDM&#x2F;FDM&#x2F;WDM&#x2F;CDMA信道复用技术 包交换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络层">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/769365ef/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="网络层 交换技术  电路交换（Circuit Switch） 包交换（Packet Switch）  虚电路  交换式虚电路（暂时的） 永久虚电路 虚电路是有有连接的 可以保证带宽 虚电路基本被淘汰了。因为需要保证带宽的情形直接租用专用物理线路即可。   数据报  数据报是无连接的     两种交换技术的根本区别在于信道复用技术。  电路交换采用TDM&#x2F;FDM&#x2F;WDM&#x2F;CDMA信道复用技术 包交换">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-23T15:56:18.000Z">
+<meta property="article:modified_time" content="2021-06-23T15:56:18.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/769365ef/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络层 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/769365ef/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络层
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-23 23:56:18" itemprop="dateCreated datePublished" datetime="2021-06-23T23:56:18+08:00">2021-06-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="%E7%BD%91%E7%BB%9C%E5%B1%82" tabindex="-1">网络层</h2>
+<h3 id="%E4%BA%A4%E6%8D%A2%E6%8A%80%E6%9C%AF" tabindex="-1">交换技术</h3>
+<ul>
+<li>电路交换（Circuit Switch）</li>
+<li>包交换（Packet Switch）
+<ul>
+<li>虚电路
+<ul>
+<li>交换式虚电路（暂时的）</li>
+<li>永久虚电路</li>
+<li>虚电路是有有连接的</li>
+<li>可以保证带宽</li>
+<li>虚电路基本被淘汰了。因为需要保证带宽的情形直接租用专用物理线路即可。</li>
+</ul>
+</li>
+<li>数据报
+<ul>
+<li>数据报是无连接的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>两种交换技术的根本区别在于信道复用技术。
+<ul>
+<li>电路交换采用TDM/FDM/WDM/CDMA信道复用技术</li>
+<li>包交换采用的是统计多路复用技术</li>
+</ul>
+</li>
+<li>分组交换的两种方式的根本区别在于**是否在</li>
+</ul>
+<h3 id="%E7%BD%91%E7%BB%9C%E5%B1%82%E6%9C%8D%E5%8A%A1%E6%A8%A1%E5%9E%8B" tabindex="-1">网络层服务模型</h3>
+<ul>
+<li>恒定位速率：固定速率，无差错，无拥塞</li>
+<li>可变位速率：确保速率，无差错，无拥塞</li>
+<li>可用位速率：最小保证，可用于ATM机</li>
+<li>未指定位速率</li>
+<li>因特网：尽力交付：无带宽保证，可能丢包，可能乱序（总之就是没有底线）</li>
+</ul>
+<h3 id="ip%E5%9C%B0%E5%9D%80" tabindex="-1">IP地址</h3>
+<ul>
+<li>IP地址是<strong>全局地址，全球唯一（公网IP）</strong></li>
+<li>IP地址是<strong>按层分配</strong>（具有树状的子网结构）</li>
+</ul>
+<h3 id="ip%E6%95%B0%E6%8D%AE%E6%8A%A5" tabindex="-1">IP数据报</h3>
+<p>头部格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">版本(4b) 头部长度(4b)  服务类型(8b)                 总长度(16b)</span><br><span class="line">           标识(16b)  未分配(1b)  DF(1b) MF(1b) 片段偏移量(13b) </span><br><span class="line">生存期(8b)   协议(8b)  头部校验(16b)  </span><br><span class="line">            源IP地址(32b)</span><br><span class="line">            目的IP地址(32b)</span><br><span class="line">选项（至多40b）   填充</span><br></pre></td></tr></table></figure>
+<p>头部字段详解</p>
+<ol>
+<li>
+<p>版本</p>
+<p>只用两种：IPv4和IPv6</p>
+</li>
+<li>
+<p>头部长度</p>
+<p>由于只有4b，因此该数值的单位是<em>4字节</em>，也即头部长度最大只有60B</p>
+<p>此外，4字节为单位的长度导致头部的长度必须<strong>4字节对齐</strong></p>
+</li>
+<li>
+<p>服务类型</p>
+<p>最初为了指明四种服务要求（低延迟，高吞吐量、高可靠性、最小花费）和优先权。</p>
+<p>但实际上，这些特性都没有实现。（因为网络环境复杂，总是有数据报要求所有的服务要求和最高优先权）</p>
+</li>
+<li>
+<p>总长度：数据包的长度，单位是字节</p>
+</li>
+<li>
+<p>标识符</p>
+<p>也即包的<em>编号</em></p>
+</li>
+<li>
+<p>片段偏移</p>
+<p>若IP数据包的大小超过了链路层的<em>最大传输单元（MTU）</em>（也即最大有效载荷，<strong>不等于最长帧长度</strong>），不得不对IP数据报<em>分段</em></p>
+<ul>
+<li>每个分段都有自己的头部</li>
+<li>分段之后的IP数据报标识符相同。</li>
+<li>此时需要这个字段记录了各个段的<strong>数据部分</strong>相对于<strong>数据部分起始位置</strong>的偏移量</li>
+<li>此时偏移量的单位是<em>8字节</em>（因为IP数据报长度字段是16bit的，但偏移量字段只有13bit，因此是以8字节为单位）。注意，因为是8字节为单位，故划分的时候要对齐8字节。</li>
+<li>到达目的主机之后需要重组这几个分段</li>
+</ul>
+</li>
+<li>
+<p>MF,DF</p>
+<p>由于每个片段具有独立头部，故未分段前的IP包的总长度位置，因此若最后一个片段丢失，重组时无法发现。因此需要MF（More Fragment）标志表明当前是否是最后一个片段（非最后片段：MF=1；最后片段：MF=0）</p>
+<p>DF（Don’t Fragment）标志表示不要划分。若IP数据报长度大于MTU，又设置了DF，路由器只能丢弃该报了。</p>
+</li>
+<li>
+<p>生存期（TTL）</p>
+<p>使用该字段的根本目的是internet可能有环，为防止不合适的路由选择策略导致数据包无限地绕圈，路由器丢弃超出生存期的包。</p>
+<p>不同于物理网络不具有清除绕圈的包的能力（广播风暴），采用生成树算法解决构造合理的拓扑结构，互连网络采用TTL来定期清除绕圈的包。这其实是因为构建互连网络是不可行的。</p>
+<p>使用秒不实际，该TTL的单位是<em>跳</em>。</p>
+<p><strong>每经过一个路由器，TTL-1</strong>。<strong>当TTL归零时，路由器不再转发该数据报</strong>，并且向源主机发送ICMP报文。</p>
+<p>TTL的取值一般是64（Linux）或者255（Windows10）。通常TTL的取值参考的是<em>Internet的网络图半径的两倍</em></p>
+</li>
+<li>
+<p>协议</p>
+<p>该字段就是所谓的SAP，记录<strong>上层协议</strong>。主要的上层协议主要是TCP和UDP。</p>
+</li>
+<li>
+<p>头部校验</p>
+<p>使用<em>校验和</em>来校验头部。<strong>仅校验头部</strong></p>
+<p>使用校验和有一个小效果，就是每经过一个路由器，TTL都要减1，从而头部校验也必须相应变更。但由于使用校验和，而且TTL字段是16位对齐的，因此不需要重算整个校验和，只需要相应减1即可（由于存储的是反码，实际上是+1）</p>
+</li>
+<li>
+<p>源IP地址</p>
+</li>
+<li>
+<p>目的IP地址</p>
+</li>
+</ol>
+<h3 id="%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%88%86%E6%AE%B5" tabindex="-1">数据报分段</h3>
+<p>若IP数据包的大小超过了链路层的<em>最大传输单元（MTU）</em>（也即最大有效载荷，<strong>不等于最长帧长度</strong>），不得不对IP数据报<em>分段</em></p>
+<ul>
+<li>每个分段都有自己的头部</li>
+<li>分段之后的IP数据报标识符相同。</li>
+<li>此时需要这个字段记录了各个段的<strong>数据部分</strong>相对于<strong>数据部分起始位置</strong>的偏移量</li>
+<li>此时偏移量的单位是<em>8字节</em>（因为IP数据报长度字段是16bit的，但偏移量字段只有13bit，因此是以8字节为单位）。注意，因为是8字节为单位，故划分的时候要对齐8字节。</li>
+<li>到达目的主机之后需要重组这几个分段</li>
+<li>若超时限时内不能收到同一个包的所有片段，则视为重组失败，丢弃该包。</li>
+</ul>
+<p>由于每个片段具有独立头部，故未分段前的IP包的总长度位置，因此若最后一个片段丢失，重组时无法发现。因此需要MF（More Fragment）标志表明当前是否是最后一个片段（非最后片段：MF=1；最后片段：MF=0）</p>
+<p>DF（Don’t Fragment）标志表示不要划分。若IP数据报长度大于MTU，又设置了DF，路由器只能丢弃该报了。此时路由器一般会发一个ICMP包给源主机</p>
+<p>DF是实现了的。DF可以用于<em>路径最小MTU发现</em>。因为根据路径最小MTU构造适当大小的IP包避免分段可以提高性能。</p>
+<h3 id="ip%E5%9C%B0%E5%9D%80-1" tabindex="-1">IP地址</h3>
+<p>IP地址跟MAC地址都是全球分配（一般是全球唯一）的。</p>
+<p>相比MAC地址，IP地址除了作为主机的唯一标识，还包含了表征<em>网络互连</em>的特征。更具体地说，IP地址具有<em>网络号</em>分量和<em>主机号</em>分量。这一特性使得IP是<em>可路由的</em>：某一具体主机所在的网络可以直接从IP地址中得知，因此路由只需要针对主机所在的网络就行了。</p>
+<p>IP地址可以分成两部分：</p>
+<ol>
+<li><strong>网络号</strong></li>
+<li><strong>主机号</strong></li>
+</ol>
+<p>IP地址 = 网络号:主机号</p>
+<h4 id="%E6%9C%89%E7%B1%BB%E7%BD%91" tabindex="-1">有类网</h4>
+<p>传统的IP分类分5类：A类到E类</p>
+<ul>
+<li>
+<p>A类：</p>
+<p>0.x.x.x ~ 127.x.x.x</p>
+<p>起始位为0，首字节为网络号，后3字节为主机号</p>
+<p>A类网络一共只有128个，但每一个网络具有非常多的主机</p>
+</li>
+<li>
+<p>B类：</p>
+<p>128.x.x.x ~ 191.x.x.x</p>
+<p>起始位为10，前2字节为网络号，后2字节为主机号。</p>
+<p>B类网络共16384个，每个网络也有不少的主机可用。</p>
+</li>
+<li>
+<p>C类：</p>
+<p>192.x.x.x ~ 223.x.x.x</p>
+<p>起始位110，前3字节为网络号，后1字节为主机号。</p>
+<p>C类网络很多，但每个网路只有至多256台主机。</p>
+</li>
+<li>
+<p>D类：</p>
+<p>224.x.x.x ~ 239.x.x.x</p>
+<p>起始位1110</p>
+<p>多播地址，不做常规使用</p>
+</li>
+<li>
+<p>E类：</p>
+<p>240.x.x.x ~ 255.255.255.255</p>
+<p>起始位1111</p>
+<p>保留，未使用</p>
+</li>
+</ul>
+<p>传统的有类网问题很多：</p>
+<ul>
+<li>A、B类网络的网络数目太少，网络号会迅速耗尽</li>
+<li>C类网络中一台主机太少了</li>
+<li>不启用E类地址，使得本就紧缺的IPv4地址空间更加不够用</li>
+</ul>
+<p>传统有类网不够灵活，不便于实际使用。目前有类网只是IP地址的管理机构管理地址的标准。</p>
+<h4 id="%E6%9C%89%E7%B1%BB%E7%BD%91%EF%BC%9A%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91" tabindex="-1">有类网：划分子网</h4>
+<p>传统有类网不够灵活，现在采用<em>子网划分</em>的手法了配置IP地址。</p>
+<p>将原来的网络划分为更小的<em>子网</em>，子网划分的大小可以根据实际需要连接的主机数目，因此比传统分类IP地址更灵活。</p>
+<p>为了划分子网，从原来的主机号中划出多若干个位用于标识子网。原来的网络号拼上子网的编号，得到<em>子网号</em></p>
+<p>注意，我们规定：</p>
+<ul>
+<li>类似网络号，<strong>子网号必须唯一</strong>。</li>
+<li><strong>主机号不能是全0或全1</strong></li>
+</ul>
+<p>由于子网号是变长的，通常采用<em>子网掩码</em>来告知主机如何解释IP地址。</p>
+<p>取IP地址“与上”子网掩码来得到子网号。</p>
+<h4 id="%E6%97%A0%E7%B1%BB%E7%BD%91%EF%BC%9A%E6%9E%84%E6%88%90%E8%B6%85%E7%BD%91" tabindex="-1">无类网：构成超网</h4>
+<p>在原来的有类网上划分子网只能将原有的网络化成更小的，<strong>划分子网无法为一个网分配更多的主机</strong></p>
+<p>通过引入所谓的<em>无类域间路由选择协议（CIDR）</em>，现在允许将多个原来的有类网合并为一个更大的网，称为<em>超网</em>。</p>
+<p>为了实现构成超网，需要<em>将网络号的划作主机号</em>。类似的，同样需要子网掩码来确定网络号。</p>
+<p>引入构成超网之后，现在的网络号已不再具有典型的5类划分，因此<em>构成超网方案可以说是无类网</em>。</p>
+<p>CIDR显著减少路由表中的表项数目，这一特性称为<em>路由聚合</em>。</p>
+<h4 id="%E7%89%B9%E6%AE%8A%E7%9A%84ip%E5%9C%B0%E5%9D%80%EF%BC%9A" tabindex="-1">特殊的IP地址：</h4>
+<ul>
+<li>网络号是0，主机号非0：
+<ul>
+<li>仅能用作源地址</li>
+<li>表示与目的地址处于同一网路中</li>
+</ul>
+</li>
+<li>网络号&amp;主机号都是0：<code>0.0.0.0</code>
+<ul>
+<li>仅能用作源地址，有两种常见含义</li>
+<li>不限制源地址（服务器监听任何来源）</li>
+<li>源地址不可知（安全考虑）</li>
+</ul>
+</li>
+<li>网络号非0，主机号为0：
+<ul>
+<li>这不用作地址来使用，而是在理论上作为<em>网络号</em>的记号</li>
+</ul>
+</li>
+<li>网络号全0，主机号全1：
+<ul>
+<li>这是本网络的广播地址，对应链路层的广播帧</li>
+</ul>
+</li>
+<li>网络号非0，主机号全1：
+<ul>
+<li>向某特定网络广播的广播地址</li>
+</ul>
+</li>
+<li>私有地址：
+<ul>
+<li>10.0.0.0 ~ 10.255.255.255（这是一个A类网）</li>
+<li>172.16.0.0 ~ 172.31.255.255 （这是16个B类网）</li>
+<li>192.168.0.0 ~ 192.168.255.255（这是256个C类网）</li>
+<li>这三个IP地址空间都是<em>私有地址</em>，<strong>不需要向管理机构申请即可使用，不是全球唯一的，不可在公网上使用</strong>（主干网的路由器会把这些IP作为目的地址的包滤掉）</li>
+<li>这些地址都是配合NAT使用的<em>专用网</em>地址</li>
+<li>具体用法详见NAT/NAPT部分</li>
+</ul>
+</li>
+<li>环回地址：
+<ul>
+<li>127.0.0.1 ~ 127.255.255.254</li>
+<li>这些称为<em>环回地址</em>。这些IP都指向本机。</li>
+<li>特别地，我们通常使用127.0.0.1即可</li>
+<li>默认情况下PC还会配置一个静态域名localhost，对应的就是127.0.0.1</li>
+</ul>
+</li>
+</ul>
+<h3 id="nat%2Fnapt" tabindex="-1">NAT/NAPT</h3>
+<p>实际上无论是子网划分，还是构成超网，实际上都没有拓展IPv4的地址空间：<strong>无论如何划分，一个IP地址都只能对应一台主机</strong></p>
+<p>结合私有地址，NAT协议</p>
+<p>（待完善）</p>
+<h3 id="arp" tabindex="-1">ARP</h3>
+<p>（待完善）</p>
+<h3 id="dhcp%EF%BC%9A%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8Dip" tabindex="-1">DHCP：动态分配ip</h3>
+<p>全球IPv4公网IP资源有限，大部分被美国机构占用了。（尤其在中国）大量用户需要从持有公网IP的机构<em>租用</em>ip地址。此时，需要<em>DHCP（动态主机配置协议）</em></p>
+<p>DHCP协议底层使用UDP协议向DHCP服务器发送请求，请求服务器为其分配一个可用的IP。</p>
+<p>DHCP归属的网络分层比较特殊：</p>
+<ul>
+<li>DHCP名义上在底层使用IP传输，但实际上只能工作在直连网中</li>
+<li>DHCP使用UDP封装数据</li>
+<li>DHCP有自己的协议数据头</li>
+</ul>
+<p>因此，一般说DHCP是跨三层工作的应用层协议。</p>
+<p>要点：</p>
+<ul>
+<li>DHCP协议虽然使用UDP，但实际上底层用的是<strong>LAN广播帧</strong>。使用UDP/IP是为了编程方便。事实上，该UDP报文的源IP是<code>0.0.0.0</code>（注意是特殊IP，表示源地址不确定），目的ip地址是<code>255.255.255.255</code>，代表广播。</li>
+<li>DHCP四个步骤：
+<ol>
+<li>discover: 用户向DHCP服务器索要ip地址</li>
+<li>offer: DHCP服务器向用户提供可用的ip地址</li>
+<li>request: 用户收到offer之后，确认接受offer，租用DHCP提供的ip</li>
+<li>ack: DHCP服务器确认收到了用户的request并正式将ip分配给该客户</li>
+</ol>
+</li>
+<li>先请求offer再决定是否租用的原因是DHCP消息是广播的，而LAN中可能存在多台DHCP服务器，这可能导致用户主机收到多个offer，用户主机只选择其中一个offer并发送request接受offer</li>
+<li>实际上DHCP消息不会被路由转发，因为这是无目标的广播</li>
+</ul>
+<h3 id="icmp%EF%BC%88%E7%BD%91%E7%BB%9C%E6%8E%A7%E5%88%B6%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE%EF%BC%89" tabindex="-1">ICMP（网络控制消息协议）</h3>
+<p>这是一个直接使用IP协议而不使用TCP/UDP的消息协议。<strong>该协议的最主要作用是诊断互连网络的问题</strong></p>
+<p>通常分为两大类：</p>
+<ol>
+<li>查询消息</li>
+<li>差错消息</li>
+</ol>
+<p>最典型的查询消息是经典的控制台工具<em>ping</em>所使用的“回显请求”和“回显应答”消息。</p>
+<p>关于ping回显的要点：</p>
+<ul>
+<li>若没有差错，收到回显请求的主机会向源主机发送“回显应答”消息；否则，源主机会收到响应的ICMP差错消息。</li>
+<li><strong>需要“回显请求”和“回显答复”两个ICMP消息传输成功才最终能“ping通”</strong>。有些时候容易忽略目的主机收到回显请求但回显答复没有正确到达源主机的情况。**回显答复因某种原因无法到达源主机会导致“超时”**而不是具体的差错消息。</li>
+<li>如果在中间某个路由器已经出错，则由出错的路由器向源主机发送ICMP差错报文。</li>
+<li>部分主机（比如多数Windows10的个人电脑）会设置防火墙丢弃（不应答）回显请求导致“ping不通”。但此时不表明网络不通。</li>
+</ul>
+<p>差错消息：<br>
+（待完善）</p>
+<h3 id="rip" tabindex="-1">RIP</h3>
+<p>RIP：路由信息协议(Routing Information Protocol)</p>
+<p>该算法的核心工作原理是<strong>采用邻居的路由表构造自己的路由表</strong>。</p>
+<p>要点：</p>
+<ul>
+<li>路由表中到目的网络的距离以跳为单位，<strong>最大为15，距离16表示无穷大，或者说不可达</strong></li>
+<li>初始时RIP路由表中只有直连网的路由信息，且距离为1</li>
+<li>每个30s将自己的路由表发送给邻居，以便更新路由表</li>
+<li>每次收到来自邻居的路由表，使用如下策略更新路由表：
+<ul>
+<li>首先对收到的路由表的所有的距离+1</li>
+<li>若到某个目的网络的路由在原来的路由表中不存在，则加入路由表</li>
+<li>若到达某网络的路由较目前表中的距离更小，则更新路由表</li>
+<li>若到达某网络的路由从其“下一条”路由器传来新的距离，则无条件更新距离</li>
+<li>路由表每项都有TTL，更新的路由记录同步重置TTL</li>
+</ul>
+</li>
+</ul>
+<p>RIP中的一些问题</p>
+<ol>
+<li>
+<p>慢收敛</p>
+<p>路由表的更新传播到远端路由器需要的时间很长</p>
+</li>
+<li>
+<p>计数到无穷</p>
+<p>由于更新策略，导致某条被置为无穷的路由记录被邻居out-dated的记录更新回去，最后震荡计数缓慢收敛至无穷。虽然最终稳定态的结果是正确的，但收敛的速度很慢。</p>
+</li>
+</ol>
+<p>RIP中的一些技术：</p>
+<ol>
+<li>
+<p>水平分割</p>
+<p>从一个接口学得的路由不该从该接口发回去</p>
+</li>
+<li>
+<p>毒性反转</p>
+<p>从一个接口学得的路由从该接口发回去的时候，距离改为无穷大</p>
+</li>
+<li>
+<p>抑制</p>
+<p>距离被改为无穷大的路由在一段时间内不允许被修改，防止抖动</p>
+</li>
+<li>
+<p>触发更新</p>
+<p>一旦出现路由变化，立刻将变化的路由发给邻居，原来的30s发一次完整路由表不变</p>
+</li>
+</ol>
+<h3 id="ospf" tabindex="-1">OSPF</h3>
+<p>基本策略：</p>
+<p>将AS拓扑结构建成图，使用单源最短路径建立路由表。</p>
+<p>建图策略：</p>
+<ol>
+<li>末端网：只连一条入边</li>
+<li>广播型网络：与所有相连路由器建立双向边</li>
+<li>点到点网络：类似末端网，只有入边，但点的两端的路由器还需要连双向边</li>
+<li>每个路由器利用*链路状态通告(Link State Advertisement, LSA)*将<strong>出边</strong>广播到所有路由器。</li>
+<li>每个（广播型的）中转网需要选举一个指定路由器，作为代理负责发送中转网节点对应的LSA</li>
+<li>每个路由器使用邻接矩阵存储收到的LSA，并更新数据库</li>
+<li>最终AS中每个路由器中的图结构都同步到完全一致</li>
+</ol>
+<p>OSPF基本步骤：</p>
+<ol>
+<li>邻居发现<br>
+（待完善）</li>
+<li>同步至完全相邻<br>
+（待完善）
+<ol>
+<li>生成LSA</li>
+<li>扩散LSA</li>
+<li>收集、更新LSA</li>
+</ol>
+</li>
+<li>计算最短路径</li>
+<li>建立路由表</li>
+</ol>
+<p>LSA格式：</p>
+<p>LSA的主要作用是同步网络图数据库，因此根据建图策略，主要有两种LSA：</p>
+<ul>
+<li>Router LSA</li>
+<li>Network LSA</li>
+</ul>
+<p>OSPF的一些特点：</p>
+<ol>
+<li>所有OSPF消息都要认证（防止恶意认证）</li>
+<li>协议规定，路由表可以保存多条相同开销的路径，实现负载均衡</li>
+<li>支持多播</li>
+<li>（对比RIP）收敛更快</li>
+<li>（对比RIP）更“安静”：若链路状态不变，每30min才扩散一次（但实际上，每10s需要Hello一次，其实没有那么明显）</li>
+<li>（对比RIP）实现更复杂，需要计算开销更大（需要实现Dij）</li>
+</ol>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/580c088a/" rel="prev" title="BGP">
+      <i class="fa fa-chevron-left"></i> BGP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/325a50df/" rel="next" title="Spline">
+      Spline <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">1.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.</span> <span class="nav-text">交换技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82%E6%9C%8D%E5%8A%A1%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">网络层服务模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ip%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.</span> <span class="nav-text">IP地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ip%E6%95%B0%E6%8D%AE%E6%8A%A5"><span class="nav-number">1.4.</span> <span class="nav-text">IP数据报</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%88%86%E6%AE%B5"><span class="nav-number">1.5.</span> <span class="nav-text">数据报分段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ip%E5%9C%B0%E5%9D%80-1"><span class="nav-number">1.6.</span> <span class="nav-text">IP地址</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E7%B1%BB%E7%BD%91"><span class="nav-number">1.6.1.</span> <span class="nav-text">有类网</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E7%B1%BB%E7%BD%91%EF%BC%9A%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91"><span class="nav-number">1.6.2.</span> <span class="nav-text">有类网：划分子网</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%B1%BB%E7%BD%91%EF%BC%9A%E6%9E%84%E6%88%90%E8%B6%85%E7%BD%91"><span class="nav-number">1.6.3.</span> <span class="nav-text">无类网：构成超网</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E7%9A%84ip%E5%9C%B0%E5%9D%80%EF%BC%9A"><span class="nav-number">1.6.4.</span> <span class="nav-text">特殊的IP地址：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nat/napt"><span class="nav-number">1.7.</span> <span class="nav-text">NAT&#x2F;NAPT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arp"><span class="nav-number">1.8.</span> <span class="nav-text">ARP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp%EF%BC%9A%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8Dip"><span class="nav-number">1.9.</span> <span class="nav-text">DHCP：动态分配ip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#icmp%EF%BC%88%E7%BD%91%E7%BB%9C%E6%8E%A7%E5%88%B6%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number">1.10.</span> <span class="nav-text">ICMP（网络控制消息协议）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rip"><span class="nav-number">1.11.</span> <span class="nav-text">RIP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf"><span class="nav-number">1.12.</span> <span class="nav-text">OSPF</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

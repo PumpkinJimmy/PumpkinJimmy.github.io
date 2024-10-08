@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Operating System 自学笔记：中断 现代CPU允许外部设备以某种方式触发中断来使CPU暂停当前指令的执行、保存上下文并切换PC指针至特定的位置。通常中断后CPU会切换至中断处理程序处继续执行命令，并通常在中断处理程序完成后通过恢复保存的上下文来返回中断的点继续执行。 “中断”二字具有误导性，除了异常中断，通常“中断”其实是指暂停当前的控制流并执行中断处理程序，最后恢复到原来的控制流。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/c45a417b/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="Operating System 自学笔记：中断 现代CPU允许外部设备以某种方式触发中断来使CPU暂停当前指令的执行、保存上下文并切换PC指针至特定的位置。通常中断后CPU会切换至中断处理程序处继续执行命令，并通常在中断处理程序完成后通过恢复保存的上下文来返回中断的点继续执行。 “中断”二字具有误导性，除了异常中断，通常“中断”其实是指暂停当前的控制流并执行中断处理程序，最后恢复到原来的控制流。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-08T02:07:54.000Z">
+<meta property="article:modified_time" content="2021-06-08T02:07:54.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/c45a417b/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OS | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/c45a417b/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-08 10:07:54" itemprop="dateCreated datePublished" datetime="2021-06-08T10:07:54+08:00">2021-06-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="operating-system" tabindex="-1">Operating System</h2>
+<h3 id="%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%B8%AD%E6%96%AD" tabindex="-1">自学笔记：中断</h3>
+<p>现代CPU允许外部设备以某种方式触发<em>中断</em>来使CPU暂停当前指令的执行、保存上下文并切换PC指针至特定的位置。通常中断后CPU会切换至<em>中断处理程序</em>处继续执行命令，并通常在中断处理程序完成后通过恢复保存的上下文来返回中断的点继续执行。</p>
+<p>“中断”二字具有误导性，除了异常中断，通常“中断”其实是指<em>暂停</em>当前的控制流并执行中断处理程序，最后恢复到原来的控制流。</p>
+<p>中断机制的作用在于<strong>避免轮询，通过异步提高处理器利用率</strong>。</p>
+<p>具体来说，假设没有中断机制，再CPU执行到IO相关指令后，需要发送信号到IO模块，并反复检查IO模块的状态寄存器（也即<em>轮询</em>）以确定IO模块是否完成了工作，并在IO模块完成工作后开始读/写IO模块缓冲区的数据，再继续执行。这一轮询过程中CPU是始终在没有意义地忙的，因为轮询的实质是“等待完成”，表现在程序执行上就是<em>阻塞</em>。偏偏IO设备的速度往往远低于CPU，故轮询会造成巨大的CPU资源浪费。</p>
+<p>例如：</p>
+<blockquote>
+<p>常见家用机械硬盘是7200转/s的，故磁碟旋转半周需要4ms，耗时约400万CPU周期，若不使用中断，读取硬盘数据的过程中，CPU不得不等待机械硬盘寻道读取数据再写入到缓冲区，CPU才能读取，这是巨大的浪费。</p>
+</blockquote>
+<p>中断机制允许采用如下机制：CPU向硬盘控制器发出读信号后，不作轮询，继续执行接下来的程序。硬盘控制器在完成读盘后，触发CPU中断，CPU暂停当前指令流，执行中断处理程序读入硬盘缓冲区里的数据，最后恢复指令流继续执行。</p>
+<p>一个合适的类比是<strong>回调</strong>。中断机制可以看作允许CPU为IO操作注册“回调”。（实质上回调机制最有效的应用场景之一正是基于硬件中断的IO复用）</p>
+<p>常见的中断类型：</p>
+<ul>
+<li>程序中断：也称“异常”，即程序执行了不合法的操作</li>
+<li>硬件故障中断</li>
+<li><strong>IO中断</strong>：由IO控制器产生，用以通知CPU完成了某IO操作。举例：磁盘读写，网络通信，打印</li>
+<li><strong>时钟中断</strong>：CPU内部计时器产生，用来实现“定时类”功能。</li>
+</ul>
+<p>中断机制的一个很好的案例是Nginx的异步IO复用。（待完善）</p>
+<h3 id="process" tabindex="-1">Process</h3>
+<ul>
+<li>Process Image = Code Segment + Data Segment + Stack Segment + Process Control Block(PCB)</li>
+<li>PCB
+<ul>
+<li>pid（可能还有ppid,uid）</li>
+<li>state: running/ready/blocked</li>
+<li>priority</li>
+<li>Program Counter (PC)</li>
+<li>memory pointers: 内存相关指针</li>
+<li>context: registers</li>
+<li>IO information: such as file descriptors</li>
+<li>accounting information: 进程相关统计信息</li>
+<li>注意，PCB中memorgy pointers + context + IO info.对应管理的资源可以看作一台逻辑上完整的计算机的全部资源。这暗示了进程运行相互独立相互隔离的特点</li>
+</ul>
+</li>
+<li>进程状态模型
+<ul>
+<li>二状态模型
+<ul>
+<li>最基本的模型，进程分别为运行态和等待态</li>
+<li>过于简单</li>
+</ul>
+</li>
+<li>五状态模型
+<ul>
+<li>进程分为<em>运行态</em>、<em>就绪态</em>和<em>阻塞态</em>，以及方便管理的起始态和结束态</li>
+<li><em>运行态</em>表示进程正在运行</li>
+<li><em>就绪态</em>表示进程不在运行，但请求的资源都已就绪，只等调度器调入运行</li>
+<li><em>阻塞态</em>表示进程正在等待IO/其他资源，从而阻塞</li>
+</ul>
+</li>
+<li>六状态模型/七状态模型
+<ul>
+<li>结合虚拟存储器，可以在无状态模型上添加<em>挂起态</em></li>
+<li>挂起态的进程不在运行，且进程映像被调出主存，存在辅存中</li>
+<li>设计挂起态的动机是解决主存容量不足，将长久不运行的进程移出主存，在需要的时候才调入</li>
+<li>不正确地使用挂起态可能会导致性能下降（缺页的时间代价很大）</li>
+<li>由于虚拟存储器地分页机制，不一定要把整个进程映像挪到辅存中，可以把一部分（部分页）放在辅存中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>进程控制原语
+<ul>
+<li>依赖OS的<em>原语</em>来实现进程的分发、状态切换等操作</li>
+<li>原语与常规程序偏度不同，原语是<em>原子操作</em>，不可以中断，否则会导致混乱</li>
+<li>一个常见的手法是通过不响应中断来实现原子性</li>
+<li>逻辑上来看，OS原语可以看作对ISA的扩充，增加了指令</li>
+</ul>
+</li>
+</ul>
+<h3 id="process-vs.-thread" tabindex="-1">Process vs. Thread</h3>
+<ul>
+<li>进程是<strong>资源分配的最小单位</strong>
+<ul>
+<li>OS为进程分配pid、内存、fd表等资源，<em>不单独为线程分配这些资源</em></li>
+<li>具有独立的PCB、特权级等</li>
+<li>进程可以是OS层面并发执行的较粗粒度。</li>
+</ul>
+</li>
+<li>线程是<strong>调度执行的最小单位</strong>
+<ul>
+<li>OS可以以线程为单位分配CPU时间。</li>
+<li>线程是OS层面并发执行的最小粒度。</li>
+<li>同一进程派生的多个线程<strong>共享资源</strong>，比如fd，内存地址空间等</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B-vs.-%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B" tabindex="-1">用户级线程 vs. 内核级线程</h3>
+<p>用户级线程（ULT）</p>
+<ul>
+<li>在用户级代码实现多线程</li>
+<li>代表性的库是pthread</li>
+<li>优点：
+<ul>
+<li>不需要切换至内核态</li>
+<li>调度策略可以由应用程序定制</li>
+<li>可以跨平台</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>由于发起系统调用时进程被阻塞，只要有一个线程发起系统调用时，同一进程的所有派生的用户级线程都会阻塞</li>
+<li>在纯粹的用户级线程策略中，用户级线程无法利用多核</li>
+</ul>
+</li>
+<li>当然现在的ULT解决了部分缺点，比如说非阻塞的系统调用</li>
+</ul>
+<p>系统级线程（KLT）</p>
+<ul>
+<li>线程管理由内核完成，OS的调度以线程为单位</li>
+<li>优点：
+<ul>
+<li>线程阻塞不会导致进程阻塞</li>
+<li>充分发挥多核优势</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>线程调度切换需要内核介入，故有模式切换开销</li>
+</ul>
+</li>
+</ul>
+<p>还有混合ULT和KLT的方案（比如Solaris），在线程创建在用户态，线程调度和同步在内核态，此时ULT被映射到了若干个KLT</p>
+<h3 id="%E5%AF%B9%E7%A7%B0%E5%A4%9A%E5%A4%84%E7%90%86smp%EF%BC%9A%E5%90%8C%E6%9E%84" tabindex="-1">对称多处理SMP：同构</h3>
+<p>SMP 对称多处理是指<strong>有多个具有相同功能的逻辑上的处理器</strong>， 也即<em>同构</em>多处理器技术（区别异构）</p>
+<p>多核处理器是SMP的一种实现，又称为<em>片上SMP</em></p>
+<h3 id="windows%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B" tabindex="-1">Windows进程模型</h3>
+<p>Windows系统思想：<strong>一切皆资源/一切皆对象</strong>。所有的资源都表示为对象(object)，然后使用句柄(handle)来管理。进程是占用资源的基本单位，一个进程的句柄表包含该进程拥有的资源，比如打开的文件、代码段、数据段，和<em>线程对象</em>。（由此可见，Windows下进程和线程是截然不同的逻辑实体）</p>
+<p>Windows对象具有<em>属性</em>和<em>服务</em>（方法），许多时候，Windows的进程/线程属性对标的就是进程模型的PCB/TCB</p>
+<h3 id="linux%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B" tabindex="-1">Linux进程模型</h3>
+<p>Linux的设计思想：<strong>一切皆文件</strong>。因此Linux进程占有的资源主要表现为其“打开”的文件，或者说其<em>文件描述符表</em></p>
+<p>Linux实际上没有区分进程和线程</p>
+<h3 id="mac%2Fios%E7%9A%84gcd%E6%8A%80%E6%9C%AF" tabindex="-1">Mac/iOS的GCD技术</h3>
+<p>Mac/iOS处理基本的内核即线程实现之外，还在OS中提供了更强大的自动线程管理功能。用户不需要显式使用OS API，而是使用拓展的C语言记号来标识需要并发的“块”，然后由OS来创建线程、管理线程，根据底层硬件的特性来调整策略。</p>
+<h3 id="%E4%BA%92%E6%96%A5%EF%BC%9A%E5%85%AD%E4%B8%AA%E8%A6%81%E6%B1%82" tabindex="-1">互斥：六个要求</h3>
+<ul>
+<li><strong>强制排他</strong>：这是最基本的要求。同一时刻只有一个进程进入临界区</li>
+<li><strong>让权等待</strong>：当进程无法进入临界区时立刻释放处理器，防止<strong>忙等待</strong>（浪费CPU时间）</li>
+<li><strong>有限等待</strong>：一个试图进入临界区的进程不会无限地等待，也即不会<em>饥饿</em></li>
+<li><strong>充分并发</strong>：各个进程可以互不干扰地并发运行</li>
+<li>满足异步：各个进程并发逻辑不受处理器数量和相对速度影响</li>
+<li>空闲让进：当没有代码试图进入临界区时，一个进入临界区的尝试可以立刻成功</li>
+</ul>
+<h3 id="%E4%BA%92%E6%96%A5%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9Adekker%E7%AE%97%E6%B3%95" tabindex="-1">互斥：软件实现：Dekker算法</h3>
+<p>考虑多线程互斥，使用全局变量flag来表示n个竞争进入临界区的线程。使用turn表示“是否谦让”。大致流程如下：</p>
+<ol>
+<li><code>flag[id]</code>标为true</li>
+<li>轮询其他所有flag</li>
+<li>若互斥，等待，若谦让，在短暂<code>flag[id]=false</code>后重新使<code>flag[id]=true</code></li>
+<li>进入临界区</li>
+<li><code>flag[id]</code>标为false</li>
+</ol>
+<p>问题：</p>
+<ul>
+<li>逻辑复杂，难以证明</li>
+<li>轮流问题（谦让度顺序变化）</li>
+<li><strong>忙等待</strong></li>
+</ul>
+<h3 id="%E4%BA%92%E6%96%A5%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9Apeterson%E7%AE%97%E6%B3%95" tabindex="-1">互斥：软件实现：Peterson算法</h3>
+<p>考虑多线程互斥，大致流程</p>
+<ol>
+<li><code>flag[id]=1</code></li>
+<li><code>turn=other's id</code></li>
+<li>轮询其他所有flag，检查turn，只要当有其他人flag为真且turn不等于自己时就等待</li>
+<li>进入临界区</li>
+<li><code>flag[id]=0</code></li>
+</ol>
+<p>特点：</p>
+<ul>
+<li>较容易实现</li>
+<li>无轮流</li>
+<li><strong>忙等待</strong></li>
+</ul>
+<h3 id="%E4%BA%92%E6%96%A5%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0" tabindex="-1">互斥：硬件实现</h3>
+<p>简单粗暴：关中断</p>
+<ul>
+<li>在进程进入临界区的时候关中断（不响应中断）</li>
+<li>缺点1：限制了处理器交替执行的能力</li>
+<li>缺点2：对多核情形不生效（单核情形下一切切换源自中断，但多核情形下具有天然的并行）</li>
+</ul>
+<p>完整实现：<strong>TS/XCHG&amp;自旋锁</strong></p>
+<ul>
+<li>
+<p>观察软件方案，可以发现软件方案失败的根本原因是<strong>轮询操作中“test”和“set”操作中间可能被切换</strong>。因此可以在硬件上设计一个“TestSet”指令在一个指令周期内完成两个操作</p>
+</li>
+<li>
+<p>此方案适用如下情形：</p>
+<p>互斥的存储器 &amp; 共享存储的SMP</p>
+</li>
+<li>
+<p>TestSet实现自旋锁<br>
+考虑如下自旋锁的（伪）汇编代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">lockvar db 0</span><br><span class="line"></span><br><span class="line">proc lock(lockvar)</span><br><span class="line">  loop:</span><br><span class="line">    TS lockvar</span><br><span class="line">    jnz loop</span><br><span class="line">  ret</span><br><span class="line">endproc</span><br><span class="line"></span><br><span class="line">proc unlock(lockvar)</span><br><span class="line">  loop:</span><br><span class="line">    mov lockvar, 0</span><br><span class="line">  ret</span><br><span class="line">endproc</span><br></pre></td></tr></table></figure>
+<p>代码说明：</p>
+<p>加锁逻辑：lockvar为0时没有进程在临界区中，1则表示有进程在临界区中。测试lockvar的值并将lockvar置1，若lockvar的原来的值是0，则成功获得锁，允许进入临界区；否则，获得锁失败，循环等待，直到lockvar为0。</p>
+<p>关键点：</p>
+<ul>
+<li>硬件实现了一个TS指令，<strong>在一个指令周期</strong>内完成“检查lockvar的值”和“lockvar置1”的动作。由于在一个指令周期内，<strong>两个动作是不会被中断</strong>，且由于存储器的“互斥”，<strong>多个处理器同时加锁也只有一个进程获得锁</strong></li>
+<li>无论测试结果如何，都要置1的理由是：若加锁失败，lockvar肯定本来就是1，不受影响；若加锁成功，为了排除其他进程，也必须立即将lockvar设为1</li>
+</ul>
+</li>
+<li>
+<p>XCHG实现自旋锁</p>
+<p>XCHG可以在一个指令周期内<strong>交换一个寄存器和一个内存单元的数据</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">lockvar db 0</span><br><span class="line"></span><br><span class="line">proc lock(lockvar)</span><br><span class="line">  loop: </span><br><span class="line">    mov ax, 1</span><br><span class="line">    XCHG ax, lockvar</span><br><span class="line">    jnz loop</span><br><span class="line">  ret</span><br><span class="line">endproc</span><br><span class="line"></span><br><span class="line">proc unlock(lockvar)</span><br><span class="line">  mov ax, 0</span><br><span class="line">  ret</span><br><span class="line">endproc</span><br></pre></td></tr></table></figure>
+<p>可以看到，XCHG和TS指令工作的实质是一样的：在一个指令周期内同时获知一个内存单元的值并设置该内存单元的值。XCHG将内存单元的值和寄存器的值对调，然后测试寄存器的值即可知道内存单元原来的值。</p>
+</li>
+<li>
+<p>自旋锁 vs 互斥锁</p>
+<ul>
+<li>互斥锁是<em>sleep-waiting</em>（让权等待），等待锁的进程会阻塞，在解锁之前阻塞不会获得CPU时间</li>
+<li>自旋锁是<em>busy-waiting</em>（忙等待），等待锁的进程不会阻塞，而是不断轮询（不断循环）。由于没有阻塞，该进程会占用CPU时间</li>
+<li>自旋锁：
+<ul>
+<li>由于不阻塞，如果等待时间很短，性能会远胜于互斥锁</li>
+<li>易于实现</li>
+<li>如果等待时间很长，由于忙等待，将浪费CPU时间</li>
+<li>可能饥饿</li>
+<li>可能死锁</li>
+</ul>
+</li>
+<li>互斥锁：
+<ul>
+<li>由于等待的时候阻塞，然后又唤醒调入，开销较大</li>
+<li>但由于等待的时候阻塞（让权等待），不会浪费CPU时间</li>
+<li>由于可以由OS调度，可以减少饥饿的问题</li>
+<li>可能死锁</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E4%BF%A1%E5%8F%B7%E9%87%8F" tabindex="-1">信号量</h3>
+<p>信号量其实就是就是进程间通信用的一个共享的整数变量。</p>
+<p>一个信号量只有三种合法操作</p>
+<ol>
+<li>
+<p>初始化</p>
+<p>初始化信号量为一个非负整数。具体取值取决于使用信号量的具体情景。</p>
+</li>
+<li>
+<p>P操作（Wait/Down）</p>
+<p>信号量减1。若信号量此时<strong>为负</strong>，<strong>执行P操作的进程阻塞</strong></p>
+</li>
+<li>
+<p>V操作（Signal/Up）</p>
+<p>信号量加1。若信号量此时<strong>非正</strong>，<strong>唤醒其中一个因P操作阻塞的进程</strong>。</p>
+</li>
+</ol>
+<p>注意，每一个信号量对应一个阻塞队列，其中放置了由于对该信号量的P操作阻塞的所有进程。</p>
+<p>信号量除了是一个整数，还需要对应一个<em>阻塞队列</em>，存放<strong>因对该信号量做P操作而阻塞的进程控制块</strong></p>
+<p>一种取值只能是0或者1的特殊的信号量，称为<em>二元信号量</em>。由于此时这种信号量不存在负数的情形，因此二元信号量不是根据信号量取值来判断是否阻塞的，而是检测<em>阻塞队列是否为空</em>。因此，所谓二元信号量其实跟那个整数没什么关系。</p>
+<h4 id="%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0" tabindex="-1">信号量实现</h4>
+<p>可以发现，对同一个信号量的P操作V操作是典型的可能导致竞态的操作。因此，P/V操作必须利用自旋锁来确保互斥修改（不要试图用互斥锁，因为互斥锁本事就是用信号量实现的。。。）</p>
+<h4 id="%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0%E4%BA%92%E6%96%A5%E9%94%81" tabindex="-1">信号量实现互斥锁</h4>
+<p>显然，如果信号量初始为1，该信号量其实就是sleep-waiting的<strong>互斥锁</strong>（由于是sleep-waiting，所以不是自旋锁）</p>
+<p>几个要点：</p>
+<ol>
+<li>配置一个<strong>初始为1</strong>的信号量（常常被称为<em>互斥量</em>）</li>
+<li>试图进入临界区的进程需要对信号量执行P操作（即<em>lock</em>）</li>
+<li>离开临界区时，进程对信号量执行V操作（即<em>unlock</em>）</li>
+</ol>
+<h4 id="%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98" tabindex="-1">生产者-消费者问题</h4>
+<p>问题描述：</p>
+<p>若干个进程通过有限的共享缓冲区交换数据</p>
+<ul>
+<li>一组“生产者”进程不断写入</li>
+<li>另一组“消费者”进程不断读出</li>
+<li><strong>任何时刻只能有一个进程可以对缓冲区进行操作</strong></li>
+</ul>
+<p>解决方案：<strong>使用信号量实现的队列</strong>。</p>
+<ul>
+<li>使用一个信号量用于同步。</li>
+<li>生产者每次将产品入队都会导致信号量+1；</li>
+<li>当队列为空的时候，试图获取产品的消费者将会导致信号量为负，从而导致消费者阻塞等待；</li>
+<li>生产者一放入新产品，就会导致信号量+1，若信号量为负，等待的某个消费者进程立即被唤醒，并得到新入队的产品，继续执行。</li>
+<li>*若缓冲区有限，则在缓冲区满的情况下，生产者可能需要阻塞等待。此时可能需要增加一个信号量。</li>
+<li>最后，由于涉及共享变量的修改，所以还需要一个互斥锁</li>
+</ul>
+<h4 id="%E8%AF%BB%E8%80%85-%E5%86%99%E8%80%85%E9%97%AE%E9%A2%98" tabindex="-1">读者-写者问题</h4>
+<p>问题描述：对于同一组数据资源（比如文件），要求满足以下要求：</p>
+<ul>
+<li>任意多个读进程可以同时读文件</li>
+<li>一次只能有一个写进程写文件</li>
+<li>如果一个写进程在写文件，任意读进程都不能读文件</li>
+</ul>
+<p>这种问题的典型情境是<em>数据库的读写</em>。数据库90%的请求都是读，数据库需要满足大量并发的读请求，因此要允许大量进程同时读；但又需要维护数据一致性，因此必须在写的时候锁定数据表。</p>
+<p>容易既有读者在排队，又有写者在排队，因此有两种策略：</p>
+<ol>
+<li>读者优先：当读者持有锁的时候，任何新的读者都可以立刻进入使用资源</li>
+<li>写者优先：当读者持有锁，写者在等待时，新来的读者不能立刻进入使用资源，而是现有读者使用完之后立刻将资源交给写者。</li>
+</ol>
+<p>读者有限的解决方案如下：</p>
+<ol>
+<li>
+<p>初始化信号量<code>r=1,w=1</code></p>
+</li>
+<li>
+<p>读者逻辑：</p>
+<ol>
+<li><code>p(r)</code></li>
+<li>当前读者数+1</li>
+<li>若当前读者数=1，则<code>p(w)</code></li>
+<li><code>v(r)</code></li>
+<li><code>READ</code>操作</li>
+<li><code>p(r)</code></li>
+<li>当前读者数-1</li>
+<li>若当前读者数=0，则<code>v(w)</code></li>
+<li><code>v(r)</code></li>
+</ol>
+</li>
+<li>
+<p>写者逻辑：</p>
+<ol>
+<li><code>p(w)</code></li>
+<li><code>WRITE</code>操作</li>
+<li><code>v(w)</code></li>
+</ol>
+</li>
+</ol>
+<p>注：</p>
+<ul>
+<li>写者逻辑非常简单：每次写数据之前<code>lock(w)</code>，写完<code>unlock(w)</code></li>
+<li>读者需要使用两个锁：
+<ul>
+<li>当前读者数量是所有读者线程共享的变量，修改时都要<code>lock(r)</code></li>
+<li>若一个新的读者获得读锁，发现<code>reader_count==1</code>，说明<strong>在它之前，读者并未对资源加锁</strong>，此时必须执行<code>lock(w)</code>来保证不会既读又写。</li>
+<li>若一个新读者获得读锁，发现<code>reader_count&gt;1</code>，说明<strong>在它之前，读者已经为资源加锁了，其他读者可以自由进入资源临界区读数据</strong></li>
+<li>无论何种情况，一个新读者完成<code>lock(r)</code>并互斥地为读者数量+1之后，可以<code>unlock(r)</code>了</li>
+<li>类似的，当读取完成，<code>reader_count--</code>时，若<code>reader_count==0</code>，就要<code>unlock(w)</code>了</li>
+</ul>
+</li>
+<li><strong>读者优先可能导致写者饥饿</strong>。由于当读者持有锁的时候，任何新的读者都可以立刻进入使用资源，也即若不断有新的读者进入，写者永远无法进入临界区。因此实际操作中写者优先相对读者优先实用。</li>
+</ul>
+<p>写者优先的解决方案如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">writer:</span><br><span class="line">  p(y)</span><br><span class="line">  write_count++</span><br><span class="line">  if (write_count==1) p(rsem) </span><br><span class="line">  v(y)</span><br><span class="line"></span><br><span class="line">  p(wsem)</span><br><span class="line">  WRITE_UNIT()</span><br><span class="line">  v(wsem)</span><br><span class="line"></span><br><span class="line">  p(y)</span><br><span class="line">  write_count--</span><br><span class="line">  if (write_count==0) v(rsem)</span><br><span class="line">  v(y)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">reader:</span><br><span class="line">  p(z)</span><br><span class="line">  p(rsem)</span><br><span class="line"></span><br><span class="line">  p(x)</span><br><span class="line">  read_count++</span><br><span class="line">  if (read_count==1) p(wsem)</span><br><span class="line">  v(x)</span><br><span class="line"></span><br><span class="line">  v(z)</span><br><span class="line">  READ_UNIT()</span><br><span class="line"></span><br><span class="line">  p(x)</span><br><span class="line">  read_count--</span><br><span class="line">  if (read_count==0) v(wsem)</span><br><span class="line">  v(x)</span><br></pre></td></tr></table></figure>
+<h4 id="%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5" tabindex="-1">进程同步</h4>
+<p>互斥可以<em>强制排他</em>，结果上来说可以实现<strong>临界区访问的顺序化</strong>（无重叠），但它无法保证多个协作进程的<strong>时序</strong>。并发进程之间的时序约束问题称为<em>进程同步</em>问题。</p>
+<h4 id="%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5" tabindex="-1">信号量实现进程同步</h4>
+<p>考虑<code>a -&gt; b</code>的一个同步要求，采用一个信号量实现<code>s</code></p>
+<p>要点如下：</p>
+<ol>
+<li>初始化<code>s=0</code></li>
+<li>a完成后执行<code>v(s)</code>操作</li>
+<li>b开始前执行<code>p(s)</code>操作（即<em>join</em>）</li>
+</ol>
+<h3 id="%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6" tabindex="-1">消息机制</h3>
+<p>一种相对高层的IPC机制</p>
+<p>两种原语：</p>
+<ul>
+<li><code>send</code> 发送消息</li>
+<li><code>receive</code> 接收消息</li>
+</ul>
+<p>其中<code>send/receive</code>都可以是阻塞/非阻塞的</p>
+<p>消息传递既可以是直接发送给给定PID的进程，也可以是使用中间代理结构（信箱）来通信</p>
+<p>作为一种高级的IPC方式，消息机制完全可以用于<em>分布式系统</em>。</p>
+<p>实现消息机制最重要的部件是<em>消息队列</em></p>
+<h3 id="%E6%AD%BB%E9%94%81" tabindex="-1">死锁</h3>
+<p>死锁发生的四个必要条件</p>
+<ol>
+<li>
+<p>互斥</p>
+<p>进程可以排他地占有资源</p>
+</li>
+<li>
+<p>占有等待</p>
+<p>进程在由于请求其他资源阻塞等待的时候仍然占有着属于自己的资源</p>
+</li>
+<li>
+<p>不可抢占</p>
+<p>不允许一个进程<em>抢占</em>另一个进程的资源。</p>
+<p><em>抢占</em>是指某资源在其持有的进程使用完并主动释放之前被另一个资源强占。</p>
+</li>
+</ol>
+<p>作为前三个条件的结果，条件四：</p>
+<ol start="4">
+<li>循环等待</li>
+</ol>
+<p>总体上，三种解决死锁的策略：</p>
+<ol>
+<li>
+<p>死锁预防</p>
+<p>保守的策略，通过<strong>破坏死锁发生的必要条件</strong>来完全杜绝死锁的发生。</p>
+</li>
+<li>
+<p>死锁避免</p>
+<p>类似死锁预防</p>
+</li>
+<li>
+<p>死锁检测</p>
+<p>在运行时由OS定期扫描检测死锁</p>
+</li>
+</ol>
+<h4 id="%E6%AD%BB%E9%94%81%E9%A2%84%E9%98%B2" tabindex="-1">死锁预防</h4>
+<ol>
+<li>
+<p>破坏互斥：不可能</p>
+<p>互斥是并发程序避免RC保持数据一致性的基础，不可能通过这一方法来避免死锁。</p>
+</li>
+<li>
+<p>破坏占有等待：<strong>初始一次性申请所有资源</strong></p>
+<p>若要求进程在创建之时申请所有需要的资源，得到资源之后才允许启动，<strong>不允许进程在执行过程中申请新的资源，则可以避免占有着资源进行阻塞等待</strong>。</p>
+<p>优点：易于实现、易于理解</p>
+<p>缺点：</p>
+<ul>
+<li>资源利用率低：进程在运行的整个生命周期中占有着所有涉及到的资源，但该资源可能只是在进程执行的一小部分使用到了该资源，剩余时间资源都空置浪费了。</li>
+</ul>
+</li>
+<li>
+<p>抢占</p>
+</li>
+<li>
+<p>破坏循环等待：按序分配</p>
+<p>含义：进程A若想申请资源<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">R_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></eq>，必须保证<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∀</mi><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">\forall i &lt; j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord">∀</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></eq>，资源<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">R_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>已被分配。若条件不满足，必须按需地申请所有前面的资源<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">R_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>，即便不需要该条件</p>
+<p>实际上这一方法只适用于一个小的资源集合上。</p>
+</li>
+</ol>
+<h4 id="%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D" tabindex="-1">死锁避免</h4>
+<p>死锁预防：通过<strong>制定静态的资源管理策略，破坏死锁发生的条件，从原理上杜绝死锁的发生</strong>。这些策略都是静态、保守的，且往往<strong>极大地影响进程的并发执行效率/并发的灵活度</strong>。</p>
+<p>死锁避免：在不试图破坏死锁发生的必要条件的情况下，通过<strong>适当设计资源动态分配策略，避免循环等待</strong></p>
+<p>对比定义发现，死锁预防和死锁避免其实都是试图从原理上杜绝死锁地发生，但死锁避免更灵活，限制相对少。</p>
+<p>一个典型的死锁避免策略是<em>银行家算法</em></p>
+<p>应用银行家算法有如下前提：</p>
+<ol>
+<li>可以使用一个整数描述一个资源类的资源实例数目</li>
+<li>资源都是可重用资源</li>
+<li><strong>每个进程需要的每类资源的最大数量都是在进程创建时预先声明的</strong></li>
+</ol>
+<p>使用如下符号：</p>
+<ul>
+<li>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo separator="true">,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m,n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">m</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span></eq>表示<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></eq>个进程，<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq>个资源类</p>
+</li>
+<li>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">R \in \mathbb{R}^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></eq>表示系统拥有的各类资源的总数</p>
+</li>
+<li>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo separator="true">,</mo><mi>A</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>m</mi><mo>×</mo><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">C,A \in \mathbb{R}^{m\times n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></eq>分别表示每个进程声明的需要的最大资源数目以及每个进程目前分配得到的每类资源的数目</p>
+</li>
+<li>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">V \in\mathbb{R}^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></eq>表示各类资源当前可用的数目</p>
+</li>
+<li>
+<p>一组<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>R</mi><mo separator="true">,</mo><mi>C</mi><mo separator="true">,</mo><mi>A</mi><mo separator="true">,</mo><mi>V</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(R,C,A,V)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span></eq>表示一个系统资源的状态。显然，该表示其实是冗余的.（<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>j</mi></msub><mo>≡</mo><msub><mi>R</mi><mi>j</mi></msub><mo>−</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></msubsup><msub><mi>A</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V_j \equiv R_j - \sum_{i=1}^{m} A_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≡</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.104em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8043em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></eq>）</p>
+</li>
+<li>
+<p><strong>进程启动拒绝</strong></p>
+<p>显然，当新进程<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>满足：<br>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>C</mi><mrow><mi>m</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><msub><mi>C</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>≤</mo><msub><mi>R</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">
+  C_{m+1, j} + \sum_{i=1}^{m} C_{ij} \le R_j
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></eqn></section></p>
+<p>时，进程才能启动。</p>
+<p>这一策略是保守的，不是最优的，因为它考虑的是最坏情况：所有进程同时请求所有资源的最大数目。实际上这种情况并不一定会发生（甚至不可能发生）</p>
+</li>
+<li>
+<p><strong>资源分配拒绝（银行家算法）</strong>：</p>
+<p>当<strong>存在</strong><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></eq>使得<br>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>C</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>A</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>≤</mo><msub><mi>V</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">
+  C_{ij} - A_{ij} \le V_{j}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></eqn></section></p>
+<p>时称状态<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>R</mi><mo separator="true">,</mo><mi>C</mi><mo separator="true">,</mo><mi>A</mi><mo separator="true">,</mo><mi>V</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(R,C,A,V)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span></eq>为<em>安全状态</em>。不满足上述条件（不存在符合条件的<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></eq>），称为<em>不安全状态</em></p>
+<p>安全状态的意义在于<strong>安全状态下的系统保证至少存在一条资源分配路径使得当前所有并发进程运行至结束</strong></p>
+<p>反之，依据安全状态的充分条件，我们可以通过计算确定一个资源分配请求是否会导致不安全状态，从而<strong>拒绝一个导致不安全状态的资源请求</strong></p>
+</li>
+</ul>
+<p>银行家算法的优点：</p>
+<ul>
+<li>更灵活，支持资源的动态分配</li>
+<li>不需要抢占、回滚</li>
+<li>减少潜在的死锁问题</li>
+</ul>
+<p>银行家算法的缺点：</p>
+<ul>
+<li>无法处理所有形式的资源
+<ul>
+<li>无法处理不可重用资源</li>
+<li>无法处理难以量化的系统资源</li>
+</ul>
+</li>
+<li>不支持系统动态扩容
+<ul>
+<li>系统的资源类的数目固定</li>
+<li>系统的各个资源类的资源实例数目固定</li>
+</ul>
+</li>
+<li>没有考虑进程同步问题</li>
+<li>系统性能影响：可能会阻塞合理的资源分配请求</li>
+<li>不够灵活：需要预先声明进程需要的最大资源数目</li>
+<li>算法性能问题：不考虑硬件加速，每一次检查状态是否安全都需要<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(mn)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">mn</span><span class="mclose">)</span></span></span></span></eq>的时间</li>
+</ul>
+<p>可以发现，即便银行家算法有许多优点，其缺陷仍然是不可接受的，因此在实践中OS都没有采用银行家算法。</p>
+<h4 id="%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B" tabindex="-1">死锁检测</h4>
+<p>相比于死锁预防和死锁避免，死锁检测不试图通过限制资源的分配来避免死锁，而是在死锁发生之后检测出死锁并恢复系统。</p>
+<p>检测的策略一般是：资源分配时检查+周期性检查</p>
+<p>检测出死锁后恢复系统的方法：</p>
+<ol>
+<li>杀死进程直至死锁解开（常见，简单粗暴）</li>
+<li>回滚进程</li>
+</ol>
+<h4 id="%E7%BB%BC%E5%90%88%E7%9A%84%E6%AD%BB%E9%94%81%E5%A4%84%E7%90%86%E7%AD%96%E7%95%A5" tabindex="-1">综合的死锁处理策略</h4>
+<p>实际上，计算机资源的特点各不相同，适合的死锁处理技术也各不相同。现在，OS采用的是针对不同的资源类采用不同的死锁处理策略。</p>
+<h4 id="%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90%E9%97%AE%E9%A2%98" tabindex="-1">哲学家就餐问题</h4>
+<p>问题：考虑五个哲学家做围桌，每两个座位之间都有一把叉子（共5把），作为结果，每个作为左右都有一把叉子。每个人必须要两把叉子才能吃，问如何避免死锁和饥饿。</p>
+<p>这个问题的特点在于<strong>资源图的环已经天然存在，若使用朴素的互斥方案，一定会导致循环等待造成死锁，且这一死锁会导致所有人饥饿</strong>（字面，笑）</p>
+<p>朴素的解决方案（会导致全部死锁饥饿）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">semaphore fork[5] = &#123;1, 1, 1, 1, 1&#125;</span><br><span class="line">philosopher:</span><br><span class="line">  P(fork[left])</span><br><span class="line">  P(fork[right])</span><br><span class="line">  eat()</span><br><span class="line">  V(fork[right])</span><br><span class="line">  V(fork[left])</span><br></pre></td></tr></table></figure>
+<p>一种简单的解决方案是只允许至多4个哲学家同时就餐：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">semaphore fork[5]</span><br><span class="line">semaphore room = 4</span><br><span class="line">philosopher:</span><br><span class="line">  P(room)</span><br><span class="line">  P(fork[left])</span><br><span class="line">  P(fork[right])</span><br><span class="line">  eat()</span><br><span class="line">  V(fork[right])</span><br><span class="line">  V(fork[left])</span><br><span class="line">  V(room)</span><br></pre></td></tr></table></figure>
+<p>由于只有4个人同时就餐的时候资源图不构成环，因此不会死锁。问题是不完全符合问题的场景：命名是5个人的餐桌</p>
+<p>另一种方法是利用管程（条件变量）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">cv fork[5]</span><br><span class="line">get_fork():</span><br><span class="line">  if fork[left]:</span><br><span class="line">    fork[left] = false</span><br><span class="line">  else:</span><br><span class="line">    cwait(fork[left])</span><br><span class="line">  if fork[right]:</span><br><span class="line">    fork[right] = false</span><br><span class="line">  else:</span><br><span class="line">    cwait(fork[right])</span><br><span class="line">  </span><br><span class="line">release_fork():</span><br><span class="line">  fork[right] = true</span><br><span class="line">  csignal(fork[right])</span><br><span class="line">  fork[left] = true</span><br><span class="line">  csignal(fork[left])</span><br><span class="line"></span><br><span class="line">philosopher:</span><br><span class="line">  get_fork()</span><br><span class="line"></span><br><span class="line">  eat()</span><br><span class="line"></span><br><span class="line">  release_fork()</span><br></pre></td></tr></table></figure>
+<p>可以发现，相比朴素方案，这种方案除了将信号量换成了条件变量，其他完全一致。但不会死锁。因为<strong>同时只有一个进程能进入管程</strong>，从结果来看，这种互斥结构导致<strong>get_fork/release_fork逻辑上成为了原子操作</strong></p>
+<h2 id="%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86" tabindex="-1">存储管理管理</h2>
+<ul>
+<li>
+<p>覆盖技术</p>
+<p>较老的技术。由程序员描述模块的依赖关系（表示为树状），内存只需要放置当前运行的进程的依赖路径上的模块，余下的放入辅存中，从而节省内存。</p>
+</li>
+<li>
+<p>交换技术</p>
+<p>古老的整体交换技术在进程不运行的时候由OS自动将程序调到硬盘上。相比覆盖技术，这种技术的好处在于对用户是透明的。</p>
+</li>
+<li>
+<p>分区管理</p>
+<ul>
+<li>
+<p>核心思想：<strong>对物理内存分区，每个分区放入一个进程</strong></p>
+</li>
+<li>
+<p>起点：固定分区管理（partition）</p>
+<p>将线性内存分成等大的若干<em>分区</em>，每个占用内存小于分区的进程可以将整个分区分配给进程，然后直接载入。</p>
+<p>优点：简单，内存不够就用整个分区做交换。<br>
+缺点：</p>
+<ol>
+<li>进程占用内存大于一个分区则需要多个分区，无法整体交换，又回到覆盖算法</li>
+<li>进程小于分区大小，空余的空间无法利用，造成内存的<em>内碎片(internal fragment)</em></li>
+<li>预先划分的分区数目实际上限制了最大并发活动进程数目</li>
+</ol>
+</li>
+<li>
+<p>动态分区：</p>
+<p>优点：灵活，内存利用率高，消除了内碎片<br>
+缺点：导致外碎片（内存切割出来的中间的小空隙）</p>
+<p>动态分区放置算法：</p>
+<ul>
+<li>
+<p>首次适配</p>
+<p>从内存起始开始扫描，找到第一个适配的分区。</p>
+<p>简单，通常效果是最好的。</p>
+</li>
+<li>
+<p>临近适配</p>
+<p>从上次分配结束的地方开始扫描，找到一个适配的分区。</p>
+<p>需要经常压缩。</p>
+</li>
+<li>
+<p>最佳适配</p>
+<p>扫描整个内存，找到最小的适配（足够用）的分区</p>
+<p>其实是最坏，产生碎片最多。</p>
+</li>
+<li>
+<p>最坏适配</p>
+<p>扫描整个内存，找到最大的内存块来分配分区</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>页式存储管理</p>
+<ul>
+<li>基本原理：
+<ul>
+<li>将主存划分为若干等长小块，称为<em>页框(frame)</em></li>
+<li>将进程分为若干个<em>页(page)</em>，一个页的大小与一个页框大小相同</li>
+<li>进程加载时，所有页都放入了某个可用的页框（不要求连续）。</li>
+<li>建立页表，管理所有的页和页框</li>
+<li>所谓的页是“逻辑上的”，“虚拟的”，存在于虚拟地址中，虚拟页的号码称为虚页号。所谓页框就是物理页，页框号也称为实页号。</li>
+<li><strong>页式存储管理的核心为利用页表将虚页号号转换为实页号，将虚拟地址转换为线性地址（物理地址）</strong></li>
+<li>相比段式存储管理，页式存储管理<strong>对高层用户是透明的</strong></li>
+</ul>
+</li>
+<li>优点：
+<ul>
+<li>几乎可以认为消除了内存碎片</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>不易共享和保护</li>
+<li>不易动态链接</li>
+<li>不易处理数据结构的扩容</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>段式 vs 页式</p>
+<ol>
+<li><strong>分页机制是对用户透明的，分段对用户可见</strong>；</li>
+<li>页大小固定（通常是4K），段长是可变的；</li>
+<li><strong>分页的目的是实现虚拟内存，分段的目的是便于模块化、管理</strong>；</li>
+<li>分页的地址空间是一维的，分段的地址空间是二维的</li>
+<li><strong>启用分页的以后逻辑地址上的连续不意味着物理地址</strong>，分段保持地址空间的连续性</li>
+<li>分页不便于共享，分段便于共享</li>
+<li>分页是保护模式下的可选特性，分段是保护模式特权级实现的基础，是必须使用的特性</li>
+<li>分页的地址变换更灵活，但<strong>段内逻辑地址不小于段基址</strong></li>
+<li>分页可以消除内存碎片，分段造成内存碎片</li>
+</ol>
+</li>
+</ul>
+<h2 id="%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8" tabindex="-1">虚拟存储器</h2>
+<p>基本特点：</p>
+<ol>
+<li>不连续性</li>
+<li><strong>部分交换</strong></li>
+<li>大空间</li>
+</ol>
+<p>虚拟内存的实现依赖硬件和软件支持：</p>
+<ul>
+<li>硬件支持：分页、页表需要硬件处理才能有可以接受的性能</li>
+<li>软件支持：页面替换的策略。</li>
+</ul>
+<p>虚拟分页：</p>
+<p>利用页式存储管理，<strong>只将部分页面放入内存</strong></p>
+<h3 id="%E5%8F%8D%E5%90%91%E9%A1%B5%E8%A1%A8" tabindex="-1">反向页表</h3>
+<p>针对64位计算机过于庞大的逻辑地址空间，采用<em>反向页表</em>取代多级页表方案。</p>
+<p>反向页表：<strong>使用物理页号作为索引，虚页号放在页表内</strong>，然后<strong>搜索表，找到匹配项，匹配的表项的索引号就是需要的物理页号</strong></p>
+<h3 id="%E5%88%86%E9%A1%B5%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5" tabindex="-1">分页管理策略</h3>
+<p>调页策略：</p>
+<ol>
+<li>
+<p>请求调页(Demand paging)</p>
+<p>核心思想是<strong>只有在缺页的时候才调入页面</strong>。</p>
+<p>简单粗暴，但是会产生大量缺页中断，产生大量IO。</p>
+</li>
+<li>
+<p>预先调页(Prepaging)</p>
+<p>核心思想是<strong>发生缺页需要调入某页的时候，一次调入该页和相邻若干页</strong></p>
+<p>该策略的有效性来自于：</p>
+<ol>
+<li><strong>局部性原理</strong></li>
+<li><strong>一次机械磁盘IO需要的时间与读入扇区数无关</strong>。就机械硬盘而言，一次读取一个扇区或者一次读取多个扇区需要时间区别不大，但读两次磁盘需要的时间却比读一次多得多。主要原因是机械硬盘读盘的最大开销是<strong>寻道</strong>（但固态硬盘的寻道时间接近0，所以这一条对固态硬盘不成立？）</li>
+</ol>
+</li>
+</ol>
+<p>放置策略：由于分页消除了碎片，其实有空页框就用就好，不需要什么特殊的策略。</p>
+<p><strong>替换策略</strong>：</p>
+<p>当内存不足的时候，需要对内存中的页面进行<strong>替换</strong>。这是对分页策略中影响最明显的部分。</p>
+<p>不正确的替换策略会导致频繁的换页，导致频繁的外存IO，严重影响效率。</p>
+<p>替换策略实际上与Cache的Block替换是一致的。</p>
+<p>常见策略：</p>
+<ol>
+<li>
+<p>最优算法：</p>
+<p>换出未来不再使用或还要最长时间才使用的页。这是不可实现的策略，因为未来的执行路径不可预知，该算法可以给出替换策略性能的理论上界。</p>
+</li>
+<li>
+<p>LRU（最近最少使用）</p>
+<p>换出最近最少使用的内存页。这是基于局部性原理对最优算法的良好近似. 但是算法的硬件代价比较高. 不仅可以用于换页, 还可以用于任何缓存管理(比如浏览器缓存).</p>
+</li>
+<li>
+<p>FIFO</p>
+<p>维护队列,先入先出</p>
+</li>
+<li>
+<p>时钟算法</p>
+<p>对LRU的近似实现。</p>
+<p>将候选替换页面放在环形缓冲区，每个页面中增加一个R(Reference)位，表示该页是否被引用过。</p>
+<p>每次需要替换时，扫描环形缓冲区：</p>
+<ul>
+<li>扫描到R=1的页面：R清零</li>
+<li>扫描到R=0的页面：替换出去</li>
+<li>重复执行，直到找到一个页面替换出去为止</li>
+</ul>
+<p>由于一个R=1的页面至少要第二次扫描到才有机会替换出去，因此该算法也称为“二次机会算法”</p>
+</li>
+</ol>
+<p>驻留集管理：</p>
+<p><em>驻留集</em>：虚拟存储器中为进程分配的物理页的集合。</p>
+<p>驻留集大小的权衡：</p>
+<ul>
+<li>若进程驻留集过小，则缺页率过高，调页开销大。</li>
+<li>进程的驻留集大到一定程度，则内存占用大，且产生边际递减效应，缺页率不再显著下降</li>
+</ul>
+<p>驻留集管理策略：</p>
+<ul>
+<li>固定大小：每个进程的驻留集大小固定</li>
+<li>可变大小：执行过程中OS动态调整驻留集大小
+<ul>
+<li>可根据缺页率动态调整，性能较好</li>
+<li>需要OS对活动进程的行为进行评估，增加管理开销</li>
+</ul>
+</li>
+</ul>
+<p>替换范围：</p>
+<ul>
+<li>全局替换：内存中任何为锁定的页都可以替换</li>
+<li>局部替换：被替换页只局限于缺页进程的驻留集</li>
+</ul>
+<p>清除策略：决策何时将已修改的页换出到外存中</p>
+<ul>
+<li>请求清除</li>
+<li>预先清除</li>
+</ul>
+<p>进程并发负载权衡：权衡内存中同时驻留的进程数目</p>
+<ul>
+<li>太少：大部分进程都挂起了，CPU空闲时间太长了，CPU利用率低</li>
+<li>太多：每个进程的驻留集太小，缺页频繁，产生“抖动”，CPU无限等待调页，CPU利用率也很低</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/88c26b79/" rel="prev" title="Outline">
+      <i class="fa fa-chevron-left"></i> Outline
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/c8c4683d/" rel="next" title="数据链路层">
+      数据链路层 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#operating-system"><span class="nav-number">1.</span> <span class="nav-text">Operating System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%9A%E4%B8%AD%E6%96%AD"><span class="nav-number">1.1.</span> <span class="nav-text">自学笔记：中断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#process"><span class="nav-number">1.2.</span> <span class="nav-text">Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#process-vs.-thread"><span class="nav-number">1.3.</span> <span class="nav-text">Process vs. Thread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B-vs.-%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">用户级线程 vs. 内核级线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%A4%9A%E5%A4%84%E7%90%86smp%EF%BC%9A%E5%90%8C%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">对称多处理SMP：同构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#windows%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.6.</span> <span class="nav-text">Windows进程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.7.</span> <span class="nav-text">Linux进程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mac/ios%E7%9A%84gcd%E6%8A%80%E6%9C%AF"><span class="nav-number">1.8.</span> <span class="nav-text">Mac&#x2F;iOS的GCD技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%EF%BC%9A%E5%85%AD%E4%B8%AA%E8%A6%81%E6%B1%82"><span class="nav-number">1.9.</span> <span class="nav-text">互斥：六个要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9Adekker%E7%AE%97%E6%B3%95"><span class="nav-number">1.10.</span> <span class="nav-text">互斥：软件实现：Dekker算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9Apeterson%E7%AE%97%E6%B3%95"><span class="nav-number">1.11.</span> <span class="nav-text">互斥：软件实现：Peterson算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.12.</span> <span class="nav-text">互斥：硬件实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-number">1.13.</span> <span class="nav-text">信号量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.13.1.</span> <span class="nav-text">信号量实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-number">1.13.2.</span> <span class="nav-text">信号量实现互斥锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98"><span class="nav-number">1.13.3.</span> <span class="nav-text">生产者-消费者问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E8%80%85-%E5%86%99%E8%80%85%E9%97%AE%E9%A2%98"><span class="nav-number">1.13.4.</span> <span class="nav-text">读者-写者问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="nav-number">1.13.5.</span> <span class="nav-text">进程同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="nav-number">1.13.6.</span> <span class="nav-text">信号量实现进程同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6"><span class="nav-number">1.14.</span> <span class="nav-text">消息机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">1.15.</span> <span class="nav-text">死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E9%A2%84%E9%98%B2"><span class="nav-number">1.15.1.</span> <span class="nav-text">死锁预防</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D"><span class="nav-number">1.15.2.</span> <span class="nav-text">死锁避免</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B"><span class="nav-number">1.15.3.</span> <span class="nav-text">死锁检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E7%9A%84%E6%AD%BB%E9%94%81%E5%A4%84%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.15.4.</span> <span class="nav-text">综合的死锁处理策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90%E9%97%AE%E9%A2%98"><span class="nav-number">1.15.5.</span> <span class="nav-text">哲学家就餐问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">存储管理管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">虚拟存储器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E9%A1%B5%E8%A1%A8"><span class="nav-number">3.1.</span> <span class="nav-text">反向页表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text">分页管理策略</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

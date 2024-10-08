@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="BGP EGP 两种外部网关协议：  EGP BGP  与内部网关的主要区别： BGP概述  BGP使用可靠扩散将AS内的网络的信息扩散出去 BGP不要求AS连接的拓扑结构是一棵树，它有自己的处理回路的办法 AS号类似IP地址，需要全球唯一，范围0~65535（部分是保留的私有AS号，不能在公网使用）  BGP基本工作原理 NLRI扩散  AS中运行BGP协议的路由器称为BGP路由器，它充当BGP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BGP">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/580c088a/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="BGP EGP 两种外部网关协议：  EGP BGP  与内部网关的主要区别： BGP概述  BGP使用可靠扩散将AS内的网络的信息扩散出去 BGP不要求AS连接的拓扑结构是一棵树，它有自己的处理回路的办法 AS号类似IP地址，需要全球唯一，范围0~65535（部分是保留的私有AS号，不能在公网使用）  BGP基本工作原理 NLRI扩散  AS中运行BGP协议的路由器称为BGP路由器，它充当BGP">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-23T03:09:57.000Z">
+<meta property="article:modified_time" content="2021-06-23T03:09:57.000Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/580c088a/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BGP | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/580c088a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BGP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-23 11:09:57" itemprop="dateCreated datePublished" datetime="2021-06-23T11:09:57+08:00">2021-06-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="bgp" tabindex="-1">BGP</h1>
+<h2 id="egp" tabindex="-1">EGP</h2>
+<p>两种外部网关协议：</p>
+<ul>
+<li>EGP</li>
+<li>BGP</li>
+</ul>
+<h2 id="%E4%B8%8E%E5%86%85%E9%83%A8%E7%BD%91%E5%85%B3%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%EF%BC%9A" tabindex="-1">与内部网关的主要区别：</h2>
+<h2 id="bgp%E6%A6%82%E8%BF%B0" tabindex="-1">BGP概述</h2>
+<ul>
+<li>BGP使用<strong>可靠扩散</strong>将AS内的网络的信息扩散出去</li>
+<li>BGP不要求AS连接的拓扑结构是一棵树，它有自己的处理回路的办法</li>
+<li>AS号类似IP地址，需要全球唯一，范围0~65535（部分是保留的私有AS号，不能在公网使用）</li>
+</ul>
+<h2 id="bgp%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86" tabindex="-1">BGP基本工作原理</h2>
+<h3 id="nlri%E6%89%A9%E6%95%A3" tabindex="-1">NLRI扩散</h3>
+<ul>
+<li>AS中运行BGP协议的路由器称为BGP路由器，它充当BGP Speacker的身份；没有运行BGP则是内部路由器</li>
+<li>在同一AS内的两个BGP路由器是iBGP相邻关系，而两个不同AS之间直连的BGP路由器称为eBGP相邻关系。</li>
+<li>BGP使用可靠扩散将AS内的网络的信息扩散出去</li>
+<li>BGP扩散的是NLRI(Network Layer Reachability Info.)</li>
+<li></li>
+</ul>
+<p>BGP防止AS之间回路：由于NLRI中包含<code>AS_PATH</code>信息，记录一条NLRI的来路，因此在<code>AS_PATH</code>内的AS收到扩散NLRI，则不再扩散，丢弃。</p>
+<p>BGP防止AS之内回路：我们规定：从iBGP收到的NLRI不能再扩散给iBGP。作为代价，一条从eBGP收到的NLRI必须单独发送给同一个AS内的所有iBGP，而不能只发送给自己的邻居iBGP。</p>
+<p>内部路由器如何完成与AS之外的路由：</p>
+<ul>
+<li>注入（不实用）：由BGP路由器为AS内的内部路由器注入所有的外部网络路由（太多了，内部路由器吃不消）</li>
+<li>隧道：为所有的iBGP路由器之间配置“隧道”（类似直通链路）</li>
+</ul>
+<h3 id="%E5%BB%BA%E7%AB%8Bbgp%E8%B7%AF%E7%94%B1%E8%A1%A8" tabindex="-1">建立BGP路由表</h3>
+<p>主要从NLRI包的信息构建BGP路由<br>
+（待完善）</p>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/344b732e/" rel="prev" title="大二下复习提纲">
+      <i class="fa fa-chevron-left"></i> 大二下复习提纲
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/769365ef/" rel="next" title="网络层">
+      网络层 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bgp"><span class="nav-number">1.</span> <span class="nav-text">BGP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#egp"><span class="nav-number">1.1.</span> <span class="nav-text">EGP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%86%85%E9%83%A8%E7%BD%91%E5%85%B3%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">与内部网关的主要区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bgp%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.</span> <span class="nav-text">BGP概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bgp%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">BGP基本工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nlri%E6%89%A9%E6%95%A3"><span class="nav-number">1.4.1.</span> <span class="nav-text">NLRI扩散</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8Bbgp%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="nav-number">1.4.2.</span> <span class="nav-text">建立BGP路由表</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

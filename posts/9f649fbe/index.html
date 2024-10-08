@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="形态学运算 基本运算（待完善）  膨胀 腐蚀 开运算 闭运算 击中运算  击中-击不中运算 这个运算的含义其实是精确匹配： 只有当结构元素取1的点在原集合中也取1，结构元素取0的点原集合中也取0才算是“击中”点，运算结果才是1. 常用算法  图形匹配：击中&#x2F;击不中运算 边缘提取：基于形态学梯度 区域填充 求连通分量 求凸壳  击中运算图形匹配 略 形态学梯度 其实就是膨胀减腐蚀 区域填充 求连通分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形态学运算">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/9f649fbe/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="形态学运算 基本运算（待完善）  膨胀 腐蚀 开运算 闭运算 击中运算  击中-击不中运算 这个运算的含义其实是精确匹配： 只有当结构元素取1的点在原集合中也取1，结构元素取0的点原集合中也取0才算是“击中”点，运算结果才是1. 常用算法  图形匹配：击中&#x2F;击不中运算 边缘提取：基于形态学梯度 区域填充 求连通分量 求凸壳  击中运算图形匹配 略 形态学梯度 其实就是膨胀减腐蚀 区域填充 求连通分">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-15T22:41:45.000Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:author" content="BBPumpkin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/9f649fbe/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>形态学运算 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/9f649fbe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          形态学运算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-16 06:41:45" itemprop="dateCreated datePublished" datetime="2021-11-16T06:41:45+08:00">2021-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 18:10:11" itemprop="dateModified" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E5%BD%A2%E6%80%81%E5%AD%A6%E8%BF%90%E7%AE%97" tabindex="-1">形态学运算</h1>
+<h2 id="%E5%9F%BA%E6%9C%AC%E8%BF%90%E7%AE%97%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">基本运算（待完善）</h2>
+<ul>
+<li>膨胀</li>
+<li>腐蚀</li>
+<li>开运算</li>
+<li>闭运算</li>
+<li>击中运算</li>
+</ul>
+<h3 id="%E5%87%BB%E4%B8%AD-%E5%87%BB%E4%B8%8D%E4%B8%AD%E8%BF%90%E7%AE%97" tabindex="-1">击中-击不中运算</h3>
+<p>这个运算的含义其实是<strong>精确匹配</strong>：</p>
+<p>只有当<strong>结构元素取1的点在原集合中也取1，结构元素取0的点原集合中也取0</strong>才算是“击中”点，运算结果才是1.</p>
+<h2 id="%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95" tabindex="-1">常用算法</h2>
+<ul>
+<li>图形匹配：击中/击不中运算</li>
+<li>边缘提取：基于形态学梯度</li>
+<li>区域填充</li>
+<li>求连通分量</li>
+<li>求凸壳</li>
+</ul>
+<h3 id="%E5%87%BB%E4%B8%AD%E8%BF%90%E7%AE%97%E5%9B%BE%E5%BD%A2%E5%8C%B9%E9%85%8D" tabindex="-1">击中运算图形匹配</h3>
+<p>略</p>
+<h3 id="%E5%BD%A2%E6%80%81%E5%AD%A6%E6%A2%AF%E5%BA%A6" tabindex="-1">形态学梯度</h3>
+<p>其实就是膨胀减腐蚀</p>
+<h3 id="%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85" tabindex="-1">区域填充</h3>
+<h3 id="%E6%B1%82%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F" tabindex="-1">求连通分量</h3>
+<p>迭代算法如下：</p>
+<ul>
+<li>利用模板表示4-临界/8-临界</li>
+<li>从集合的任意一个点开始，利用模板膨胀</li>
+<li>膨胀结果再对原集合做交集</li>
+<li>若某次迭代后集合不变，则迭代结束</li>
+</ul>
+<h3 id="%E6%B1%82%E5%87%B8%E5%A3%B3" tabindex="-1">求凸壳</h3>
+<ul>
+<li>凸壳：包含集合的最小凸集</li>
+<li>凸缺：凸壳减原来的集合</li>
+</ul>
+<p>方法利用击中击不中运算迭代。</p>
+<p>需要构造四个方向的特殊模板。</p>
+<p>四个方向的迭代都结束之后，最后利用初始集合的包围盒裁剪得到凸壳。</p>
+<h3 id="%E7%BB%86%E5%8C%96" tabindex="-1">细化</h3>
+<p>其实就是对给定的集合和结构元素（或结构元素集），<strong>丢弃所有的击中点</strong></p>
+<h3 id="%E7%B2%97%E5%8C%96" tabindex="-1">粗化</h3>
+<p>将击中点也包含在内。</p>
+<p>通常通过对补集细化来对原集粗化。注意最终需要消除不连通点才是完整结果。</p>
+<h3 id="%E9%AA%A8%E6%9E%B6" tabindex="-1">骨架</h3>
+<p>骨架是<em>最大内接圆的圆心的集合</em></p>
+<p>算法：<em>k级骨架</em>就是k阶腐蚀减去k阶开运算的结果。我们可以用所有级的骨架并在一起充当骨架。</p>
+<h3 id="%E8%A3%81%E5%89%AA" tabindex="-1">裁剪</h3>
+<p>清除毛刺。</p>
+<p>步骤如下：</p>
+<ol>
+<li>细化</li>
+<li>提取终点</li>
+<li>限制膨胀</li>
+<li>并回去，得到结果</li>
+</ol>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/21d1d2b7/" rel="prev" title="数据库：索引">
+      <i class="fa fa-chevron-left"></i> 数据库：索引
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/c85b8ed3/" rel="next" title="智能合约">
+      智能合约 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%A2%E6%80%81%E5%AD%A6%E8%BF%90%E7%AE%97"><span class="nav-number">1.</span> <span class="nav-text">形态学运算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%90%E7%AE%97%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">基本运算（待完善）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BB%E4%B8%AD-%E5%87%BB%E4%B8%8D%E4%B8%AD%E8%BF%90%E7%AE%97"><span class="nav-number">1.1.1.</span> <span class="nav-text">击中-击不中运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">常用算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BB%E4%B8%AD%E8%BF%90%E7%AE%97%E5%9B%BE%E5%BD%A2%E5%8C%B9%E9%85%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">击中运算图形匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%A2%E6%80%81%E5%AD%A6%E6%A2%AF%E5%BA%A6"><span class="nav-number">1.2.2.</span> <span class="nav-text">形态学梯度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85"><span class="nav-number">1.2.3.</span> <span class="nav-text">区域填充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F"><span class="nav-number">1.2.4.</span> <span class="nav-text">求连通分量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E5%87%B8%E5%A3%B3"><span class="nav-number">1.2.5.</span> <span class="nav-text">求凸壳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%86%E5%8C%96"><span class="nav-number">1.2.6.</span> <span class="nav-text">细化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%97%E5%8C%96"><span class="nav-number">1.2.7.</span> <span class="nav-text">粗化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%A8%E6%9E%B6"><span class="nav-number">1.2.8.</span> <span class="nav-text">骨架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%81%E5%89%AA"><span class="nav-number">1.2.9.</span> <span class="nav-text">裁剪</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

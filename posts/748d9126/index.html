@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pumpkinjimmy.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分布式系统导论 分布式系统的挑战  系统涉及  争取的接口设计和抽象   一致性 容错 部署  集群 多种场景 光宇分布   实现  安全 性能 负载均衡    排队论基础 马尔可夫过程 所谓马尔可夫过程是指一种简单但广泛存在的随机过程：未来状态只与当前状态有关，也即无后效性。 M&#x2F;M&#x2F;1 M&#x2F;M&#x2F;1排队模型有如下假设：  队列无限长度 请求到达服从泊松分布，且分布的参数为λ\lambdaλ，称为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统导论">
+<meta property="og:url" content="http://pumpkinjimmy.github.io/posts/748d9126/index.html">
+<meta property="og:site_name" content="BBPumpkin的博客">
+<meta property="og:description" content="分布式系统导论 分布式系统的挑战  系统涉及  争取的接口设计和抽象   一致性 容错 部署  集群 多种场景 光宇分布   实现  安全 性能 负载均衡    排队论基础 马尔可夫过程 所谓马尔可夫过程是指一种简单但广泛存在的随机过程：未来状态只与当前状态有关，也即无后效性。 M&#x2F;M&#x2F;1 M&#x2F;M&#x2F;1排队模型有如下假设：  队列无限长度 请求到达服从泊松分布，且分布的参数为λ\lambdaλ，称为">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-10T07:01:28.000Z">
+<meta property="article:modified_time" content="2023-06-08T10:10:11.261Z">
+<meta property="article:author" content="BBPumpkin">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="专业课">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://pumpkinjimmy.github.io/posts/748d9126/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式系统导论 | BBPumpkin的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BBPumpkin的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pumpkinjimmy.github.io/posts/748d9126/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="BBPumpkin">
+      <meta itemprop="description" content="BBPumpkin的个人博客( •̀ ω •́ )y">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BBPumpkin的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式系统导论
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-10 15:01:28" itemprop="dateCreated datePublished" datetime="2021-09-10T15:01:28+08:00">2021-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 18:10:11" itemprop="dateModified" datetime="2023-06-08T18:10:11+08:00">2023-06-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA" tabindex="-1">分布式系统导论</h1>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8C%91%E6%88%98" tabindex="-1">分布式系统的挑战</h2>
+<ul>
+<li>系统涉及
+<ul>
+<li>争取的接口设计和抽象</li>
+</ul>
+</li>
+<li>一致性</li>
+<li>容错</li>
+<li>部署
+<ul>
+<li>集群</li>
+<li>多种场景</li>
+<li>光宇分布</li>
+</ul>
+</li>
+<li>实现
+<ul>
+<li>安全</li>
+<li>性能</li>
+<li>负载均衡</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E6%8E%92%E9%98%9F%E8%AE%BA%E5%9F%BA%E7%A1%80" tabindex="-1">排队论基础</h2>
+<h3 id="%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B" tabindex="-1">马尔可夫过程</h3>
+<p>所谓<em>马尔可夫过程</em>是指一种简单但广泛存在的随机过程：<strong>未来状态只与当前状态有关</strong>，也即<strong>无后效性</strong>。</p>
+<h3 id="m%2Fm%2F1" tabindex="-1">M/M/1</h3>
+<p>M/M/1排队模型有如下假设：</p>
+<ol>
+<li>队列无限长度</li>
+<li>请求到达服从<em>泊松分布</em>，且分布的参数为<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span></eq>，称为<em>到达率</em></li>
+<li>系统服务服从<em>指数分布</em>，且分布的参数为<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span></eq>，称为<em>服务率</em></li>
+</ol>
+<p>排队系统稳态：当所有状态转入跟转出的概率相等时，系统稳定。</p>
+<h3 id="%E6%8E%92%E9%98%9F%E8%AF%B7%E6%B1%82%E5%88%86%E5%B8%83%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89" tabindex="-1">排队请求分布（重要）</h3>
+<p>令<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">p_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq>表示系统中有<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></eq>个正在排队的请求的概率，则：<br>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mfrac><mi>λ</mi><mi>μ</mi></mfrac><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mfrac><mi>λ</mi><mi>μ</mi></mfrac><msup><mo stretchy="false">)</mo><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">
+    p_k = (1-\frac{\lambda}{\mu})(\frac{\lambda}{\mu})^k
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.2519em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">μ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">λ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">μ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">λ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span></span></span></span></eqn></section></p>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87" tabindex="-1">分布式系统的设计目标</h2>
+<ol>
+<li>
+<p>使资源可访问</p>
+<p>（其实就是用户要能用）</p>
+</li>
+<li>
+<p>透明性</p>
+<p>指的是<strong>系统的具体实现细节对用户不可见</strong>，用户可以不关心实现细节。</p>
+</li>
+<li>
+<p>开放性</p>
+</li>
+<li>
+<p>可拓展性</p>
+</li>
+</ol>
+<h2 id="%E9%80%8F%E6%98%8E%E6%80%A7" tabindex="-1">透明性</h2>
+<h3 id="%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%8C%E5%85%A8%E9%80%8F%E6%98%8E%E6%80%A7%E4%B8%8D%E5%BF%85%E8%A6%81%E3%80%81%E9%9A%BE%E4%BB%A5%E5%AE%9E%E7%8E%B0" tabindex="-1">为什么完全透明性不必要、难以实现</h3>
+<ul>
+<li>
+<p>掩盖了通信成本</p>
+<p>若系统完全透明，则地理上的距离带来的通信成本</p>
+</li>
+<li>
+<p>无法完全隐藏节点失效</p>
+<p>节点的失效是无法完全掩盖的。</p>
+</li>
+<li>
+<p>牺牲性能</p>
+</li>
+<li>
+<p>暴露拓扑结构</p>
+</li>
+</ul>
+<h2 id="%E5%8F%AF%E6%8B%93%E5%B1%95%E6%80%A7" tabindex="-1">可拓展性</h2>
+<p>三方面典型的可拓展性：</p>
+<ul>
+<li>规模可拓展性：用户和进程数量可以不断增加</li>
+<li>地理可拓展性：可以迁移到不同的地理位置</li>
+<li>管理可拓展性：系统可以拥有多个管理域，每个管理域具有自己独立的管理策略</li>
+</ul>
+<p>通常分布式系统关注的可拓展性是<strong>规模可拓展性</strong>。主流的可拓展性解决方案是多个服务器独立并行运行。</p>
+<h3 id="%E8%A7%84%E6%A8%A1%E5%8F%AF%E6%8B%93%E5%B1%95%E6%80%A7" tabindex="-1">规模可拓展性</h3>
+<p>在分布式系统中考虑可拓展性的动机：</p>
+<ul>
+<li>处理器性能瓶颈</li>
+<li>存储容量瓶颈</li>
+<li>网络信息瓶颈</li>
+</ul>
+<h3 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%8B%93%E5%B1%95%E6%8A%80%E6%9C%AF" tabindex="-1">分布式系统拓展技术</h3>
+<h4 id="%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E5%BB%B6%E8%BF%9F" tabindex="-1">隐藏通信延迟</h4>
+<p><strong>尽量避免等待服务器。</strong></p>
+<p>实现：</p>
+<ul>
+<li>异步计算</li>
+<li>客户端计算</li>
+</ul>
+<h4 id="%E5%88%86%E6%95%A3" tabindex="-1">分散</h4>
+<p>再多个机器上划分数据和计算。</p>
+<p>例如：</p>
+<ul>
+<li>Web</li>
+<li>区块链</li>
+</ul>
+<h4 id="%E5%A4%8D%E5%88%B6" tabindex="-1">复制</h4>
+<p>再多个机器上创建数据副本。</p>
+<p>例如：</p>
+<ul>
+<li>Web站点镜像</li>
+<li>Web缓存服务器</li>
+</ul>
+<p><strong>复制带来了一致性问题</strong></p>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%BA%A6%E9%87%8F%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">分布式系统度量（待完善）</h2>
+<ul>
+<li>
+<p>系统利用率：</p>
+<p>基于排队论，有如下结论：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>U</mi><mo>=</mo><munder><mo>∑</mo><mrow><mi>k</mi><mo>&gt;</mo><mn>0</mn></mrow></munder><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>0</mn></msub><mo>=</mo><mfrac><mi>λ</mi><mi>μ</mi></mfrac></mrow><annotation encoding="application/x-tex">
+        U = \sum_{k&gt;0} p_k = 1 - p_0 = \frac{\lambda}{\mu}
+    </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3795em;vertical-align:-1.3295em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">&gt;</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3295em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2519em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">μ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">λ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></eqn></section><p>其中<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span></span></span></span></eq>是系统利用率</p>
+</li>
+<li>
+<p>平均请求数：</p>
+</li>
+<li>
+<p>平均吞吐量：</p>
+</li>
+<li>
+<p>响应时间：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>R</mi><mo>=</mo><mfrac><mi>S</mi><mrow><mn>1</mn><mo>−</mo><mi>U</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+        R = \frac{S}{1-U}
+    </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1297em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></eqn></section></li>
+</ul>
+<h2 id="%E6%9E%84%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%B8%E5%9E%8B%E9%99%B7%E9%98%B1" tabindex="-1">构建分布式系统的典型陷阱</h2>
+<ul>
+<li>网络是可靠的</li>
+<li>网络带宽是无限的</li>
+<li>网络是安全的</li>
+<li>网络通信是零开销的<br>
+（待完善）</li>
+</ul>
+<h2 id="%E4%B8%89%E7%A7%8D%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F" tabindex="-1">三种分布式系统</h2>
+<h3 id="%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F" tabindex="-1">并行计算系统</h3>
+<h3 id="%E9%9B%86%E7%BE%A4%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F" tabindex="-1">集群计算系统</h3>
+<p>集群计算系统本质上是通过LAN连接的高端计算系统。</p>
+<ul>
+<li>同构：相同的OS，几乎相同的硬件</li>
+<li>单个管理节点</li>
+</ul>
+<h3 id="%E7%BD%91%E6%A0%BC%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F" tabindex="-1">网格计算系统</h3>
+<ul>
+<li>异构</li>
+<li>多个组织</li>
+<li>容易拓展到广域网环境</li>
+<li>为了允许合作，使用虚拟组织</li>
+</ul>
+<p>（已经很少用了）</p>
+<h3 id="%E4%BA%91%E8%AE%A1%E7%AE%97" tabindex="-1">云计算</h3>
+<p>分层结构：</p>
+<ul>
+<li>硬件</li>
+<li>基础设施：硬件资源的虚拟化</li>
+<li>运行平台：</li>
+<li>应用</li>
+</ul>
+<h2 id="%E9%9B%86%E6%88%90%E5%BA%94%E7%94%A8" tabindex="-1">集成应用</h2>
+<h3 id="%E6%9C%8D%E5%8A%A1" tabindex="-1">服务</h3>
+<p>服务是一种软件形式，一种带有API的软件。</p>
+<h3 id="%E4%BA%8B%E5%8A%A1%E7%B3%BB%E7%BB%9F%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89" tabindex="-1">事务系统（待完善）</h3>
+<h3 id="%E4%B8%AD%E9%97%B4%E4%BB%B6" tabindex="-1">中间件</h3>
+<p>为系统集成提供通信的“承上启下”的软件。</p>
+<p>它可以理解为软件系统的“消息总线”。</p>
+<h3 id="%E5%A6%82%E4%BD%95%E9%9B%86%E6%88%90" tabindex="-1">如何集成</h3>
+<ol>
+<li>
+<p>文件传输</p>
+<p>简单，但不灵活。</p>
+</li>
+<li>
+<p>共享数据库</p>
+<p>相对灵活，需要通用模式，可能导致瓶颈</p>
+</li>
+<li>
+<p>RPC</p>
+<p>有效，但需要caller和callee同时在线</p>
+</li>
+<li>
+<p>消息传递</p>
+<p>允许caller和callee在时空上解耦</p>
+</li>
+</ol>
+<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E5%B5%8C%E5%85%A5%E7%B3%BB%E7%BB%9F" tabindex="-1">分布式嵌入系统</h2>
+<ul>
+<li>普适计算系统</li>
+<li>移动计算系统</li>
+<li>传感网络</li>
+</ul>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+              <a href="/tags/%E4%B8%93%E4%B8%9A%E8%AF%BE/" rel="tag"># 专业课</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/2cd15c58/" rel="prev" title="机器学习：NLP基础">
+      <i class="fa fa-chevron-left"></i> 机器学习：NLP基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/32ea83f9/" rel="next" title="计算几何基础：仿射变换">
+      计算几何基础：仿射变换 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">分布式系统导论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">1.1.</span> <span class="nav-text">分布式系统的挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E9%98%9F%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.</span> <span class="nav-text">排队论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">马尔可夫过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m/m/1"><span class="nav-number">1.2.2.</span> <span class="nav-text">M&#x2F;M&#x2F;1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E9%98%9F%E8%AF%B7%E6%B1%82%E5%88%86%E5%B8%83%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">排队请求分布（重要）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-number">1.3.</span> <span class="nav-text">分布式系统的设计目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E6%98%8E%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">透明性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%8C%E5%85%A8%E9%80%8F%E6%98%8E%E6%80%A7%E4%B8%8D%E5%BF%85%E8%A6%81%E3%80%81%E9%9A%BE%E4%BB%A5%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">为什么完全透明性不必要、难以实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%8B%93%E5%B1%95%E6%80%A7"><span class="nav-number">1.5.</span> <span class="nav-text">可拓展性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E6%A8%A1%E5%8F%AF%E6%8B%93%E5%B1%95%E6%80%A7"><span class="nav-number">1.5.1.</span> <span class="nav-text">规模可拓展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%8B%93%E5%B1%95%E6%8A%80%E6%9C%AF"><span class="nav-number">1.5.2.</span> <span class="nav-text">分布式系统拓展技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">隐藏通信延迟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%95%A3"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">分散</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">复制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%BA%A6%E9%87%8F%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.6.</span> <span class="nav-text">分布式系统度量（待完善）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%B8%E5%9E%8B%E9%99%B7%E9%98%B1"><span class="nav-number">1.7.</span> <span class="nav-text">构建分布式系统的典型陷阱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.</span> <span class="nav-text">三种分布式系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.1.</span> <span class="nav-text">并行计算系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.2.</span> <span class="nav-text">集群计算系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E6%A0%BC%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.8.3.</span> <span class="nav-text">网格计算系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97"><span class="nav-number">1.8.4.</span> <span class="nav-text">云计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%BA%94%E7%94%A8"><span class="nav-number">1.9.</span> <span class="nav-text">集成应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.9.1.</span> <span class="nav-text">服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%B3%BB%E7%BB%9F%EF%BC%88%E5%BE%85%E5%AE%8C%E5%96%84%EF%BC%89"><span class="nav-number">1.9.2.</span> <span class="nav-text">事务系统（待完善）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">1.9.3.</span> <span class="nav-text">中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%9B%86%E6%88%90"><span class="nav-number">1.9.4.</span> <span class="nav-text">如何集成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B5%8C%E5%85%A5%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.10.</span> <span class="nav-text">分布式嵌入系统</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BBPumpkin</p>
+  <div class="site-description" itemprop="description">BBPumpkin的个人博客( •̀ ω •́ )y</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">171</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/PumpkinJimmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;PumpkinJimmy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BBPumpkin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
